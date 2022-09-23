@@ -36,6 +36,9 @@ clean:
 	$(MAKE) -C src/Preprocess clean
 	$(MAKE) -C src/Solver clean
 
+format:
+	find -name "*.[ch]" | xargs clang-format -i
+
 all: $(BUILD_DIR)/$(TARGET_EXEC) GUI NeuralNetwork Preprocess Solver
 
 GUI:
