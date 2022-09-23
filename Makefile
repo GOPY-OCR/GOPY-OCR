@@ -13,7 +13,7 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 # As an example, ./build/hello.c.o turns into ./build/hello.c.d
 DEPS := $(OBJS:.o=.d)
 
-CFLAGS := -Wall -Wextra -std=c99 -O3 -g -fsanitize=address  
+CFLAGS := -Wall -Wextra -O3 -g  
 # The final build step.
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
@@ -35,6 +35,8 @@ clean:
 	$(MAKE) -C src/NeuralNetwork clean
 	$(MAKE) -C src/Preprocess clean
 	$(MAKE) -C src/Solver clean
+
+all: $(BUILD_DIR)/$(TARGET_EXEC) GUI NeuralNetwork Preprocess Solver
 
 GUI:
 	$(MAKE) -C src/GUI
