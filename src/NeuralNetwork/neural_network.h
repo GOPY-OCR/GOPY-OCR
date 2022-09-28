@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "matrices.h"
+#include "matrice.h"
 
 typedef struct Layer {
-    Matrix *weights;
-    Matrix *biases;
+    matrice *weights;
+    matrice *biases;
 } Layer;
 
 typedef struct NeuralNetwork {
