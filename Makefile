@@ -53,3 +53,5 @@ Preprocess:
 Solver:
 	$(MAKE) -C src/Solver
 
+Postprocess:
+	$(MAKE) -C src/Postprocess
