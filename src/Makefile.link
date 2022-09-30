@@ -3,6 +3,9 @@ TARGET_EXEC := main
 BUILD_DIR := ./build
 SRC_DIRS := ./
 
+CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
+LDLIBS = `pkg-config --libs sdl2 SDL2_image`
+
 # Find all the C files we want to compile
 SRCS := $(shell find $(SRC_DIRS) -name '*.c')
 
