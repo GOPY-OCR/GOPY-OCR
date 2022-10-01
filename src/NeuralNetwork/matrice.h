@@ -1,9 +1,9 @@
-
+#pragma once
 
 typedef struct matrice {
-    int columns;
-    int rows;
-    double **data;
+  int columns;
+  int rows;
+  double **data;
 } matrice;
 
 matrice *matrice_new(int rows, int columns);
