@@ -1,13 +1,14 @@
 TARGET_EXEC := main
 
 BUILD_DIR := ./build
-SRC_DIRS := ./ 
+SRC_DIRS := ./
 
+CPPFLAGS := -MMD -MP -I../utils # cpp flags stands for C preprocessor flags not C++ flags
 CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 LDLIBS = `pkg-config --libs sdl2 SDL2_image`
 
 # Find all the C files we want to compile
-SRCS := $(shell find $(SRC_DIRS) -name '*.c')
+SRCS := $(shell find $(SRC_DIRS) -name '*.c') 
 
 # String substitution for every C/C++ file.
 # As an example, hello.c turns into ./build/hello.c.o
