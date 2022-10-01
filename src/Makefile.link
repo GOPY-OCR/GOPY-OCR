@@ -1,7 +1,7 @@
 TARGET_EXEC := main
 
 BUILD_DIR := ./build
-SRC_DIRS := ./
+SRC_DIRS := ./ 
 
 CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 LDLIBS = `pkg-config --libs sdl2 SDL2_image`
