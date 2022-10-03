@@ -8,7 +8,7 @@ CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 LDLIBS = `pkg-config --libs sdl2 SDL2_image`
 
 # Find all the C files we want to compile
-SRCS := $(shell find $(SRC_DIRS) -name '*.c') 
+SRCS := $(shell find $(SRC_DIRS) -name '*.c')
 
 # String substitution for every C/C++ file.
 # As an example, hello.c turns into ./build/hello.c.o
@@ -18,12 +18,26 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 # As an example, ./build/hello.c.o turns into ./build/hello.c.d
 DEPS := $(OBJS:.o=.d)
 
+# Adds utils folder
+utils_src = $(shell find ../utils -name '*.c') 
+utils_obj = $(utils_src:../%=$(BUILD_DIR)/%.o)
+utils_dep = $(utils_obj:.o=.d)
+SRCS += $(utils_src)
+OBJS += $(utils_obj)
+DEPS += $(utils_dep)
+
+
 # The final build step.
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
 
 # Build step for C source
 $(BUILD_DIR)/%.c.o: %.c
+	mkdir -p $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+# Build step for utils C source
+$(BUILD_DIR)/utils/%.c.o: ../utils/%.c
 	mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
