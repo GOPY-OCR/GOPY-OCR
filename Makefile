@@ -23,9 +23,6 @@ $(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# run tests
-check: $(BUILD_DIR)/$(TARGET_EXEC)
-	$(MAKE) -C tests
 
 .PHONY: clean
 clean:
@@ -54,3 +51,6 @@ Preprocess:
 Solver:
 	$(MAKE) -C src/Solver
 
+
+check: $(BUILD_DIR)/$(TARGET_EXEC)
+	$(MAKE) -C tests check 
