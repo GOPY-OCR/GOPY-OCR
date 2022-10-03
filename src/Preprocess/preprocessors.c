@@ -1,6 +1,5 @@
 #include "preprocessors.h"
 
-
 // Saves an image to a file.
 //
 // path: Path of the image.

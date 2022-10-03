@@ -1,6 +1,5 @@
 #include "utils.h"
 
-
 // Loads an image in a surface.
 // The format of the surface is SDL_PIXELFORMAT_RGB888.
 //

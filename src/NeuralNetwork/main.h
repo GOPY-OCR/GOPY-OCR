@@ -1,5 +1,6 @@
 #pragma once
-#include "../Preprocess/preprocessors.h"
+#include <utils.h>
+#include <err.h>
 #include "neural_network.h"
 
-int predict(SDL_Surface *image);
+int predict(const char *image_path);
