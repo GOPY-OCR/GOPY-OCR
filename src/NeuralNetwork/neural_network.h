@@ -2,6 +2,7 @@
 #include "matrice.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef struct Layer {
     matrice *weights;
@@ -10,7 +11,7 @@ typedef struct Layer {
 
 typedef struct NeuralNetwork {
     int nb_layers;
-    Layer *layers;
+    Layer **layers;
 } NeuralNetwork;
 
 Layer *create_layer(int nb_neurons, int nb_inputs);

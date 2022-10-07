@@ -2,14 +2,14 @@
 
 Layer *create_layer(int nb_neurons, int nb_inputs) {
     Layer *layer = malloc(sizeof(Layer));
-    layer->weights = matrice_random(nb_neurons, nb_inputs);
-    layer->biases = matrice_random(nb_neurons, 1);
+    layer->weights = matrice_random(nb_neurons, nb_inputs, -1, 1);
+    layer->biases = matrice_random(nb_neurons, 1, -1, 1);
     return layer;
 }
 
 void free_layer(Layer *layer) {
-    free_matrice(layer->weights);
-    free_matrice(layer->biases);
+    matrice_free(layer->weights);
+    matrice_free(layer->biases);
     free(layer);
 }
 
@@ -52,6 +52,8 @@ NeuralNetwork *load_neural_network(char *filename) {
     return NULL;
 }
 
+double sigmoid(double x) { return 1 / (1 + exp(-x)); }
+
 /*
  * Computes the output of a neural network
  * nn: neural network
@@ -62,7 +64,7 @@ matrice *feed_forward(NeuralNetwork *nn, matrice *inputs) {
 
     for (int i = 0; i < nn->nb_layers; i++) {
         output = matrice_add(
-            matrice_multiply(nn->layers[i]->weights, output),
+            matrice_dot(nn->layers[i]->weights, output),
             nn->layers[i]->biases);   // output = weights * output + biases
         matrice_map(output, sigmoid); // output = sigmoid(output)
     }
