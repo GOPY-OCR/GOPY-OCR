@@ -1,13 +1,15 @@
 #include "matrice.h"
 
-matrice* matrice_new(int rows, int columns) {
+matrice *matrice_new(int rows, int columns) {
     matrice *m = malloc(sizeof(matrice));
     m->rows = rows;
     m->columns = columns;
     m->data = malloc(sizeof(double) * rows * columns);
 
-    if (m->data == NULL) 
-        errx(EXIT_FAILURE, "Error allocating memory for matrice of size %d x %d\n", rows, columns);
+    if (m->data == NULL)
+        errx(EXIT_FAILURE,
+             "Error allocating memory for matrice of size %d x %d\n", rows,
+             columns);
 
     return m;
 }
@@ -26,26 +28,17 @@ void matrice_print(matrice *m) {
     }
 }
 
-
-double matrice_get(matrice *m, int row, int column){
-    return *(m->data + (row * (m->columns) + column));
-}
-void matrice_set(matrice *m, int row, int column, double value){
-    double* field = m->data + (row * (m->columns) + column);
-    *field = value;
-}
-
 int count_chars(char *str, char c) {
     int count = 0;
-    for (;*str != '\0'; str++)
+    for (; *str != '\0'; str++)
         if (*str == c)
             count++;
-    
+
     return count;
 }
 
 #define MAX_PARSING_COLUMNS 1000
-matrice* matrice_from_string(char *str) {
+matrice *matrice_from_string(char *str) {
     char *line, *strcopy;
     matrice *m;
 
@@ -58,7 +51,10 @@ matrice* matrice_from_string(char *str) {
 
         while ((number = strsep(&line, " "))) {
             if (columns >= MAX_PARSING_COLUMNS) {
-                errx(EXIT_FAILURE, "matrice_from_string: more than %i columns to parse, aborting", MAX_PARSING_COLUMNS);
+                errx(EXIT_FAILURE,
+                     "matrice_from_string: more than %i columns to parse, "
+                     "aborting",
+                     MAX_PARSING_COLUMNS);
             }
             first_line[columns] = atof(number);
             columns++;
@@ -71,7 +67,7 @@ matrice* matrice_from_string(char *str) {
             matrice_set(m, 0, i, first_line[i]);
         }
 
-        //free(first_line);
+        // free(first_line);
 
         int row = 1;
         int column;
@@ -79,31 +75,86 @@ matrice* matrice_from_string(char *str) {
             column = 0;
             while ((number = strsep(&line, " "))) {
                 if (column >= columns) {
-                    errx(EXIT_FAILURE, "matrice_from_string: row %i has more columns than row 0, aborting", row);
+                    errx(EXIT_FAILURE,
+                         "matrice_from_string: row %i has more columns than "
+                         "row 0, "
+                         "aborting",
+                         row);
                 }
                 matrice_set(m, row, column, atof(number));
                 column++;
             }
             if (column != columns) {
-                errx(EXIT_FAILURE, "matrice_from_string: row %i has less columns than row 0, aborting", row);
+                errx(EXIT_FAILURE,
+                     "matrice_from_string: row %i has less columns than row 0, "
+                     "aborting",
+                     row);
             }
             row++;
         }
         if (row != rows) {
-            errx(EXIT_FAILURE, "matrice_from_string: matrice has leading commas, aborting");
+            errx(EXIT_FAILURE,
+                 "matrice_from_string: matrice has leading commas, aborting");
         }
 
         free(strcopy);
-        
+
         return m;
-    }
-    else {
+    } else {
         return matrice_new(0, 0);
     }
 }
 
+double matrice_get(matrice *m, int row, int column) {
+    return *(m->data + (row * (m->columns) + column));
+}
 
-matrice* matrice_dot(matrice *m1, matrice *m2) {
+void matrice_set(matrice *m, int row, int column, double value) {
+    double *field = m->data + (row * (m->columns) + column);
+    *field = value;
+}
+
+double random_double(double min, double max) {
+    double range = (max - min);
+    double div = RAND_MAX / range;
+    return min + (rand() / div);
+}
+
+matrice *matrice_random(int rows, int columns, double min, double max) {
+    matrice *m = matrice_new(rows, columns);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            matrice_set(m, i, j, random_double(min, max));
+        }
+    }
+    return m;
+}
+
+matrice *matrice_zeros(int rows, int columns) {
+    matrice *m = matrice_new(rows, columns);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            matrice_set(m, i, j, 0);
+        }
+    }
+    return m;
+}
+
+int matrice_equals(matrice *m1, matrice *m2) {
+    if (m1->rows != m2->rows || m1->columns != m2->columns)
+        return 0;
+
+    for (int i = 0; i < m1->rows; i++) {
+        for (int j = 0; j < m1->columns; j++) {
+            if (matrice_get(m1, i, j) != matrice_get(m2, i, j))
+                return 0;
+        }
+    }
+
+    return 1;
+}
+
+matrice *matrice_dot(matrice *m1, matrice *m2) {
     matrice *m = matrice_new(m1->rows, m2->columns);
     for (int i = 0; i < m1->rows; i++) {
         for (int j = 0; j < m2->columns; j++) {
@@ -117,9 +168,13 @@ matrice* matrice_dot(matrice *m1, matrice *m2) {
     return m;
 }
 
-matrice* matrice_add(matrice *m1, matrice *m2) {
+matrice *matrice_add(matrice *m1, matrice *m2) {
     if (m1->rows != m2->rows || m1->columns != m2->columns) {
-        errx(EXIT_FAILURE, "matrice_add: matrice dimensions do not match, m1 is %d x %d, m2 is %d x %d", m1->rows, m1->columns, m2->rows, m2->columns);
+        errx(EXIT_FAILURE,
+             "matrice_add: matrice dimensions do not match, m1 is %d x %d, m2 "
+             "is "
+             "%d x %d",
+             m1->rows, m1->columns, m2->rows, m2->columns);
     }
     matrice *m = matrice_new(m1->rows, m1->columns);
     for (int i = 0; i < m1->rows; i++) {
@@ -130,7 +185,7 @@ matrice* matrice_add(matrice *m1, matrice *m2) {
     return m;
 }
 
-matrice* matrice_transpose(matrice *m) {
+matrice *matrice_transpose(matrice *m) {
     matrice *m_t = matrice_new(m->columns, m->rows);
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
@@ -140,42 +195,4 @@ matrice* matrice_transpose(matrice *m) {
     return m_t;
 }
 
-double random_double(double min, double max) {
-    double range = (max - min); 
-    double div = RAND_MAX / range;
-    return min + (rand() / div);
-}
-
-matrice* matrice_random(int rows, int columns, double min, double max) {
-    matrice *m = matrice_new(rows, columns);
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            matrice_set(m, i, j, random_double(min, max));
-        }
-    }
-    return m;
-}
-
- matrice* matrice_zeros(int rows, int columns) {
-   matrice *m = matrice_new(rows, columns);
-   for (int i = 0; i < rows; i++) {
-       for (int j = 0; j < columns; j++) {
-           matrice_set(m, i, j, 0);
-       }
-   }
-   return m;
- }
-
-int matrice_equals(matrice *m1, matrice *m2){
-    if(m1->rows != m2->rows || m1->columns != m2->columns)
-        return 0;
-
-    for(int i = 0; i < m1->rows; i++){
-        for(int j = 0; j < m1->columns; j++){
-            if(matrice_get(m1, i, j) != matrice_get(m2, i, j))
-                return 0;
-        }
-    }
-
-    return 1;
-}
+void matrice_map(matrice *m, double (*f)(double));

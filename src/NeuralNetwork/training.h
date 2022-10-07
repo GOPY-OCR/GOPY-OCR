@@ -4,8 +4,8 @@
 #include <utils.h>
 
 typedef struct dataset {
-  matrice inputs;
-  matrice targets;
+    matrice inputs;
+    matrice targets;
 } dataset;
 
 void train(NeuralNetwork nn, int epochs, float learning_rate,
