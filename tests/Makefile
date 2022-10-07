@@ -1,16 +1,28 @@
+TARGET_EXEC := ./test
+
 BUILD_DIR := ./build
 SRC_DIR := ./
 
-SRCS := $(shell find $(SRC_DIR) -name '*.c')
+SRCS := ../src/NeuralNetwork/matrice.c
 
-CFLAGS = -lcriterion
+OBJS := $(notdir $(SRCS))
+OBJS := $(OBJS:%=$(BUILD_DIR)/%.o)
 
-$(BUILD_DIR)/test: $(SRCS)
+CFLAGS = -lcriterion -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
+
+$(TARGET_EXEC): $(OBJS)
 	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(SRC_DIR)/test.c -o $(BUILD_DIR)/test
+	$(CC) $(CFLAGS) $(OBJS) $(SRC_DIR)/test.c -o $(TARGET_EXEC)
 
-check: $(BUILD_DIR)/test
-	$(BUILD_DIR)/test
+$(BUILD_DIR)/%.c.o: $(SRCS) $(SRC_DIR)/*.c
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+.PHONY: check
+check: $(TARGET_EXEC)
+	$(TARGET_EXEC)
 	@echo "Ok"
+
+.PHONY: clean
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) $(TARGET_EXEC)
