@@ -20,4 +20,13 @@ SDL_Surface* crop_surface(SDL_Surface* grid, int x, int y,
     return dest_surface;
 }
 
+void split_sudoku(SDL_Surface* grid, SDL_Surface *splitted[81])
+{
+    int h_step = grid->h / 9;
+    int v_step = grid->w / 9;
 
+    for (int i = 0; i < 9; i++)
+        for (int j = 0; j < 9;j++)
+            splitted[i * 9 + j] = crop_surface(
+                    grid, i * v_step, j * h_step, v_step, h_step);
+}
