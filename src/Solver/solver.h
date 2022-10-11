@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void generate_grid_file(char **grid);
+void generate_grid_file(int **grid);
 
 #endif
 
