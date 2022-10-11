@@ -202,3 +202,21 @@ void matrice_map(matrice *m, double (*f)(double)){
         }
     }
 }
+
+void matrice_multiply(matrice *m, double scalar){
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->columns; j++) {
+            matrice_set(m, i, j, matrice_get(m, i, j) * scalar);
+        }
+    }
+}
+
+matrice* matrice_clone(matrice *m){
+    matrice *m_clone = matrice_new(m->rows, m->columns);
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->columns; j++) {
+            matrice_set(m_clone, i, j, matrice_get(m, i, j));
+        }
+    }
+    return m_clone;
+}

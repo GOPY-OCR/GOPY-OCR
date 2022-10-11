@@ -44,8 +44,6 @@ Test(matrices, test_add) {
     matrice *m = matrice_add(m1, m2);
 
     cr_assert(matrice_equals(m, expected), "Matrices are not equal");
-
-    matrice_free(m);
 }
 
 Test(matrices, test_dot) {
@@ -56,8 +54,6 @@ Test(matrices, test_dot) {
     matrice *m = matrice_dot(m1, m2);
 
     cr_assert(matrice_equals(m, expected), "Matrices are not equal");
-
-    matrice_free(m);
 }
 
 Test(matrices, test_transpose) {
@@ -68,8 +64,6 @@ Test(matrices, test_transpose) {
     matrice *m = matrice_transpose(m1);
 
     cr_assert(matrice_equals(m, expected), "Matrices are not equal");
-
-    matrice_free(m);
 }
 
 Test(matrices, test_random_generate) {
@@ -88,4 +82,28 @@ Test(matrices, test_random_generate) {
                       "Random matrix is not in range");
         }
     }
+}
+
+Test(matrices, test_scalar_multiply){
+    setup();
+
+    matrice *expected = matrice_from_string("2 4,"
+                                            "6 8");
+    matrice_multiply(m1, 2);
+
+    cr_assert(matrice_equals(m1, expected), "Matrices are not equal");
+}
+
+double multiply_by_two(double x) {
+    return x * 2;
+}
+
+Test(matrices, test_map) {
+    setup();
+
+    matrice *expected = matrice_from_string("2 4,"
+                                            "6 8");
+    matrice_map(m1, multiply_by_two);
+
+    cr_assert(matrice_equals(m1, expected), "Matrices are not equal");
 }

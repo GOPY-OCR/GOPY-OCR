@@ -1,22 +1,27 @@
 TARGET_EXEC := ./test
 
 BUILD_DIR := ./build
-SRC_DIR := ./
+SRC_DIR := ../src
 
-SRCS := ../src/NeuralNetwork/matrice.c
+SRCS := $(shell find $(SRC_DIR) ! -name "main.c" -name "*.c")
+#SRCS := ../src/NeuralNetwork/matrice.c ../src/NeuralNetwork/training.c ../src/utils/utils.c 
 
-OBJS := $(notdir $(SRCS))
-OBJS := $(OBJS:%=$(BUILD_DIR)/%.o)
 
+OBJS := $(SRCS:$(SRC_DIR)/%=$(BUILD_DIR)/%.o)
+
+CPPFLAGS = -I$(SRC_DIR)/utils
 CFLAGS = -lcriterion -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
+LDLIBS = `pkg-config --libs sdl2 SDL2_image`
+LDFLAGS = -lm
 
-$(TARGET_EXEC): $(OBJS)
+$(TARGET_EXEC): $(OBJS) ./*.c
 	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(OBJS) $(SRC_DIR)/test.c -o $(TARGET_EXEC)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(OBJS) ./test.c -o $(TARGET_EXEC) $(LDFLAGS)
 
-$(BUILD_DIR)/%.c.o: $(SRCS) $(SRC_DIR)/*.c
-	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
+	mkdir -p $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
 
 .PHONY: check
 check: $(TARGET_EXEC)

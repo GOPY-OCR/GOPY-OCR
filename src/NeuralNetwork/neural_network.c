@@ -52,7 +52,6 @@ NeuralNetwork *load_neural_network(char *filename) {
     return NULL;
 }
 
-double sigmoid(double x) { return 1 / (1 + exp(-x)); }
 
 /*
  * Computes the output of a neural network

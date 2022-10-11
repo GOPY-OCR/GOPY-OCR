@@ -7,3 +7,11 @@ NeuralNetwork* create_xor_network() {
     return network;
 }
 
+void train_xor_network(NeuralNetwork *network){
+    //TODO
+}
+int test_xor_network(NeuralNetwork *network){
+    //TODO
+
+    return -1;
+}

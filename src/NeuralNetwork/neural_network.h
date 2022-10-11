@@ -1,8 +1,8 @@
 #pragma once
 #include "matrice.h"
+#include "maths.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 typedef struct Layer {
     matrice *weights;

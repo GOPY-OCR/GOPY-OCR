@@ -1,19 +1,99 @@
 #include "training.h"
 
+
+// trains the neural network with the given training data
+// 
+// neural_network: the neural network to train
+// epochs: the number of epochs to train the neural network
+// training_data: the training dataset to train the neural network with
+// testing_data: (optional) used to evaluate the neural network after each epoch
 void train(NeuralNetwork nn, int epochs, float learning_rate,
            dataset training_data, dataset testing_data) {
     //! TODO
-    dataset data = load_dataset("data/training/");
+
 }
 
+
+#define INPUT_SIZE 784
 // loads a dataset from a given path
 // dataset is a folder containing 10 folders, one for each digit
 //
-dataset load_dataset(const char *path) { dataset data; }
+// path: path to the dataset, e.g. "data/training/"
+// size: number of images per class
+// returns: a dataset
+dataset* load_dataset(const char *path, int size) {
+    dataset *data = malloc(sizeof(dataset));
+    data->inputs = matrice_new(size * 10, INPUT_SIZE);
+    data->targets = matrice_new(size * 10, 10);
 
-// list files in a directory
+    int pathle = strlen(path);
+    for (int i = 0; i < 10; i++) {
+        char *folder = malloc(pathle + 2);
+        strcpy(folder, path);
+        // last folder character is the digit e.g. "data/training/0"
+        folder[pathle] = i + '0';         
+        folder[pathle + 1] = '\0';
+        
+        char **images_paths = list_files(folder, size);
+
+        for (int j = 0; j < size; j++) {
+            SDL_Surface *image = load_image(images_paths[j]);
+
+            // !TODO: convert image to input vector
+            // !TODO: set target vector
+        }
+    }
+
+
+    return data;
+}
+
+
+// converts a list of images to a list of inputs
+// images: list of images
+// size: number of images
+
+
+// list files and sub-directories in a directory
 //
 // path: path to directory
 // n: maximum number of files to list
 // returns: list of files in directory
-char **list_files(const char *path, int n) {}
+char **list_files(const char *path, int n) {
+    DIR *dir;
+    struct dirent *ent;
+    char **files = malloc(n * sizeof(char*));
+    int i = 0;
+
+    if ((dir = opendir(path)) != NULL) {
+        while ((ent = readdir(dir)) != NULL && i < n) {
+            if (ent->d_type == DT_REG) {
+                files[i] = malloc(strlen(ent->d_name) + 1);
+                strcpy(files[i], ent->d_name);
+                i++;
+            }
+        }
+        closedir(dir);
+    } else {
+        perror("Could not open directory");
+    }
+
+    return files;
+}
+
+void backprop(NeuralNetwork *nn, matrice *input, matrice *target) {
+
+    // feedforward
+    matrice *output = input;
+    matrice **activations = malloc((nn->nb_layers + 1) * sizeof(matrice*));
+    activations[0] = input;
+    matrice **zs = malloc(nn->nb_layers * sizeof(matrice*));
+    for (int i = 0; i < nn->nb_layers; i++) {
+        output = matrice_add(matrice_dot(nn->layers[i]->weights, output), nn->layers[i]->biases);
+        zs[i] = matrice_clone(output);
+        matrice_map(output, sigmoid);
+        activations[i + 1] = matrice_clone(output);
+    }
+
+    // TODO: backpropagate http://neuralnetworksanddeeplearning.com/chap2.html
+}
