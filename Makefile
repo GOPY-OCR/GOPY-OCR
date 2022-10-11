@@ -51,6 +51,9 @@ Preprocess:
 Solver:
 	$(MAKE) -C src/Solver
 
-
 check: $(BUILD_DIR)/$(TARGET_EXEC)
 	$(MAKE) -C tests check 
+  
+Postprocess:
+	$(MAKE) -C src/Postprocess
+
