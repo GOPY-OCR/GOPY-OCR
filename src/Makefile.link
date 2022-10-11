@@ -25,8 +25,8 @@ ifneq ($(DEBUG), 0)
 	CPPFLAGS += -DDEBUG # define DEBUG like `#define DEBUG` in all C files
 endif
 
-# Build step for utils C source
-$(BUILD_DIR)/utils/%.c.o: ../utils/%.c
+# Build step for Utils C source
+$(BUILD_DIR)/Utils/%.c.o: ../Utils/%.c
 	mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
