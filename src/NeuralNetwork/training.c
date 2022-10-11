@@ -1,8 +1,7 @@
 #include "training.h"
 
-
 // trains the neural network with the given training data
-// 
+//
 // neural_network: the neural network to train
 // epochs: the number of epochs to train the neural network
 // training_data: the training dataset to train the neural network with
@@ -10,9 +9,7 @@
 void train(NeuralNetwork nn, int epochs, float learning_rate,
            dataset training_data, dataset testing_data) {
     //! TODO
-
 }
-
 
 #define INPUT_SIZE 784
 // loads a dataset from a given path
@@ -21,7 +18,7 @@ void train(NeuralNetwork nn, int epochs, float learning_rate,
 // path: path to the dataset, e.g. "data/training/"
 // size: number of images per class
 // returns: a dataset
-dataset* load_dataset(const char *path, int size) {
+dataset *load_dataset(const char *path, int size) {
     dataset *data = malloc(sizeof(dataset));
     data->inputs = matrice_new(size * 10, INPUT_SIZE);
     data->targets = matrice_new(size * 10, 10);
@@ -31,9 +28,9 @@ dataset* load_dataset(const char *path, int size) {
         char *folder = malloc(pathle + 2);
         strcpy(folder, path);
         // last folder character is the digit e.g. "data/training/0"
-        folder[pathle] = i + '0';         
+        folder[pathle] = i + '0';
         folder[pathle + 1] = '\0';
-        
+
         char **images_paths = list_files(folder, size);
 
         for (int j = 0; j < size; j++) {
@@ -44,15 +41,12 @@ dataset* load_dataset(const char *path, int size) {
         }
     }
 
-
     return data;
 }
-
 
 // converts a list of images to a list of inputs
 // images: list of images
 // size: number of images
-
 
 // list files and sub-directories in a directory
 //
@@ -62,7 +56,7 @@ dataset* load_dataset(const char *path, int size) {
 char **list_files(const char *path, int n) {
     DIR *dir;
     struct dirent *ent;
-    char **files = malloc(n * sizeof(char*));
+    char **files = malloc(n * sizeof(char *));
     int i = 0;
 
     if ((dir = opendir(path)) != NULL) {
@@ -85,11 +79,12 @@ void backprop(NeuralNetwork *nn, matrice *input, matrice *target) {
 
     // feedforward
     matrice *output = input;
-    matrice **activations = malloc((nn->nb_layers + 1) * sizeof(matrice*));
+    matrice **activations = malloc((nn->nb_layers + 1) * sizeof(matrice *));
     activations[0] = input;
-    matrice **zs = malloc(nn->nb_layers * sizeof(matrice*));
+    matrice **zs = malloc(nn->nb_layers * sizeof(matrice *));
     for (int i = 0; i < nn->nb_layers; i++) {
-        output = matrice_add(matrice_dot(nn->layers[i]->weights, output), nn->layers[i]->biases);
+        output = matrice_add(matrice_dot(nn->layers[i]->weights, output),
+                             nn->layers[i]->biases);
         zs[i] = matrice_clone(output);
         matrice_map(output, sigmoid);
         activations[i + 1] = matrice_clone(output);

@@ -52,7 +52,6 @@ NeuralNetwork *load_neural_network(char *filename) {
     return NULL;
 }
 
-
 /*
  * Computes the output of a neural network
  * nn: neural network

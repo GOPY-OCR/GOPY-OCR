@@ -84,7 +84,7 @@ Test(matrices, test_random_generate) {
     }
 }
 
-Test(matrices, test_scalar_multiply){
+Test(matrices, test_scalar_multiply) {
     setup();
 
     matrice *expected = matrice_from_string("2 4,"
@@ -94,9 +94,7 @@ Test(matrices, test_scalar_multiply){
     cr_assert(matrice_equals(m1, expected), "Matrices are not equal");
 }
 
-double multiply_by_two(double x) {
-    return x * 2;
-}
+double multiply_by_two(double x) { return x * 2; }
 
 Test(matrices, test_map) {
     setup();
