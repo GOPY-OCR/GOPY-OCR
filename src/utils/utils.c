@@ -11,3 +11,7 @@ SDL_Surface* load_image(const char* path)
 
     return res;
 }
+
+void save_image(SDL_Surface *surface, const char *path) {
+    IMG_SavePNG(surface, path);
+}
