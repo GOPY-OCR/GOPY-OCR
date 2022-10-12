@@ -31,8 +31,14 @@ matrice *matrice_zeros(int rows, int columns);
 int matrice_equals(matrice *m1, matrice *m2);
 
 matrice *matrice_dot(matrice *m1, matrice *m2);
-matrice *matrice_add(matrice *m1, matrice *m2);
 matrice *matrice_transpose(matrice *m);
+
+// element wise operations
+matrice *matrice_elementwise(matrice *m1, matrice *m2,
+                             double (*f)(double, double));
+matrice *matrice_add(matrice *m1, matrice *m2);
+matrice *matrice_sub(matrice *m1, matrice *m2);
+matrice *matrice_mul(matrice *m1, matrice *m2);
 
 // inplace operations
 void matrice_map(matrice *m, double (*f)(double));

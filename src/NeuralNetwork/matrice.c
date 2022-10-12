@@ -168,21 +168,44 @@ matrice *matrice_dot(matrice *m1, matrice *m2) {
     return m;
 }
 
-matrice *matrice_add(matrice *m1, matrice *m2) {
+matrice *matrice_elementwise_inner(matrice *m1, matrice *m2,
+                                   double (*f)(double, double),
+                                   const char *function_name) {
     if (m1->rows != m2->rows || m1->columns != m2->columns) {
         errx(EXIT_FAILURE,
-             "matrice_add: matrice dimensions do not match, m1 is %d x %d, m2 "
-             "is "
-             "%d x %d",
-             m1->rows, m1->columns, m2->rows, m2->columns);
+             "%s: matrice dimensions do not match, "
+             "m1 is %d x %d, m2 is %d x %d",
+             function_name, m1->rows, m1->columns, m2->rows, m2->columns);
     }
+
     matrice *m = matrice_new(m1->rows, m1->columns);
     for (int i = 0; i < m1->rows; i++) {
         for (int j = 0; j < m1->columns; j++) {
-            matrice_set(m, i, j, matrice_get(m1, i, j) + matrice_get(m2, i, j));
+            matrice_set(m, i, j,
+                        f(matrice_get(m1, i, j), matrice_get(m2, i, j)));
         }
     }
     return m;
+}
+
+matrice *matrice_elementwise(matrice *m1, matrice *m2,
+                             double (*f)(double, double)) {
+    return matrice_elementwise_inner(m1, m2, f, "matrice_elementwise");
+}
+
+double add(double a, double b) { return a + b; }
+matrice *matrice_add(matrice *m1, matrice *m2) {
+    return matrice_elementwise_inner(m1, m2, &add, "matrice_add");
+}
+
+double sub(double a, double b) { return a - b; }
+matrice *matrice_sub(matrice *m1, matrice *m2) {
+    return matrice_elementwise_inner(m1, m2, &sub, "matrice_sub");
+}
+
+double mul(double a, double b) { return a * b; }
+matrice *matrice_mul(matrice *m1, matrice *m2) {
+    return matrice_elementwise_inner(m1, m2, &mul, "matrice_mul");
 }
 
 matrice *matrice_transpose(matrice *m) {

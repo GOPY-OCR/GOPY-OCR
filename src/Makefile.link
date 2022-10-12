@@ -30,7 +30,7 @@ DEPS += $(utils_dep)
 
 # The final build step.
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LDLIBS)
 
 # Build step for C source
 $(BUILD_DIR)/%.c.o: %.c

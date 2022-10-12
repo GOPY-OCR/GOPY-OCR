@@ -4,8 +4,6 @@ BUILD_DIR := ./build
 SRC_DIR := ../src
 
 SRCS := $(shell find $(SRC_DIR) ! -name "main.c" -name "*.c")
-#SRCS := ../src/NeuralNetwork/matrice.c ../src/NeuralNetwork/training.c ../src/utils/utils.c 
-
 
 OBJS := $(SRCS:$(SRC_DIR)/%=$(BUILD_DIR)/%.o)
 
@@ -16,7 +14,7 @@ LDFLAGS = -lm
 
 $(TARGET_EXEC): $(OBJS) ./*.c
 	mkdir -p $(BUILD_DIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(OBJS) ./test.c -o $(TARGET_EXEC) $(LDFLAGS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(OBJS) ./test.c -o $(TARGET_EXEC) $(LDFLAGS) $(LDLIBS)
 
 $(BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
 	mkdir -p $(dir $@)
