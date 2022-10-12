@@ -75,7 +75,8 @@ char **list_files(const char *path, int n) {
     return files;
 }
 
-void update_mini_batch(NeuralNetwork nn, dataset mini_batch, float learning_rate) {
+void update_mini_batch(NeuralNetwork nn, dataset mini_batch,
+                       float learning_rate) {
     //! TODO
 }
 
@@ -83,15 +84,18 @@ void update_mini_batch(NeuralNetwork nn, dataset mini_batch, float learning_rate
 // gradient for the cost function.  nabla_b and
 // nabla_w are arrays of matrices, similar
 // to NeuralNetwork->biases and NeuralNetwork->weights.
-void backprop(NeuralNetwork *nn, matrice *input, matrice *target, matrice **nabla_b, matrice **nabla_w) {
-    **nabla_b = malloc(nn->nb_layers * sizeof(matrice *));
-    **nabla_w = malloc(nn->nb_layers * sizeof(matrice *));
+void backprop(NeuralNetwork *nn, matrice *input, matrice *target,
+              matrice **nabla_b, matrice **nabla_w) {
+    nabla_b = malloc(nn->nb_layers * sizeof(matrice *));
+    nabla_w = malloc(nn->nb_layers * sizeof(matrice *));
 
     // feedforward
     matrice *output = input;
     matrice **activations = malloc((nn->nb_layers + 1) * sizeof(matrice *));
     activations[0] = input; // list to store all the activations, layer by layer
-    matrice **zs = malloc(nn->nb_layers * sizeof(matrice *)); // list to store all the z vectors, layer by layer
+    matrice **zs = malloc(
+        nn->nb_layers *
+        sizeof(matrice *)); // list to store all the z vectors, layer by layer
     for (int i = 0; i < nn->nb_layers; i++) {
         output = matrice_add(matrice_dot(nn->layers[i]->weights, output),
                              nn->layers[i]->biases);
@@ -101,19 +105,22 @@ void backprop(NeuralNetwork *nn, matrice *input, matrice *target, matrice **nabl
     }
 
     // backpropagation
-    //delta = cost_derivative(activations, target) * sigmoid_prime(zs[-1])
-    //delta = (ouput - target) * map(zs[nn->nb_layers - 1], sigmoid_prime);
+    // delta = cost_derivative(activations, target) * sigmoid_prime(zs[-1])
+    // delta = (ouput - target) * map(zs[nn->nb_layers - 1], sigmoid_prime);
     matrice *sig = matrice_clone(zs[nn->nb_layers - 1]);
     matrice_map(sig, sigmoid_prime);
     matrice *delta = matrice_mul(matrice_sub(output, target), sig);
 
     nabla_b[nn->nb_layers - 1] = matrice_clone(delta);
-    nabla_w[nn->nb_layers - 1] = matrice_dot(delta, matrice_transpose(activations[nn->nb_layers - 1]));
+    nabla_w[nn->nb_layers - 1] =
+        matrice_dot(delta, matrice_transpose(activations[nn->nb_layers - 1]));
 
     for (int i = nn->nb_layers - 2; i >= 0; i--) {
         sig = matrice_clone(zs[i]);
         matrice_map(sig, sigmoid_prime);
-        delta = matrice_mul(matrice_dot(matrice_transpose(nn->layers[i + 1]->weights), delta), sig);
+        delta = matrice_mul(
+            matrice_dot(matrice_transpose(nn->layers[i + 1]->weights), delta),
+            sig);
         nabla_b[i] = matrice_clone(delta);
         nabla_w[i] = matrice_dot(delta, matrice_transpose(activations[i]));
     }
