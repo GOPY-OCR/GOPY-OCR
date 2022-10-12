@@ -9,5 +9,6 @@
 
 int find_grid_number();
 void save_grid_file(const int grid[81], const char *filename);
+void load_grid_file(const char *filename, int grid[81]);
 
 #endif

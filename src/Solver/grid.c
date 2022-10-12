@@ -24,6 +24,8 @@ int find_grid_number() {
     return count;
 }
 
+
+
 void save_grid_file(const int grid[81], const char *filename) {
     FILE *file;
     if ((file = fopen(filename, 'w')) == NULL)
@@ -47,4 +49,25 @@ void save_grid_file(const int grid[81], const char *filename) {
     }
 
     fclose(file);
+}
+
+
+
+void load_grid_file(const char *filename, int grid[81]) {
+    FILE *file;
+    if ((file = fopen(filename, 'r')) == NULL)
+        errx(EXIT_FAILURE, "Can't open file %s", filename);
+
+    size_t i = 0;
+    while (!feof(file) && i < 81) {
+        char c = fgetc(file);
+        if (c == ' ' || c == '\n')
+            continue;
+
+        if (c == '.')
+            grid[i++] = 0;
+
+        else
+            grid[i++] = c - '0';
+    }
 }
