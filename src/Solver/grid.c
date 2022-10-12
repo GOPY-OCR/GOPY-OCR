@@ -28,7 +28,7 @@ int find_grid_number() {
 
 void save_grid_file(const int grid[81], const char *filename) {
     FILE *file;
-    if ((file = fopen(filename, 'w')) == NULL)
+    if ((file = fopen(filename, "w")) == NULL)
         errx(EXIT_FAILURE, "Can't create and open file %s", filename);
     
     for (size_t i = 0; i < 9; i++) {
@@ -42,7 +42,7 @@ void save_grid_file(const int grid[81], const char *filename) {
             else
                 fprintf(file, "%i", grid[i * 9 + j]);
         }
-        if (i == 3 || i == 6)
+        if (i == 2 || i == 5)
             fprintf(file, "\n");
         
         fprintf(file, "\n");
@@ -55,7 +55,7 @@ void save_grid_file(const int grid[81], const char *filename) {
 
 void load_grid_file(const char *filename, int grid[81]) {
     FILE *file;
-    if ((file = fopen(filename, 'r')) == NULL)
+    if ((file = fopen(filename, "r")) == NULL)
         errx(EXIT_FAILURE, "Can't open file %s", filename);
 
     size_t i = 0;
