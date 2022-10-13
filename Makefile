@@ -50,14 +50,20 @@ all: $(TARGET)
 # Take a look to `prettyprint.mk` to understand $(V) and printtask calls
 $(TARGET): $(OFILES)
 	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-	@if [[ $$? == 0 ]]; then $(call printtask,$(GREEN),Linked successfuly:,$@); \
-		else $(call printtask,$(RED),Linking failed:,$@); fi;
+	@if [[ $$? == 0 ]]; then \
+		$(call printtask,$(GREEN),Linked successfuly:,$@); \
+	else \
+		$(call printtask,$(RED),Linking failed:,$@); \
+	fi;
 
 # Same rule for all .o files
 $(BUILD_DIR)/%.o: %.c
 	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
-	@if [[ $$? == 0 ]]; then $(call printtask,$(GREEN),Compiled successfuly:,$<); \
-		else $(call printtask,$(RED),Compilation failed:,$<); fi;
+	@if [[ $$? == 0 ]]; then \
+		$(call printtask,$(GREEN),Compiled successfuly:,$<); \
+	else \
+		$(call printtask,$(RED),Compilation failed:,$<); \
+	fi;
 
 test: $(TARGET)
 	$(MAKE) -C tests

@@ -11,6 +11,10 @@ BLUE    := \033[0;34m
 YELLOW  := \033[0;33m
 BLINK   := \033[33;5m
 
+define printtask
+	:
+endef
+
 ifeq ($(VERBOSE), 0)
 define printtask
 	printf "$(1)$(2) $(NO_COL) $(3)$(NO_COL)\n"
