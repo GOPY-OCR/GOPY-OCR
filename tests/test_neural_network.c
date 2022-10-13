@@ -1,5 +1,5 @@
-#include "../src/NeuralNetwork/training.h"
-#include "../src/NeuralNetwork/xor.h"
+#include "training.h"
+#include "xor.h"
 
 // Test(training, test_load_dataset){
 //     int nb_data = 15;

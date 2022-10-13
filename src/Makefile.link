@@ -3,7 +3,7 @@ TARGET_EXEC := main
 BUILD_DIR := ./build
 SRC_DIRS := ./
 
-CPPFLAGS := -MMD -MP -I../utils # cpp flags stands for C preprocessor flags not C++ flags
+CPPFLAGS := -MMD -MP -I../utils -Iinclude # cpp flags stands for C preprocessor flags not C++ flags
 CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 LDLIBS = `pkg-config --libs sdl2 SDL2_image`
 LDFLAGS = -lm

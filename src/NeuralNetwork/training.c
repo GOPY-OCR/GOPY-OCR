@@ -112,6 +112,13 @@ void backprop(NeuralNetwork *nn, matrice *input, matrice *target,
     }
 }
 
+// Returns the number of test inputs for which the neural
+// network outputs the correct result.
+int evaluate(NeuralNetwork *nn, dataset *data) {
+    // TODO
+    return 0;
+}
+
 #define INPUT_SIZE 784
 // loads a dataset from a given path
 // dataset is a folder containing 10 folders, one for each digit

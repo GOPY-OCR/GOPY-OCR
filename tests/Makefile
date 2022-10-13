@@ -7,7 +7,9 @@ SRCS := $(shell find $(SRC_DIR) ! -name "main.c" -name "*.c")
 
 OBJS := $(SRCS:$(SRC_DIR)/%=$(BUILD_DIR)/%.o)
 
-CPPFLAGS = -I$(SRC_DIR)/utils
+INCLUDES := $(shell find $(SRC_DIR) -name "include")
+
+CPPFLAGS = -I$(SRC_DIR)/utils $(addprefix -I,$(INCLUDES))
 CFLAGS = -lcriterion -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 LDLIBS = `pkg-config --libs sdl2 SDL2_image`
 LDFLAGS = -lm
