@@ -81,27 +81,27 @@ void update_mini_batch(NeuralNetwork nn, dataset mini_batch,
     matrice **nabla_w = malloc(nn->nb_layers * sizeof(matrice *));
     matrice **delta_nabla_b;
     matrice **delta_nabla_w;
-    for (int i = 0; i < nn->nb_layers; i++){
+    for (int i = 0; i < nn->nb_layers; i++) {
         Layer *layer = nn->layers[i];
         nabla_b[i] = matrice_zeros(layer->biases->rows, layer->biases->columns);
-        nabla_w[i] = matrice_zeros(layer->weights->rows, layer->weights->columns);
+        nabla_w[i] =
+            matrice_zeros(layer->weights->rows, layer->weights->columns);
     }
 
     int mini_batch_len = mini_batch->inputs->columns;
-    for (int i = 0; i < mini_batch_len; i++){
+    for (int i = 0; i < mini_batch_len; i++) {
         matrice *input = mini_batch->inputs[i];
         matrice *target = mini_batch->targets[i];
         backprop(nn, input, target, delta_nabla_b, delta_nabla_w);
-        
-        for (int j = 0; j < nn->nb_layers; j++){
+
+        for (int j = 0; j < nn->nb_layers; j++) {
             nabla_b[i] = matrice_add(nabla_b[i], delta_nabla_b[i]);
             nabla_w[i] = matrice_add(nabla_w[i], delta_nabla_w[i]);
         }
     }
 
-
     // update NeuralNetwork weights
-    for (int i = 0; i < nn->nb_layers; i++){
+    for (int i = 0; i < nn->nb_layers; i++) {
         nn->layers
     }
 }
