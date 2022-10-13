@@ -218,20 +218,23 @@ matrice *matrice_transpose(matrice *m) {
     return m_t;
 }
 
-void matrice_map(matrice *m, double (*f)(double)) {
+matrice *matrice_map(matrice *m, double (*f)(double)) {
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
             matrice_set(m, i, j, f(matrice_get(m, i, j)));
         }
     }
+	return m;
 }
 
-void matrice_multiply(matrice *m, double scalar) {
+matrice *matrice_multiply(matrice *m, double scalar) {
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
             matrice_set(m, i, j, matrice_get(m, i, j) * scalar);
         }
     }
+
+	return m;
 }
 
 matrice *matrice_clone(matrice *m) {

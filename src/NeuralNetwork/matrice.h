@@ -41,5 +41,5 @@ matrice *matrice_sub(matrice *m1, matrice *m2);
 matrice *matrice_mul(matrice *m1, matrice *m2);
 
 // inplace operations
-void matrice_map(matrice *m, double (*f)(double));
-void matrice_multiply(matrice *m, double scalar);
+matrice *matrice_map(matrice *m, double (*f)(double));
+matrice *matrice_multiply(matrice *m, double scalar);

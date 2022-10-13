@@ -102,7 +102,8 @@ void update_mini_batch(NeuralNetwork nn, dataset mini_batch,
 
     // update NeuralNetwork weights
     for (int i = 0; i < nn->nb_layers; i++) {
-        nn->layers
+        nn->layers[i].weights = matrice_sub(nn->layers[i].weights, 
+		matrice_multiply(nabla_w[i],learning_rate/mini_batch_len));
     }
 }
 
