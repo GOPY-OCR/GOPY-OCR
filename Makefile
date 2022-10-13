@@ -24,7 +24,7 @@ ifneq ($(DEBUG), 0)
 	OPTFLAGS = -O1
 	CFLAGS += -g -fsanitize=address,undefined
 	LDFLAGS += -fsanitize=address,undefined
-	CPPFLAGS += -DDEBUG # define DEBUG like `#define DEBUG`
+	CPPFLAGS += -DDEBUG # define DEBUG like `#define DEBUG` in all C files
 endif
 
 
@@ -47,18 +47,19 @@ DFILES := $(OFILES:%.o=%.d)
 
 all: $(TARGET)
 
-# Take a look to `prettyprint.mk` to understand $(V) and other things
+# Take a look to `prettyprint.mk` to understand $(V) and printtask calls
 $(TARGET): $(OFILES)
 	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	@if [[ $$? == 0 ]]; then $(call printtask,$(GREEN),Linked successfuly:,$@); \
 		else $(call printtask,$(RED),Linking failed:,$@); fi;
 
+# Same rule for all .o files
 $(BUILD_DIR)/%.o: %.c
 	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
 	@if [[ $$? == 0 ]]; then $(call printtask,$(GREEN),Compiled successfuly:,$<); \
 		else $(call printtask,$(RED),Compilation failed:,$<); fi;
 
-test: $(BUILD_DIR)/$(TARGET_EXEC)
+test: $(TARGET)
 	$(MAKE) -C tests
 
 clean:
