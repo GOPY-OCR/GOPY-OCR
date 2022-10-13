@@ -1,6 +1,6 @@
-BUILD_DIR := ./build
+BUILD_DIR := ./_build
 
 check:
-	echo "Ok"
+	@echo "Ok"
 clean:
 	rm -rf $(BUILD_DIR)

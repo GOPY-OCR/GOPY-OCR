@@ -1,32 +1,63 @@
-TARGET_EXEC := main
+# Name of the final executable
+TARGET := main
 
-BUILD_DIR := ./build
-SRC_DIRS := ./
+### COMPILER PART ###
 
-CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
-LDLIBS = `pkg-config --libs sdl2 SDL2_image`
+# Which compiler use
+CC := gcc
 
-# Find all the C files we want to compile
-SRCS := $(shell find $(SRC_DIRS) -name '*.c')
+USED_LIBS = sdl2 SDL2_image
+# Flags (with = and not := so flags can be added after)
+CFLAGS = -Wall -Wextra `pkg-config --cflags $(USED_LIBS)` $(OPTFLAGS)
+OPTFLAGS := -O3
+CPPFLAGS := -MMD $(INCLUDE_DIRS)
+LDFLAGS :=
+LDLIBS := `pkg-config --libs $(USED_LIBS)`
+INCLUDE_DIRS =
 
-# String substitution for every C/C++ file.
-# As an example, hello.c turns into ./build/hello.c.o
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+# Debug mode can be enabled by executing `make DEBUG=1 rule_name`
+DEBUG := 0
 
-# String substitution (suffix version without %).
-# As an example, ./build/hello.c.o turns into ./build/hello.c.d
-DEPS := $(OBJS:.o=.d)
-
-# The final build step.
-$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
-	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
-
-# Build step for C source
-$(BUILD_DIR)/%.c.o: %.c
-	mkdir -p $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+ifneq ($(DEBUG), 0)
+	OPTFLAGS = -O1
+	CFLAGS += -g -fsanitize=address,undefined
+	LDFLAGS += -fsanitize=address,undefined
+	CPPFLAGS += -DDEBUG # define DEBUG like `#define DEBUG` in all C files
+endif
 
 
-.PHONY: clean
+### SOURCES PART ###
+
+# Dir where all build files will be stored
+BUILD_DIR := ./_build
+
+# Find all subdirectories
+SRC_DIRS := $(shell find ./ -type d -not -path "*_build*")
+
+# Create all needed dirs
+$(shell mkdir -p $(SRC_DIRS:%=$(BUILD_DIR)/%))
+
+CFILES := $(shell find ./ -type f -name "*.c")
+OFILES := $(CFILES:%.c=$(BUILD_DIR)/%.o)
+DFILES := $(OFILES:%.o=%.d)
+
+### RULES PART ###
+
+all: $(TARGET)
+
+# Take a look to `prettyprint.mk` to understand $(V) and printtask calls
+$(TARGET): $(OFILES)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+
+# Same rule for all .o files
+$(BUILD_DIR)/%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
+
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) $(TARGET)
+
+format:
+	find -name "*.[ch]" | xargs clang-format -i
+
+.PHONY: clean all format
+-include $(D_FILES)
