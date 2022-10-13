@@ -224,7 +224,7 @@ matrice *matrice_map(matrice *m, double (*f)(double)) {
             matrice_set(m, i, j, f(matrice_get(m, i, j)));
         }
     }
-	return m;
+    return m;
 }
 
 matrice *matrice_multiply(matrice *m, double scalar) {
@@ -234,7 +234,7 @@ matrice *matrice_multiply(matrice *m, double scalar) {
         }
     }
 
-	return m;
+    return m;
 }
 
 matrice *matrice_clone(matrice *m) {
