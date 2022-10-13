@@ -29,5 +29,6 @@ check: $(TARGET_EXEC)
 	@echo "Ok"
 
 .PHONY: clean
+
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET_EXEC)

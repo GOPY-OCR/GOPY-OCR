@@ -1,59 +1,81 @@
-TARGET_EXEC := main
+# Name of the final executable
+TARGET := gopy_ocr
 
-BUILD_DIR := ./build
-SRC_DIRS := ./src
+include prettyprint.mk
+
+### COMPILER PART ###
+
+# Which compiler use
+CC := gcc
+
+USED_LIBS = sdl2 SDL2_image
+# Flags (with = and not := so flags can be added after)
+CFLAGS = -Wall -Wextra `pkg-config --cflags $(USED_LIBS)` $(OPTFLAGS)
+OPTFLAGS := -O3
+CPPFLAGS := -MMD $(INCLUDE_DIRS)
+LDFLAGS :=
+LDLIBS := `pkg-config --libs $(USED_LIBS)`
+INCLUDE_DIRS =
+
+# Debug mode can be enabled by executing `make DEBUG=1 rule_name`
+DEBUG := 0
+
+ifneq ($(DEBUG), 0)
+	OPTFLAGS = -O1
+	CFLAGS += -g -fsanitize=address,undefined
+	LDFLAGS += -fsanitize=address,undefined
+	CPPFLAGS += -DDEBUG # define DEBUG like `#define DEBUG` in all C files
+endif
 
 
-SRCS := src/main.c
-# String substitution for every C/C++ file.
-# As an example, hello.cpp turns into ./build/hello.cpp.o
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
-
-# String substitution (suffix version without %).
-# As an example, ./build/hello.c.o turns into ./build/hello.c.d
-DEPS := $(OBJS:.o=.d)
-
-CFLAGS := -Wall -Wextra -O3 -g 
-# The final build step.
-$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
-	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
-
-# Build step 
-$(BUILD_DIR)/%.c.o: %.c
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+### SOURCES PART ###
 
 
-.PHONY: clean
+# Dir where all build files will be stored
+BUILD_DIR := ./_build
+
+# Find all subdirectories
+SRC_DIRS := $(shell find ./src -type d -not -path "*_build*")
+
+# Create all needed dirs
+$(shell mkdir -p $(SRC_DIRS:%=$(BUILD_DIR)/%))
+
+CFILES := $(shell find ./src -type f \( -iname "*.c" ! -iname "*main.c" \)) ./src/main.c
+OFILES := $(CFILES:%.c=$(BUILD_DIR)/%.o)
+DFILES := $(OFILES:%.o=%.d)
+
+### RULES PART ###
+
+all: $(TARGET)
+
+
+# Take a look to `prettyprint.mk` to understand $(V) and printtask calls
+$(TARGET): $(OFILES)
+	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	@if [[ $$? == 0 ]]; then \
+		$(call printtask,$(GREEN),Linked successfuly:,$@); \
+	else \
+		$(call printtask,$(RED),Linking failed:,$@); \
+	fi;
+
+# Same rule for all .o files
+$(BUILD_DIR)/%.o: %.c
+	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
+	@if [[ $$? == 0 ]]; then \
+		$(call printtask,$(GREEN),Compiled successfuly:,$<); \
+	else \
+		$(call printtask,$(RED),Compilation failed:,$<); \
+	fi;
+
+test: $(TARGET)
+	$(MAKE) -C tests
+
 clean:
-	rm -rf $(BUILD_DIR)
-	$(MAKE) -C tests clean
-	$(MAKE) -C src/GUI clean
-	$(MAKE) -C src/NeuralNetwork clean
-	$(MAKE) -C src/NeuralNetwork/data clean
-	$(MAKE) -C src/Preprocess clean
-	$(MAKE) -C src/Solver clean
+	rm -rf $(BUILD_DIR) $(TARGET)
 
 format:
 	find -name "*.[ch]" | xargs clang-format -i
 
-all: $(BUILD_DIR)/$(TARGET_EXEC) GUI NeuralNetwork Preprocess Solver
 
-GUI:
-	$(MAKE) -C src/GUI
-
-NeuralNetwork: Preprocess
-	$(MAKE) -C src/NeuralNetwork
-
-Preprocess:
-	$(MAKE) -C src/Preprocess
-
-Solver:
-	$(MAKE) -C src/Solver
-
-check: $(BUILD_DIR)/$(TARGET_EXEC)
-	$(MAKE) -C tests check 
-  
-Postprocess:
-	$(MAKE) -C src/Postprocess
-
+.PHONY: clean all format test
+-include $(D_FILES)

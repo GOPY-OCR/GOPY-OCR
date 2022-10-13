@@ -21,8 +21,9 @@ jobs:
 
     - name: setup libraries
       run: sudo apt install libsdl2-dev libsdl2-image-dev
+    
+    - name: make -B VERBOSE=1 all
+      run: make -B VERBOSE=1 all
+    - name: make -B VERBOSE=1 test
+      run: make -B VERBOSE=1 test
 
-    - name: make all
-      run: make all
-    - name: make check
-      run: make check
