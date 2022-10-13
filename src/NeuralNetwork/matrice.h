@@ -5,8 +5,8 @@
 #include <string.h>
 
 typedef struct matrice {
-    int columns;
     int rows;
+    int columns;
     double *data;
 } matrice;
 
