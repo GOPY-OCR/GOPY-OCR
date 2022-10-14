@@ -14,7 +14,6 @@ CPPFLAGS = -MMD $(INCLUDE_DIRS)
 LDFLAGS :=
 LDLIBS := `pkg-config --libs $(USED_LIBS)`
 INCLUDE_DIRS = $(addprefix -I,\
-	../Utils \
 )
 
 # Debug mode can be enabled by executing `make DEBUG=1 rule_name`
@@ -27,18 +26,19 @@ ifneq ($(DEBUG), 0)
 	CPPFLAGS += -DDEBUG # define DEBUG like `#define DEBUG` in all C files
 endif
 
+
 ### SOURCES PART ###
 
 # Dir where all build files will be stored
 BUILD_DIR := ./_build
 
 # Find all subdirectories
-SRC_DIRS := $(shell find ./ -type d -not -path "*_build*") ./Utils
+SRC_DIRS := $(shell find ./ -type d -not -path "*_build*")
 
 # Create all needed dirs
 $(shell mkdir -p $(SRC_DIRS:%=$(BUILD_DIR)/%))
 
-CFILES := $(shell find ./ -type f -name "*.c") $(shell find ../Utils/ -type f -name "*.c" | echo "Utils/"`xargs basename`)
+CFILES := $(shell find ./ -type f -name "*.c")
 OFILES := $(CFILES:%.c=$(BUILD_DIR)/%.o)
 DFILES := $(OFILES:%.o=%.d)
 
@@ -48,10 +48,6 @@ all: $(TARGET)
 
 $(TARGET): $(OFILES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-
-# Special rule for Utils files
-$(BUILD_DIR)/Utils/%.o: ../Utils/%.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
 
 # Same rule for all .o files
 $(BUILD_DIR)/%.o: %.c
