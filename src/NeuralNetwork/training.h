@@ -2,8 +2,8 @@
 #include "maths.h"
 #include "matrice.h"
 #include "neural_network.h"
+#include "utils.h"
 #include <dirent.h>
-#include <utils.h>
 
 typedef struct dataset {
     matrice **inputs;
