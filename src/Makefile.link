@@ -10,10 +10,12 @@ USED_LIBS = sdl2 SDL2_image
 # Flags (with = and not := so flags can be added after)
 CFLAGS = -Wall -Wextra `pkg-config --cflags $(USED_LIBS)` $(OPTFLAGS)
 OPTFLAGS := -O3
-CPPFLAGS := -MMD $(INCLUDE_DIRS)
+CPPFLAGS = -MMD $(INCLUDE_DIRS)
 LDFLAGS :=
 LDLIBS := `pkg-config --libs $(USED_LIBS)`
-INCLUDE_DIRS =
+INCLUDE_DIRS = $(addprefix -I,\
+	../Utils \
+)
 
 # Debug mode can be enabled by executing `make DEBUG=1 rule_name`
 DEBUG := 0
@@ -26,9 +28,9 @@ ifneq ($(DEBUG), 0)
 endif
 
 # Build step for Utils C source
-$(BUILD_DIR)/Utils/%.c.o: ../Utils/%.c
-	mkdir -p $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+#$(BUILD_DIR)/Utils/%.c.o: ../Utils/%.c
+#	mkdir -p $(dir $@)
+#	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 
 ### SOURCES PART ###
@@ -37,12 +39,12 @@ $(BUILD_DIR)/Utils/%.c.o: ../Utils/%.c
 BUILD_DIR := ./_build
 
 # Find all subdirectories
-SRC_DIRS := $(shell find ./ -type d -not -path "*_build*")
+SRC_DIRS := $(shell find ./ -type d -not -path "*_build*") ./Utils
 
 # Create all needed dirs
 $(shell mkdir -p $(SRC_DIRS:%=$(BUILD_DIR)/%))
 
-CFILES := $(shell find ./ -type f -name "*.c")
+CFILES := $(shell find ./ -type f -name "*.c") $(shell find ../Utils/ -type f -name "*.c" | echo "Utils/"`xargs basename`)
 OFILES := $(CFILES:%.c=$(BUILD_DIR)/%.o)
 DFILES := $(OFILES:%.o=%.d)
 
@@ -50,9 +52,11 @@ DFILES := $(OFILES:%.o=%.d)
 
 all: $(TARGET)
 
-# Take a look to `prettyprint.mk` to understand $(V) and printtask calls
 $(TARGET): $(OFILES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+
+$(BUILD_DIR)/Utils/%.o: ../Utils/%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
 
 # Same rule for all .o files
 $(BUILD_DIR)/%.o: %.c
