@@ -1,45 +1,18 @@
 # Name of the final executable
 TARGET := main
 
-### COMPILER PART ###
+include ../../compile_settings.mk
 
-
-# Which compiler use
-CC := gcc
-
-USED_LIBS = sdl2 SDL2_image
-# Flags (with = and not := so flags can be added after)
-CFLAGS = -Wall -Wextra `pkg-config --cflags $(USED_LIBS)` $(OPTFLAGS)
-OPTFLAGS := -O3
-CPPFLAGS := -MMD $(INCLUDE_DIRS)
-LDFLAGS :=
-LDLIBS := `pkg-config --libs $(USED_LIBS)`
-INCLUDE_DIRS =
-
-# Debug mode can be enabled by executing `make DEBUG=1 rule_name`
-DEBUG := 0
-
-ifneq ($(DEBUG), 0)
-	OPTFLAGS = -O1
-	CFLAGS += -g -fsanitize=address,undefined
-	LDFLAGS += -fsanitize=address,undefined
-	CPPFLAGS += -DDEBUG # define DEBUG like `#define DEBUG` in all C files
-endif
-
-
-### SOURCES PART ###
-
-
-# Dir where all build files will be stored
-BUILD_DIR := ./_build
+INCLUDE_DIRS = $(addprefix -I, \
+			   ../Utils)
 
 # Find all subdirectories
-SRC_DIRS := $(shell find ./ -type d -not -path "*_build*")
+SRC_DIRS := $(shell find ./ -type d -not -path "*_build*") ./Utils
 
 # Create all needed dirs
 $(shell mkdir -p $(SRC_DIRS:%=$(BUILD_DIR)/%))
 
-CFILES := $(shell find ./ -type f -name "*.c")
+CFILES := $(shell find ./ -type f -name "*.c") $(shell find ../Utils/ -type f -name "*.c" | echo "Utils/"`xargs basename`)
 OFILES := $(CFILES:%.c=$(BUILD_DIR)/%.o)
 DFILES := $(OFILES:%.o=%.d)
 
@@ -47,9 +20,12 @@ DFILES := $(OFILES:%.o=%.d)
 
 all: $(TARGET)
 
-# Take a look to `prettyprint.mk` to understand $(V) and printtask calls
 $(TARGET): $(OFILES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+
+# Special rule for Utils files
+$(BUILD_DIR)/Utils/%.o: ../Utils/%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
 
 # Same rule for all .o files
 $(BUILD_DIR)/%.o: %.c
