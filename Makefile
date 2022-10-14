@@ -72,8 +72,5 @@ test: $(TARGET)
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
 
-format:
-	find -name "*.[ch]" | xargs clang-format -i
-
-.PHONY: clean all format test
+.PHONY: clean test
 -include $(D_FILES)
