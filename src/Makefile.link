@@ -3,6 +3,9 @@ TARGET := main
 
 include ../../compile_settings.mk
 
+INCLUDE_DIRS = $(addprefix -I, \
+			   ../Utils)
+
 # Find all subdirectories
 SRC_DIRS := $(shell find ./ -type d -not -path "*_build*") ./Utils
 
