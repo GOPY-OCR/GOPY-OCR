@@ -3,7 +3,7 @@
 void xor_main() {
     NeuralNetwork *network = create_xor_network();
 
-    train_xor_network(network);
+    train_xor_network(network, 0);
 
     test_xor_network(network);
 }
@@ -15,10 +15,10 @@ NeuralNetwork *create_xor_network() {
     return network;
 }
 
-void train_xor_network(NeuralNetwork *network) {
+void train_xor_network(NeuralNetwork *network, int verbose) {
     dataset *data = create_xor_dataset();
 
-    train(network, 300, 0.1, 4, data, data, 2);
+    train(network, 300, 0.1, 4, data, data, verbose);
 }
 
 

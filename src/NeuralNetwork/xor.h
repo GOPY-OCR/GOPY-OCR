@@ -5,7 +5,7 @@
 
 NeuralNetwork *create_xor_network();
 
-void train_xor_network(NeuralNetwork *network);
+void train_xor_network(NeuralNetwork *network, int verbose);
 int test_xor_network(NeuralNetwork *network);
 
 dataset *create_xor_dataset();

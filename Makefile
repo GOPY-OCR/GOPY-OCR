@@ -47,6 +47,7 @@ clean:
 	$(MAKE) clean -C src/Preprocess
 	$(MAKE) clean -C src/Postprocess
 	$(MAKE) clean -C src/Solver
+	$(MAKE) clean -C tests
 
 .PHONY: clean test
 -include $(D_FILES)

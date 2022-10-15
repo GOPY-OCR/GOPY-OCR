@@ -17,7 +17,7 @@ Test(training, test_xor_training) {
 
     cr_assert(network != NULL);
 
-    train_xor_network(network);
+    train_xor_network(network, 0);
 }
 
 Test(training, test_max_output) {

@@ -7,16 +7,18 @@ $(shell mkdir -p $(TEST_DIR))
 
 LDLIBS += -lcriterion
 INCLUDE_DIRS = $(addprefix -I,\
-			   $(BUILD_DIR)/src/Utils\
+			   ../src/Utils\
+			   ../src/NeuralNetwork\
 			   )
 
-SRC_OFILES = $(shell find $(BUILD_DIR)/src/$@/ -type f -name "*.o") \
+SRC_OFILES = $(shell find $(BUILD_DIR)/src/$@/ -type f -name "*.o" ! -iname "*main*") \
 			 $((shell find $@Tests/ -type f -name "*.c"):%.c=$(TEST_DIR)%.o)
 
-all: NeuralNetwork
+all: $(BUILD_DIR) NeuralNetwork
 
 NeuralNetwork: $(SRC_OFILES)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	echo $(SRC_OFILES)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $^ NeuralNetworkTests/test.c -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 
@@ -24,8 +26,10 @@ NeuralNetwork: $(SRC_OFILES)
 $(TEST_DIR)/%.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
 
+$(BUILD_DIR):
+	make -C ../
 
 clean:
-	rm -rf $(TEST_DIR)
+	rm -rf $(TEST_DIR) NeuralNetwork NeuralNetwork.d
 
 .PHONY: clean
