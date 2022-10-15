@@ -13,7 +13,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
+
+    - name: download criterion
+      run: wget https://github.com/Snaipe/Criterion/releases/download/v2.4.1/criterion-2.4.1-linux-x86_64.tar.xz 
+    - name: setup criterion
+      run: sudo tar -xvf criterion-2.4.1-linux-x86_64.tar.xz -C /usr/ --strip-components=1
+
     - name: setup libraries
       run: sudo apt install libsdl2-dev libsdl2-image-dev
     
@@ -21,3 +26,4 @@ jobs:
       run: make -B VERBOSE=1 all
     - name: make -B VERBOSE=1 test
       run: make -B VERBOSE=1 test
+

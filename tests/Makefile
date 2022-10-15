@@ -11,9 +11,13 @@ INCLUDE_DIRS = $(addprefix -I,\
 			   )
 
 SRC_OFILES = $(shell find $(BUILD_DIR)/src/$@/ -type f -name "*.o") \
-			 $((shell find $@/ -type f -name "*.c"):%.c=$(TEST_DIR)%.o)
+			 $((shell find $@Tests/ -type f -name "*.c"):%.c=$(TEST_DIR)%.o)
 
-all: 
+all: NeuralNetwork
+
+NeuralNetwork: $(SRC_OFILES)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	./$@
 
 
 # Same rule for all .o files
