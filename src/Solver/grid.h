@@ -1,5 +1,5 @@
-#ifndef SOLVER_H
-#define SOLVER_H
+#ifndef SOLVER_GRID_H
+#define SOLVER_GRID_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
