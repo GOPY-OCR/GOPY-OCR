@@ -126,3 +126,32 @@ Test(matrices, test_map) {
 
     cr_assert(matrice_equals(m1, expected), "Matrices are not equal");
 }
+
+Test(matrices, test_clone) {
+    setup();
+
+    matrice *m = matrice_clone(m1);
+
+    cr_assert(matrice_equals(m, m1), "Matrices are not equal");
+}
+
+Test(matrices, test_max) {
+    setup();
+
+    int i;
+    int j;
+
+    matrice_max(m1, &i, &j);
+
+
+    cr_assert(i == 1 && j == 1, "Max is not in the right place");
+
+}
+
+Test(matrices, test_sum) {
+    setup();
+
+    double sum = matrice_sum(m1);
+
+    cr_assert(sum == 10, "Sum is not equal to 10");
+}

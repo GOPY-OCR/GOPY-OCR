@@ -43,3 +43,7 @@ matrice *matrice_mul(matrice *m1, matrice *m2);
 // inplace operations
 matrice *matrice_map(matrice *m, double (*f)(double));
 matrice *matrice_multiply(matrice *m, double scalar);
+
+void matrice_max(matrice *m, int *row, int *column);
+
+double matrice_sum(matrice *m);

@@ -246,3 +246,29 @@ matrice *matrice_clone(matrice *m) {
     }
     return m_clone;
 }
+
+void matrice_max(matrice *m, int *row, int *column) {
+    double max = matrice_get(m, 0, 0);
+    *row = 0;
+    *column = 0;
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->columns; j++) {
+            double value = matrice_get(m, i, j);
+            if (value > max) {
+                max = value;
+                *row = i;
+                *column = j;
+            }
+        }
+    }
+}
+
+double matrice_sum(matrice *m) {
+    double sum = 0;
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->columns; j++) {
+            sum += matrice_get(m, i, j);
+        }
+    }
+    return sum;
+}

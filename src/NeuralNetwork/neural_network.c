@@ -57,7 +57,7 @@ NeuralNetwork *load_neural_network(char *filename) {
  * nn: neural network
  * inputs: inputs of the neural network
  */
-matrice *feed_forward(NeuralNetwork *nn, matrice *inputs) {
+matrice *feedforward(NeuralNetwork *nn, matrice *inputs) {
     matrice *output = inputs;
 
     for (int i = 0; i < nn->nb_layers; i++) {

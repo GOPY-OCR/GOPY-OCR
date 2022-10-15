@@ -12,9 +12,26 @@
 //     cr_assert(data->outputs->rows == 11);
 // }
 
-Test(training, test_xor_network) {
+Test(training, test_xor_training) {
     NeuralNetwork *network = create_xor_network();
+
     cr_assert(network != NULL);
+
     train_xor_network(network);
-    //    cr_assert(test_xor_network(network) == 1);
+}
+
+Test(training, test_max_output) {
+    matrice *outputs = matrice_from_string("0.1,"
+                                           "0.2,"
+                                           "0.3,"
+                                           "0.4,"
+                                           "0.5,"
+                                           "0.6,"
+                                           "0.7,"
+                                           "0.8,"
+                                           "0.9");
+    cr_assert(max_output(outputs) == 8);
+
+    matrice_set(outputs, 4, 0, 1);
+    cr_assert(max_output(outputs) == 4);
 }
