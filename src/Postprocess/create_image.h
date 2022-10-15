@@ -5,4 +5,5 @@
 
 int is_initial_number(int x, int y);
 
+
 #endif
