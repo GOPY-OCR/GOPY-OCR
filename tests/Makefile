@@ -1,34 +1,20 @@
-TARGET_EXEC := ./test
+# This Makefile should be called after everything is build by the main Makefile
+include ../compile_settings.mk
 
-BUILD_DIR := ./build
-SRC_DIR := ../src
+BUILD_DIR := ../_build
+TEST_DIR := $(BUILD_DIR)/tests
+$(shell mkdir -p $(TEST_DIR))
 
-SRCS := $(shell find $(SRC_DIR) ! -name "main.c" -name "*.c")
+SRC_OFILES = $(shell find $(BUILD_DIR)/src/$@/ -type f -name "*.o") $(TEST_DIR)/$@/main.o
 
-OBJS := $(SRCS:$(SRC_DIR)/%=$(BUILD_DIR)/%.o)
+all: 
 
-INCLUDES := ../src/Utils ../src/NeuralNetwork
+# Compile .o files that are not already
+$(BUILD_DIR)/%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
 
-CPPFLAGS = $(addprefix -I,$(INCLUDES))
-CFLAGS = -lcriterion -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
-LDLIBS = `pkg-config --libs sdl2 SDL2_image`
-LDFLAGS = -lm
-
-$(TARGET_EXEC): $(OBJS) ./*.c
-	mkdir -p $(BUILD_DIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(OBJS) ./test.c -o $(TARGET_EXEC) $(LDFLAGS) $(LDLIBS)
-
-$(BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
-	mkdir -p $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
-
-
-.PHONY: check
-check: $(TARGET_EXEC)
-	$(TARGET_EXEC)
-	@echo "Ok"
+clean:
+	rm -rf $(TEST_DIR)
 
 .PHONY: clean
 
-clean:
-	rm -rf $(BUILD_DIR) $(TARGET_EXEC)
