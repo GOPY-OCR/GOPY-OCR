@@ -12,7 +12,10 @@
 // epochs: the number of epochs to train the neural network
 // training_data: the training dataset to train the neural network with
 // testing_data: (optional) used to evaluate the neural network after each epoch
-// verbose_level: 0 = no output, 1 = per epoch summary, 2 = per testing data summary every epoch
+// verbose_level: 0 = no output, 
+// 		  1 = parameters summary and final eval,
+//		  2 = per epoch summary, 
+//		  3 = per testing data summary every epoch
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
