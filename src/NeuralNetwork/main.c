@@ -28,9 +28,6 @@ int main(int argc, char **argv) {
 
 
     } else if (strcmp(argv[1], "-x") == 0 || strcmp(argv[1], "--xor-demo") == 0) {
-        printf(help, argv[0]);
-        printf("\n");
-
         xor_main();
     } else {
         errx(EXIT_FAILURE,
