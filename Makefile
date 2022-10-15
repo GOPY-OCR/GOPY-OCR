@@ -42,6 +42,11 @@ test: $(TARGET)
 
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
+	$(MAKE) clean -C src/GUI
+	$(MAKE) clean -C src/NeuralNetwork
+	$(MAKE) clean -C src/Preprocess
+	$(MAKE) clean -C src/Postprocess
+	$(MAKE) clean -C src/Solver
 
 .PHONY: clean test
 -include $(D_FILES)
