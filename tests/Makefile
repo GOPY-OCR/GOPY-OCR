@@ -10,7 +10,8 @@ INCLUDE_DIRS = $(addprefix -I,\
 			   $(BUILD_DIR)/src/Utils\
 			   )
 
-SRC_OFILES = $(shell find $(BUILD_DIR)/src/$@/ -type f -name "*.o")
+SRC_OFILES = $(shell find $(BUILD_DIR)/src/$@/ -type f -name "*.o") \
+			 $((shell find $@/ -type f -name "*.c"):%.c=$(TEST_DIR)%.o)
 
 all: 
 
