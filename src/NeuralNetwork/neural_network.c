@@ -13,12 +13,6 @@ void free_layer(Layer *layer) {
     free(layer);
 }
 
-/*
- * Creates a neural network, its weights and biases are randomised
- * nb_layers: number of layers in the neural network
- * nb_inputs: number of inputs of the neural network
- * nb_neurons: number of neurons in each layer
- */
 NeuralNetwork *create_neural_network(int nb_layers, int nb_inputs,
                                      int *nb_neurons) {
     NeuralNetwork *neural_network = malloc(sizeof(NeuralNetwork));
@@ -44,19 +38,65 @@ void free_neural_network(NeuralNetwork *nn) {
 }
 
 void save_neural_network(NeuralNetwork *nn, char *filename) {
-    //! TODO
+    FILE *f = fopen(filename, "w");
+    if (f == NULL) {
+        errx(1, "save_neural_network: Could not open file %s\n", filename);
+    }
+
+    fprintf(f, "%i\n", nn->nb_layers);
+
+    for (int i = 0; i < nn->nb_layers; i++){
+        char *serialized_weights = matrice_serialize(nn->layers[i]->weights, NULL);
+        fprintf(f, "# Weights of layers[%i] :\n{\n%s}\n", i, serialized_weights);
+
+        char *serialized_biases = matrice_serialize(nn->layers[i]->biases, NULL);
+        fprintf(f, "# Biases of layers[%i] :\n{\n%s}\n", i, serialized_biases);
+
+        free(serialized_weights);
+        free(serialized_biases);
+    }
+
+    fclose(f);
 }
 
 NeuralNetwork *load_neural_network(char *filename) {
-    //! TODO
-    return NULL;
+    char *content = read_from_file(filename);
+
+    int nb_layers;
+    sscanf(content, "%i", &nb_layers);
+
+    NeuralNetwork *nn = malloc(sizeof(NeuralNetwork));
+    nn->nb_layers = nb_layers;
+    nn->layers = malloc(sizeof(Layer *) * nb_layers);
+
+    char *ptr = content;
+    for (int i = 0; i < nb_layers; i++) {
+	ptr = strstr(ptr, "{") + 2;
+	char *end = strstr(ptr, "}") - 1;
+	int size = end - ptr;
+	char *weights = malloc(sizeof(char) * size);
+	strncpy(weights, ptr, size);
+	weights[size - 1] = '\0';
+	printf("weights = %s\n", weights);
+	nn->layers[i] = malloc(sizeof(Layer));
+	nn->layers[i]->weights = matrice_deserialize(weights);
+	free(weights);
+
+	ptr = strstr(end, "{") + 2;
+	end = strstr(ptr, "}") - 1;
+	size = end - ptr;
+	char *biases = malloc(sizeof(char) * size);
+	strncpy(biases, ptr, size);
+	biases[size - 1] = '\0';
+	printf("biases = %s\n", biases);
+	nn->layers[i]->biases = matrice_deserialize(biases);
+	free(biases);
+	ptr = end;
+    }
+    
+    return nn;
 }
 
-/*
- * Computes the output of a neural network
- * nn: neural network
- * inputs: inputs of the neural network
- */
 matrice *feedforward(NeuralNetwork *nn, matrice *inputs) {
     matrice *output = inputs;
 
