@@ -19,14 +19,14 @@ ParameterizedTestParameters(neuralnetworks, test_save_load_neural_network) {
     params[0] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons };
 
     nb_layers = 2;
-    input_size = 20;
+    input_size = 10;
     nb_neurons = cr_malloc(sizeof(int) * nb_layers);
     nb_neurons[0] = 2;
     nb_neurons[1] = 2;
     params[1] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons };
 
     nb_layers = 5;
-    input_size = 50;
+    input_size = 10;
     nb_neurons = cr_malloc(sizeof(int) * nb_layers);
     for (int i = 0; i < nb_layers; i++) {
         nb_neurons[i] = input_size / (i + 1);
