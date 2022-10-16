@@ -3,7 +3,7 @@
 
 #define XOR_EPOCHS 2000
 #define XOR_LEARNING_RATE 5
-#define XOR_VERBOSE 1
+#define XOR_VERBOSE 3
 
 void xor_main() {
     NeuralNetwork *network = create_xor_network();
@@ -11,6 +11,8 @@ void xor_main() {
     train_xor_network(network, XOR_VERBOSE);
 
     test_xor_network(network);
+
+    free_neural_network(network);
 }
 
 NeuralNetwork *create_xor_network() {
