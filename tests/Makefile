@@ -34,6 +34,9 @@ $(BUILD_DIR):
 MainBuild:
 	$(MAKE) -C ..
 
+MainBuild:
+	$(MAKE) -C ..
+
 clean:
 	rm -rf $(TEST_DIR) $(TARGETS)
 
