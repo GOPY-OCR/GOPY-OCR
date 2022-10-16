@@ -8,6 +8,8 @@ include prettyprint.mk
 # Find all subdirectories
 SRC_DIRS := $(shell find ./src -type d -not -path "*_build*")
 
+INCLUDE_DIRS = src/Utils
+
 # Create all needed dirs
 $(shell mkdir -p $(SRC_DIRS:%=$(BUILD_DIR)/%))
 
@@ -47,6 +49,7 @@ clean:
 	$(MAKE) clean -C src/Preprocess
 	$(MAKE) clean -C src/Postprocess
 	$(MAKE) clean -C src/Solver
+	$(MAKE) clean -C src/Utils
 	$(MAKE) clean -C tests
 
 .PHONY: clean test
