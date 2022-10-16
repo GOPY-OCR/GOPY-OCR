@@ -36,7 +36,7 @@ ParameterizedTestParameters(neuralnetworks, test_save_load_neural_network) {
     return cr_make_param_array(struct neural_network_create_params, params, nb_params);
 }
 
-#define EPSILON 0.00001
+#define EPSILON 0.001
 ParameterizedTest(struct neural_network_create_params *params, neuralnetworks, test_save_load_neural_network){
     NeuralNetwork *nn = create_neural_network(params->nb_layers, params->input_size, params->nb_neurons);
     
