@@ -1,24 +1,26 @@
 # This Makefile should be called after everything is build by the main Makefile
 include ../compile_settings.mk
 
+TARGETS = NeuralNetwork
 BUILD_DIR := ../_build
 TEST_DIR := $(BUILD_DIR)/tests
-$(shell mkdir -p $(TEST_DIR))
+$(shell mkdir -p $(TEST_DIR)/NeuralNetworkTests)
 
 LDLIBS += -lcriterion
-INCLUDE_DIRS = $(addprefix -I,\
-			   ../src/Utils\
-			   ../src/NeuralNetwork\
-			   )
+INCLUDE_DIRS = $(shell find ../src/ -type d)
 
-SRC_OFILES = $(shell find $(BUILD_DIR)/src/$@/ -type f -name "*.o" ! -iname "*main*") \
-			 $((shell find $@Tests/ -type f -name "*.c"):%.c=$(TEST_DIR)%.o)
+SRC_OFILES = 
+define ofiles
+	$(shell find $(BUILD_DIR)/src/$(1)/ -type f -name "*.o") \
+		$(shell find $(1)Tests/ -type f -name "test.c" | echo "$(TEST_DIR)/$(1)Tests/"`xargs basename -s .c`).o \
+		../_build/src/Utils/utils.o
+endef
 
-all: $(BUILD_DIR) NeuralNetwork
+all: MainBuild $(TARGETS)
 
-NeuralNetwork: $(SRC_OFILES)
-	echo $(SRC_OFILES)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $^ NeuralNetworkTests/test.c -o $@ $(LDFLAGS) $(LDLIBS)
+.SECONDEXPANSION:
+NeuralNetwork: $(call ofiles,NeuralNetwork)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 
@@ -29,7 +31,10 @@ $(TEST_DIR)/%.o: %.c
 $(BUILD_DIR):
 	make -C ../
 
+MainBuild:
+	$(MAKE) -C ..
+
 clean:
-	rm -rf $(TEST_DIR) NeuralNetwork NeuralNetwork.d
+	rm -rf $(TEST_DIR) $(TARGETS)
 
 .PHONY: clean
