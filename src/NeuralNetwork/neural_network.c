@@ -71,25 +71,17 @@ NeuralNetwork *load_neural_network(char *filename) {
 
     char *ptr = content;
     for (int i = 0; i < nb_layers; i++) {
+        // Deserialize weights
 	ptr = strstr(ptr, "{") + 2;
 	char *end = strstr(ptr, "}") - 1;
-	int size = end - ptr;
-	char *weights = malloc(sizeof(char) * size);
-	strncpy(weights, ptr, size);
-	weights[size - 1] = '\0';
 	nn->layers[i] = malloc(sizeof(Layer));
-	nn->layers[i]->weights = matrice_deserialize(weights);
-	free(weights);
+	nn->layers[i]->weights = matrice_deserialize(ptr);
 
-	ptr = strstr(end, "{") + 2;
+        // Deserialize biases
+        ptr = strstr(end + 2, "{") + 2;
 	end = strstr(ptr, "}") - 1;
-	size = end - ptr;
-	char *biases = malloc(sizeof(char) * size);
-	strncpy(biases, ptr, size);
-	biases[size - 1] = '\0';
-	nn->layers[i]->biases = matrice_deserialize(biases);
-	free(biases);
-	ptr = end;
+	nn->layers[i]->biases = matrice_deserialize(ptr);
+	ptr = end + 2;
     }
     
     return nn;

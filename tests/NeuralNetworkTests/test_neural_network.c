@@ -9,7 +9,7 @@ struct neural_network_create_params {
 };
 
 ParameterizedTestParameters(neuralnetworks, test_save_load_neural_network) {
-    const size_t nb_params = 3;
+    const size_t nb_params = 4;
     struct neural_network_create_params *params = cr_malloc(sizeof(struct neural_network_create_params) * nb_params);
 
     int nb_layers = 1;
@@ -26,17 +26,27 @@ ParameterizedTestParameters(neuralnetworks, test_save_load_neural_network) {
     params[1] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons };
 
     nb_layers = 5;
-    input_size = 10;
+    input_size = 100;
     nb_neurons = cr_malloc(sizeof(int) * nb_layers);
-    for (int i = 0; i < nb_layers; i++) {
-        nb_neurons[i] = input_size / (i + 1);
-    }
+    nb_neurons[0] = 50;
+    nb_neurons[1] = 31;
+    nb_neurons[2] = 27;
+    nb_neurons[3] = 8;
+    nb_neurons[4] = 1;
     params[2] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons };
+
+    nb_layers = 3;
+    input_size = 40; // 784 for perfomance test: takes ~20s and produces a 8.7Mo file
+    nb_neurons = cr_malloc(sizeof(int) * nb_layers);
+    nb_neurons[0] = input_size;
+    nb_neurons[1] = input_size / 2;
+    nb_neurons[2] = 10;
+    params[3] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons };
 
     return cr_make_param_array(struct neural_network_create_params, params, nb_params);
 }
 
-#define EPSILON 0.001
+#define EPSILON 0.000001
 ParameterizedTest(struct neural_network_create_params *params, neuralnetworks, test_save_load_neural_network){
     NeuralNetwork *nn = create_neural_network(params->nb_layers, params->input_size, params->nb_neurons);
     

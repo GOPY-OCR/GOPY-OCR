@@ -1,6 +1,6 @@
 #include "matrice.h"
 
-matrice *m1, *m2, *m3, *m4, *big1;
+matrice *m1, *m2, *m3, *m4, *big1, *big2;
 char *serialized_big1;
 
 void setup(void) {
@@ -31,6 +31,8 @@ void setup(void) {
                             "0;0;0;0;0;0;0;0;0\n"
                             "999;999;999;999;999;999;999;999;999\n"
                             "-9999;-9999;-9999;-9999;-9999;-9999;-9999;-9999;-9999\n";
+
+    big2 = matrice_from_string("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41");
 }
 
 Test(matrices, test_from_string) {
@@ -211,8 +213,13 @@ Test(matrices, test_csv_read_write) {
     char *message = "This file is used for testing matrice.c. It can be deleted.";
 
     matrice_to_csv(big1, filename, message);
-
     matrice *m = matrice_read_csv(filename);
-
     cr_assert(matrice_equals(m, big1), "Matrices are not equal");
+
+    filename = "../_build/tests/TEMP_test_matrice2.csv";
+
+    matrice_to_csv(big2, filename, message);
+    m = matrice_read_csv(filename);
+    cr_assert(matrice_equals(m, big2), "Matrices are not equal");
+
 }
