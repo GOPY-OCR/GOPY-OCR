@@ -90,7 +90,6 @@ char **list_files(const char *path, int n) {
     }
 
     free(files);
-    free(ent);
     free(dir);
 
     return files;

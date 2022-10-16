@@ -18,6 +18,8 @@ char *double_to_string(double d) {
         p--;
     }
 
+    str = realloc(str, strlen(str) + 1);
+
     return str;
 }
 

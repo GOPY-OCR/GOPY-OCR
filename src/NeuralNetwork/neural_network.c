@@ -77,7 +77,6 @@ NeuralNetwork *load_neural_network(char *filename) {
 	char *weights = malloc(sizeof(char) * size);
 	strncpy(weights, ptr, size);
 	weights[size - 1] = '\0';
-	printf("weights = %s\n", weights);
 	nn->layers[i] = malloc(sizeof(Layer));
 	nn->layers[i]->weights = matrice_deserialize(weights);
 	free(weights);
@@ -88,7 +87,6 @@ NeuralNetwork *load_neural_network(char *filename) {
 	char *biases = malloc(sizeof(char) * size);
 	strncpy(biases, ptr, size);
 	biases[size - 1] = '\0';
-	printf("biases = %s\n", biases);
 	nn->layers[i]->biases = matrice_deserialize(biases);
 	free(biases);
 	ptr = end;
