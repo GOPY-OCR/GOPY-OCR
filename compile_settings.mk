@@ -26,3 +26,6 @@ endif
 
 # Dir where all build files will be stored
 BUILD_DIR := ./_build
+
+# use bash
+SHELL := /bin/bash
