@@ -61,19 +61,14 @@ void train(NeuralNetwork *nn,
         matrice_to_csv(accuracies, "accuracies.csv", message);
     }
 
-    matrice_free(accuracies);
-
     if (verbose > 0) {
 	    printf("Final Epoch: ");
 	    float accuracy = evaluate(nn, testing_data, verbose);
     }
 }
 
-void update_mini_batch(NeuralNetwork *nn, 
-        dataset *data, 
-        float learning_rate,
-        int start, 
-        int end) {
+void update_mini_batch(NeuralNetwork *nn, dataset *data, float learning_rate,
+        int start, int end) {
     matrice **nabla_b = malloc(nn->nb_layers * sizeof(matrice *));
     matrice **nabla_w = malloc(nn->nb_layers * sizeof(matrice *));
     matrice **delta_nabla_b = malloc(nn->nb_layers * sizeof(matrice *));
@@ -91,70 +86,38 @@ void update_mini_batch(NeuralNetwork *nn,
         backprop(nn, input, target, delta_nabla_b, delta_nabla_w);
 
         for (int j = 0; j < nn->nb_layers; j++) {
-            matrice *old_nabla_b = nabla_b[j];
-            matrice *old_nabla_w = nabla_w[j];
-
             nabla_b[j] = matrice_add(nabla_b[j], delta_nabla_b[j]);
             nabla_w[j] = matrice_add(nabla_w[j], delta_nabla_w[j]);
-
-            //matrice_free(old_nabla_b);
-            //matrice_free(old_nabla_w);
-            //matrice_free(delta_nabla_b[j]);
-            //matrice_free(delta_nabla_w[j]);
         }
-
     }
 
     // update NeuralNetwork weights
     for (int i = 0; i < nn->nb_layers; i++) {
-        matrice *old_weights = nn->layers[i]->weights;
-        matrice *old_biases = nn->layers[i]->biases;
-
         nn->layers[i]->weights =
             matrice_sub(nn->layers[i]->weights,
                     matrice_multiply(nabla_w[i], (double)learning_rate));
-
         nn->layers[i]->biases =
             matrice_sub(nn->layers[i]->biases,
                     matrice_multiply(nabla_b[i], (double)learning_rate));
-
-        //matrice_free(old_weights);
-        //matrice_free(old_biases);
-        //matrice_free(nabla_b[i]);
-        //matrice_free(nabla_w[i]);
     }
-
-    //free(nabla_b);
-    //free(nabla_w);
-    //free(delta_nabla_b);
-    //free(delta_nabla_w);
 }
 
 
-void backprop(NeuralNetwork *nn, 
-        matrice *input, 
-        matrice *target,
-        matrice **nabla_b, 
-        matrice **nabla_w) {
-
+void backprop(NeuralNetwork *nn, matrice *input, matrice *target,
+        matrice **nabla_b, matrice **nabla_w) {
     // feedforward
     matrice *output = input;
     matrice **activations = malloc((nn->nb_layers + 1) * sizeof(matrice *));
     activations[0] = input; // list to store all the activations, layer by layer
-    matrice **zs = malloc(nn->nb_layers * sizeof(matrice *)); // list to store all the z vectors, layer by layer
-
+    matrice **zs = malloc(
+            nn->nb_layers *
+            sizeof(matrice *)); // list to store all the z vectors, layer by layer
     for (int i = 0; i < nn->nb_layers; i++) {
-        matrice *dot = matrice_dot(nn->layers[i]->weights, output);
-        
-        //if (i > 0)
-        //    matrice_free(output);
-        
-        output = matrice_add(dot, nn->layers[i]->biases);
+        output = matrice_add(matrice_dot(nn->layers[i]->weights, output),
+                nn->layers[i]->biases);
         zs[i] = matrice_clone(output);
+        matrice_map(output, sigmoid);
         activations[i + 1] = matrice_clone(output);
-        matrice_map(activations[i + 1], sigmoid);
-
-        //matrice_free(dot);
     }
 
     // backpropagation
@@ -162,45 +125,21 @@ void backprop(NeuralNetwork *nn,
     // delta = (ouput - target) * map(zs[nn->nb_layers - 1], sigmoid_prime);
     matrice *sig = matrice_clone(zs[nn->nb_layers - 1]);
     matrice_map(sig, sigmoid_prime);
-    matrice *diff = matrice_sub(output, target);
-    matrice *delta = matrice_mul(diff, sig);
+    matrice *delta = matrice_mul(matrice_sub(output, target), sig);
 
-    nabla_b[nn->nb_layers - 1] = delta;
-    matrice *transposed = matrice_transpose(activations[nn->nb_layers - 1]);
-    nabla_w[nn->nb_layers - 1] = matrice_dot(delta, transposed);
-
-    //matrice_free(transposed);
-    //matrice_free(sig);
-    //matrice_free(diff);
-    //matrice_free(output);
+    nabla_b[nn->nb_layers - 1] = matrice_clone(delta);
+    nabla_w[nn->nb_layers - 1] =
+        matrice_dot(delta, matrice_transpose(activations[nn->nb_layers - 1]));
 
     for (int i = nn->nb_layers - 2; i >= 0; i--) {
         sig = matrice_clone(zs[i]);
         matrice_map(sig, sigmoid_prime);
-        transposed = matrice_transpose(nn->layers[i + 1]->weights);
-        matrice *dot = matrice_dot(transposed, delta);
-        delta = matrice_mul(dot, sig);
-
-        //matrice_free(sig);
-        //matrice_free(transposed);
-        //matrice_free(dot);
-
-        nabla_b[i] = delta;
-        transposed = matrice_transpose(activations[i]);
-        nabla_w[i] = matrice_dot(delta, transposed);
-        //matrice_free(transposed);
+        delta = matrice_mul(
+                matrice_dot(matrice_transpose(nn->layers[i + 1]->weights), delta),
+                sig);
+        nabla_b[i] = matrice_clone(delta);
+        nabla_w[i] = matrice_dot(delta, matrice_transpose(activations[i]));
     }
-
-    for (int i = 0; i < nn->nb_layers; i++) {
-        //matrice_free(zs[i]);
-    }
-
-    for (int i = 1; i < nn->nb_layers + 1; i++) {
-        //matrice_free(activations[i]);
-    }
-
-    //free(activations);
-    //free(zs);
 }
 
 
@@ -226,7 +165,7 @@ float evaluate(NeuralNetwork *nn,
 
         correct += acc >= 0.5;
 
-        //matrice_free(error);
+        matrice_free(error);
     }
 
     float accuracy = matrice_sum(accuracy_matrice) / (float) total;
@@ -253,10 +192,10 @@ float evaluate(NeuralNetwork *nn,
     }
 
     for (int i = 0; i < total; i++) {
-        //matrice_free(outputs[i]);
+        matrice_free(outputs[i]);
     }
-    //matrice_free(accuracy_matrice);
-    //free(outputs);
+    matrice_free(accuracy_matrice);
+    free(outputs);
 
     return accuracy;
 }

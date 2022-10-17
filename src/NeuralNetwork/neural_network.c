@@ -96,8 +96,8 @@ matrice *feedforward(NeuralNetwork *nn, matrice *inputs) {
         output = matrice_add(dot, nn->layers[i]->biases);   // output = weights * output + biases
         matrice_map(output, sigmoid); // output = sigmoid(output)
 
-        //matrice_free(dot);
-        //matrice_free(old_output);
+        matrice_free(dot);
+        matrice_free(old_output);
     }
 
     return output;
