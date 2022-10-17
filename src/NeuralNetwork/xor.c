@@ -10,7 +10,9 @@ void xor_main() {
 
     train_xor_network(network, XOR_VERBOSE);
 
-    test_xor_network(network);
+    if (!test_xor_network(network, 0)) {
+        errx(1, "XOR network failed to learn\n");
+    }
 
     free_neural_network(network);
 }
@@ -28,11 +30,11 @@ void train_xor_network(NeuralNetwork *network, int verbose) {
     train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose);
 }
 
+#define MIN_ACCURACY 0.9
+int test_xor_network(NeuralNetwork *network, int verbose) {
+    float accuracy = evaluate(network, create_xor_dataset(), verbose);
 
-int test_xor_network(NeuralNetwork *network) {
-    // TODO
-
-    return -1;
+    return accuracy >= MIN_ACCURACY;
 }
 
 dataset *create_xor_dataset(){

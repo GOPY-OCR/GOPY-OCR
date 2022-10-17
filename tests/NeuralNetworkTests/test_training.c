@@ -18,6 +18,15 @@ Test(training, test_xor_training) {
     cr_assert(network != NULL);
 
     train_xor_network(network, 0);
+
+    int test = test_xor_network(network, 0);
+
+    if (!test) {
+        printf("Training failed, results:\n");
+        evaluate(network, create_xor_dataset(), 1);
+    }
+
+    cr_assert(test, "Failed to train XOR network");
 }
 
 Test(training, test_max_output) {

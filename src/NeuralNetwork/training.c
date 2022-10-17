@@ -97,10 +97,10 @@ void update_mini_batch(NeuralNetwork *nn,
             nabla_b[j] = matrice_add(nabla_b[j], delta_nabla_b[j]);
             nabla_w[j] = matrice_add(nabla_w[j], delta_nabla_w[j]);
 
-            matrice_free(old_nabla_b);
-            matrice_free(old_nabla_w);
-            matrice_free(delta_nabla_b[j]);
-            matrice_free(delta_nabla_w[j]);
+            //matrice_free(old_nabla_b);
+            //matrice_free(old_nabla_w);
+            //matrice_free(delta_nabla_b[j]);
+            //matrice_free(delta_nabla_w[j]);
         }
 
     }
@@ -118,16 +118,16 @@ void update_mini_batch(NeuralNetwork *nn,
             matrice_sub(nn->layers[i]->biases,
                     matrice_multiply(nabla_b[i], (double)learning_rate));
 
-        matrice_free(old_weights);
-        matrice_free(old_biases);
-        matrice_free(nabla_b[i]);
-        matrice_free(nabla_w[i]);
+        //matrice_free(old_weights);
+        //matrice_free(old_biases);
+        //matrice_free(nabla_b[i]);
+        //matrice_free(nabla_w[i]);
     }
 
-    free(nabla_b);
-    free(nabla_w);
-    free(delta_nabla_b);
-    free(delta_nabla_w);
+    //free(nabla_b);
+    //free(nabla_w);
+    //free(delta_nabla_b);
+    //free(delta_nabla_w);
 }
 
 
@@ -146,15 +146,15 @@ void backprop(NeuralNetwork *nn,
     for (int i = 0; i < nn->nb_layers; i++) {
         matrice *dot = matrice_dot(nn->layers[i]->weights, output);
         
-        if (i > 0)
-            matrice_free(output);
+        //if (i > 0)
+        //    matrice_free(output);
         
         output = matrice_add(dot, nn->layers[i]->biases);
         zs[i] = matrice_clone(output);
         activations[i + 1] = matrice_clone(output);
         matrice_map(activations[i + 1], sigmoid);
 
-        matrice_free(dot);
+        //matrice_free(dot);
     }
 
     // backpropagation
@@ -169,10 +169,10 @@ void backprop(NeuralNetwork *nn,
     matrice *transposed = matrice_transpose(activations[nn->nb_layers - 1]);
     nabla_w[nn->nb_layers - 1] = matrice_dot(delta, transposed);
 
-    matrice_free(transposed);
-    matrice_free(sig);
-    matrice_free(diff);
-    matrice_free(output);
+    //matrice_free(transposed);
+    //matrice_free(sig);
+    //matrice_free(diff);
+    //matrice_free(output);
 
     for (int i = nn->nb_layers - 2; i >= 0; i--) {
         sig = matrice_clone(zs[i]);
@@ -181,26 +181,26 @@ void backprop(NeuralNetwork *nn,
         matrice *dot = matrice_dot(transposed, delta);
         delta = matrice_mul(dot, sig);
 
-        matrice_free(sig);
-        matrice_free(transposed);
-        matrice_free(dot);
+        //matrice_free(sig);
+        //matrice_free(transposed);
+        //matrice_free(dot);
 
         nabla_b[i] = delta;
         transposed = matrice_transpose(activations[i]);
         nabla_w[i] = matrice_dot(delta, transposed);
-        matrice_free(transposed);
+        //matrice_free(transposed);
     }
 
     for (int i = 0; i < nn->nb_layers; i++) {
-        matrice_free(zs[i]);
+        //matrice_free(zs[i]);
     }
 
     for (int i = 1; i < nn->nb_layers + 1; i++) {
-        matrice_free(activations[i]);
+        //matrice_free(activations[i]);
     }
 
-    free(activations);
-    free(zs);
+    //free(activations);
+    //free(zs);
 }
 
 
