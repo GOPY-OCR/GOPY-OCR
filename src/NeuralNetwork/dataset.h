@@ -15,6 +15,7 @@ typedef struct dataset {
 
 // note that matrices are left uninitialized
 dataset *create_dataset(int size);
+void free_dataset(dataset *d);
 
 // if deepcopy, the matrices will be copied too
 // otherwise, the dataset will only contain pointers to the matrices

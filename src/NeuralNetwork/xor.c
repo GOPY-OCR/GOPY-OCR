@@ -28,11 +28,17 @@ void train_xor_network(NeuralNetwork *network, int verbose) {
     dataset *data = create_xor_dataset();
 
     train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose);
+
+    free_dataset(data);
 }
 
 #define MIN_ACCURACY 0.9
 int test_xor_network(NeuralNetwork *network, int verbose) {
-    float accuracy = evaluate(network, create_xor_dataset(), verbose);
+    dataset *data = create_xor_dataset();
+    
+    float accuracy = evaluate(network, data, verbose);
+
+    free_dataset(data);
 
     return accuracy >= MIN_ACCURACY;
 }
