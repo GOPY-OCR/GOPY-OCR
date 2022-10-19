@@ -11,3 +11,11 @@ int *project(SDL_Surface *image, int axis);
 
 // aka écart type
 float standard_deviation(int *xs, int size);
+
+
+Uint32 getpixel(SDL_Surface *surface, int x, int y);
+
+// image: max convex component output
+// returns the angle at which the image is rotated
+// in degrees
+int automatic_image_rotation(SDL_Surface *image);
