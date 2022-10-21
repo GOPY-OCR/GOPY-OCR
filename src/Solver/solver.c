@@ -111,6 +111,7 @@ int IsSolved(int board[][BOARDSIZE]){
     return solved;
 }
 
+
 //Solve solves the board
 int Solve(int board[][BOARDSIZE]){
     int solve = 0;
@@ -118,25 +119,31 @@ int Solve(int board[][BOARDSIZE]){
     for (size_t i = 0; i < BOARDSIZE; i ++){
         for (size_t j = 0; j < BOARDSIZE; j ++){
             if (board[i][j] == 0){
-                int tested[9] = {};
-                for (int k = 0; k < 9; k ++){
-                    tested[k] = k + 1;
-                }
-                int nbElements= sizeof(tested) / sizeof(tested[0]);
+                int notTested[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+                int nbElements= sizeof(notTested) / sizeof(notTested[0]);
                 while (nbElements != 0){
-                    int n = rand()%9 + 1;
-                    //or  int n = rand()%8;
-                    board[i][j] = tested[n];
-                    tested[n] = 0;
-
+                    int k = 0;
+                    while (k < 10){
+                        size_t l = 0;
+                        while ((int) l < nbElements && notTested[l] != k)
+                            l += 1;
+                        
+                        if ((int) l == nbElements){
+                            k += 1;
+                        }
+                        else{
+                            board[i][j] = k;
+                            notTested[l] = 0;
+                        }
+                    }
 
                     if (IsBoardValid(board)){
                         if (Solve(board)){
                             solve = 1;
                         }
-                    board[i][j] = 0;
                     }
-                    nbElements= sizeof(tested) / sizeof(tested[0]);
+                    board[i][j] = 0;
+                
                 }
                 solve = 0;
             }
