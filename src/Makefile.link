@@ -11,13 +11,16 @@ SRC_DIRS := $(shell find ./ -type d -not -path "*_build*") ./Utils
 # Create all needed dirs
 $(shell mkdir -p $(SRC_DIRS:%=$(BUILD_DIR)/%))
 
-CFILES := $(shell find ./ -type f -name "*.c") $(shell find ../Utils/ -type f -name "*.c" | echo "Utils/"`xargs basename`)
+CFILES := $(shell find ./ -type f -name "*.c") $($(shell find ../Utils/ -type f -name "*.c"):../Utils/%=$(BUILD_DIR)/Utils/%)
 OFILES := $(CFILES:%.c=$(BUILD_DIR)/%.o)
 DFILES := $(OFILES:%.o=%.d)
 
 ### RULES PART ###
 
-all: $(TARGET)
+all:
+	test := $(shell find ../Utils/ -type f -name "*.c")
+
+	echo $(test)
 
 $(TARGET): $(OFILES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)

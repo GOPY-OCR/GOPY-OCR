@@ -13,15 +13,16 @@ void grid_detection(SDL_Surface *image, int *x1, int *y1, int *x2, int *y2){
     //SDL_Surface *rotated_image = image_rotate(max_component, angle);
 }
 
-// Returns an image containing only
-// the largest shape of connected pixels
-// in the input image
-#define MAX_COMPONENTS 100
 SDL_Surface *principal_component_analysis(SDL_Surface *image, int connectivity){
     // array of connected components
+    int max_components = MAX_COMPONENTS;
     SDL_Surface **components = malloc(sizeof(SDL_Surface *) * MAX_COMPONENTS);
     int *component_sizes = malloc(sizeof(int) * MAX_COMPONENTS);
     int nb_components = 0;
+
+    if(SDL_MUSTLOCK(image)){
+        SDL_UnlockSurface(image);
+    }
 
     for(int i = 0; i < image->w; i++){
         for(int j = 0; j < image->h; j++){
@@ -32,11 +33,11 @@ SDL_Surface *principal_component_analysis(SDL_Surface *image, int connectivity){
 
             int connected = 0;
             for(int k = 0; k < nb_components; k++){
-                if(is_connected(components[k], i, j, connectivity)){
+                if(is_connected(components[k], image, i, j, connectivity)){
                     // pixel is connected to a component
                     Uint32 *pixel = getpixel(components[k], i, j);
                     *pixel = SDL_MapRGB(components[k]->format, 255, 255, 255);
-
+                    component_sizes[k]++;
                     connected = 1;
                     break;
                 }
@@ -48,6 +49,12 @@ SDL_Surface *principal_component_analysis(SDL_Surface *image, int connectivity){
                 SDL_Surface *component = SDL_CreateRGBSurface(0, image->w, image->h, 32, 0, 0, 0, 0);
                 Uint32 *pixel = getpixel(component, i, j);
                 *pixel = SDL_MapRGB(component->format, 255, 255, 255);
+
+                if(nb_components >= max_components){
+                    max_components *= 2;
+                    components = realloc(components, sizeof(SDL_Surface *) * max_components);
+                    component_sizes = realloc(component_sizes, sizeof(int) * max_components);
+                }
 
                 components[nb_components] = component;
                 component_sizes[nb_components] = 1;
@@ -64,6 +71,8 @@ SDL_Surface *principal_component_analysis(SDL_Surface *image, int connectivity){
         }
     }
 
+    printf("nb_components = %d, largest component size = %d\n", nb_components, component_sizes[maxi]);
+
     // free the other components
     for(int i = 0; i < nb_components; i++){
         if(i != maxi){
@@ -74,20 +83,39 @@ SDL_Surface *principal_component_analysis(SDL_Surface *image, int connectivity){
     return components[maxi];
 }
 
-// Returns true if the pixel at (x, y) is connected
-// to a component via a path in the image
-// 
-// connectivity: number of pixels to check around the pixel
-int is_connected(SDL_Surface *component, int x, int y, int connectivity){
-    for(int i = x - connectivity; i <= x + connectivity; i++){
-        for(int j = y - connectivity; j <= y + connectivity; j++){
-            if(i < 0 || i >= component->w || j < 0 || j >= component->h){
-                continue;
-            }
-            Uint32 *pixel = getpixel(component, i, j);
-            if(is_pixel_white(component, i, j)){
-                // a neighbor pixel is white
-                return 1;
+struct pixel{
+    int x;
+    int y;
+};
+
+int is_connected(SDL_Surface *component, SDL_Surface *image, int x, int y, int connectivity){
+    queue *q = queue_create();
+    struct pixel p = {x, y};
+    queue_push(q, &p);
+
+    while(!queue_is_empty(q)){
+        struct pixel *p = queue_dequeue(q);
+
+        if(!is_pixel_white(image, p->x, p->y)){
+            // black pixel
+            continue;
+        }
+
+        if(is_pixel_white(component, p->x, p->y)){
+            // a path could be found between the pixel and one of the component's pixels
+            queue_free(q);
+            return 1;
+        }
+
+        // add the pixel's neighbors to the queue
+        for (int i = -connectivity; i <= connectivity; i++) {
+            for (int j = -connectivity; j <= connectivity; j++) {
+                if(i == 0 && j == 0){
+                    continue;
+                }
+
+                struct pixel p2 = {p->x + i, p->y + j};
+                queue_push(q, &p2);
             }
         }
     }
@@ -114,24 +142,33 @@ int *project(SDL_Surface *image, int axis){
     return projection;
 }
 
+#define THRESHOLD 127
+// image should be locked
 int is_pixel_white(SDL_Surface *image, int x, int y){
     Uint32 *pixel = getpixel(image, x, y);
 
+    if(pixel == NULL){
+        return 0;
+    }
+
     Uint8 r, g, b;
-    SDL_GetRGB(pixel, image->format, &r, &g, &b);
-    return r == 0 && g == 0 && b == 0;
+    SDL_GetRGB(*pixel, image->format, &r, &g, &b);
+
+    return r > THRESHOLD && g > THRESHOLD && b > THRESHOLD;
 }
 
-// magic function from the internet
 Uint32 *getpixel(SDL_Surface *surface, int x, int y){
+    if(x < 0 || x >= surface->w || y < 0 || y >= surface->h){
+        return NULL;
+    }
+
     int bpp = surface->format->BytesPerPixel; // = 4
-    Uint32 *p = (Uint32 *)surface->pixels + y * surface->pitch + x * bpp;
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
     return p;
 }
 
 float floatabs(float x){return x > 0? x : -x;}
 
-// aka écart type
 float standard_deviation(int *xs, int size){
     if (size < 2) return 0;
 

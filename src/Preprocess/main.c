@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
     SDL_Surface *image = load_image(argv[1]);
 
-    SDL_Surface *principal_component = principal_component_analysis(image, 3);
+    SDL_Surface *principal_component = principal_component_analysis(image, strtol(argv[2], NULL, 10));
 
     save_image(principal_component, "principal_component.png");
 
