@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
+#include "solver.h"
 
 //size of the board
 #define BOARDSIZE 9
@@ -60,8 +57,8 @@ int IsColumnValid(int board[][BOARDSIZE]){
 int IsSquareValid(int board[][BOARDSIZE], int lign, int column){
     int numbers[BOARDSIZE] = {0};
 
-    for (size_t i = lign; lign < lign + 3; i ++){
-        for (size_t j = column; column < column + 3; j ++){
+    for (size_t i = lign; i < lign + 3; i ++){
+        for (size_t j = column; j < column + 3; j ++){
             if (Contains(numbers, board[i][j]))
                 return 0;
             else{
