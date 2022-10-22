@@ -24,7 +24,7 @@ Test(utils, test_save_image) {
         sprintf(filename, "images/cdc/%d.jpeg", i);
         SDL_Surface *im = load_image(filename);
 
-        sprintf(filename, "../_build/test/UtilsTest/TEST_utils_cdc_%d.png", i);
+        sprintf(filename, "../_build/tests/UtilsTests/TEST_utils_cdc_%d.png", i);
 
         save_image(im, filename);
     }
@@ -34,7 +34,7 @@ Test(utils, test_save_image) {
         sprintf(filename, "images/binary/%d.png", i);
         SDL_Surface *im = load_image(filename);
 
-        sprintf(filename, "../_build/test/UtilsTest/TEST_utils_binary_%d.png", i);
+        sprintf(filename, "../_build/tests/UtilsTests/TEST_utils_binary_%d.png", i);
 
         save_image(im, filename);
 
