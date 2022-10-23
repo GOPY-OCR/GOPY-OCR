@@ -1,7 +1,11 @@
 #include "utils.h"
 
+// there are 6 images, but only test with one because it takes too long
+#define CDC_NUM_TESTS 1
+#define BINARY_NUM_TESTS 1
+
 Test(utils, test_load_image) {
-    for (int i = 1; i <= 6; i++) {
+    for (int i = 1; i <= CDC_NUM_TESTS; i++) {
         char *filename = calloc(100, sizeof(char));
         sprintf(filename, "images/cdc/%d.jpeg", i);
         SDL_Surface *im = load_image(filename);
@@ -9,7 +13,7 @@ Test(utils, test_load_image) {
         cr_assert(im != NULL, "Image %d is NULL", i);
     }
 
-    for (int i = 1; i <= 2; i++) {
+    for (int i = 1; i <= BINARY_NUM_TESTS; i++) {
         char *filename = calloc(100, sizeof(char));
         sprintf(filename, "images/binary/%d.png", i);
         SDL_Surface *im = load_image(filename);
@@ -19,22 +23,22 @@ Test(utils, test_load_image) {
 }
 
 Test(utils, test_save_image) {
-    for (int i = 1; i <= 6; i++) {
+    for (int i = 1; i <= CDC_NUM_TESTS; i++) {
         char *filename = calloc(100, sizeof(char));
         sprintf(filename, "images/cdc/%d.jpeg", i);
         SDL_Surface *im = load_image(filename);
 
-        sprintf(filename, "../_build/test/UtilsTest/TEST_utils_cdc_%d.png", i);
+        sprintf(filename, "../_build/tests/UtilsTests/TEST_utils_cdc_%d.png", i);
 
         save_image(im, filename);
     }
 
-    for (int i = 1; i <= 2; i++) {
+    for (int i = 1; i <= BINARY_NUM_TESTS; i++) {
         char *filename = calloc(100, sizeof(char));
         sprintf(filename, "images/binary/%d.png", i);
         SDL_Surface *im = load_image(filename);
 
-        sprintf(filename, "../_build/test/UtilsTest/TEST_utils_binary_%d.png", i);
+        sprintf(filename, "../_build/tests/UtilsTests/TEST_utils_binary_%d.png", i);
 
         save_image(im, filename);
 

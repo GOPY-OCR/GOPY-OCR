@@ -6,16 +6,10 @@ void grid_detection(SDL_Surface *image, int *x1, int *y1, int *x2, int *y2){
     *x2 = 0;
     *y2 = 0;
 
-    SDL_Surface *max_component = max_convex_component(image);
+    int angle = automatic_image_rotation(image);
 
-    int angle = automatic_image_rotation(max_component);
-
-    SDL_Surface *rotated_image = image_rotate(max_component, angle);
-
-
+    //SDL_Surface *rotated_image = image_rotate(max_component, angle);
 }
-
-SDL_Surface *max_convex_component(SDL_Surface *image);
 
 int *project(SDL_Surface *image, int axis){
     int size = axis == 0 ? image->w : image->h;
@@ -28,10 +22,7 @@ int *project(SDL_Surface *image, int axis){
 
     for(int i = 0; i < image->w; i++){
         for(int j = 0; j < image->h; j++){
-            Uint32 pixel = getpixel(image, i, j);
-            Uint8 r, g, b;
-            SDL_GetRGB(pixel, image->format, &r, &g, &b);
-            if(r == 0 && g == 0 && b == 0){
+            if(is_pixel_white(image, i, j)){
                 projection[axis == 0 ? i : j]++;
             }
         }
@@ -48,13 +39,13 @@ int automatic_image_rotation(SDL_Surface *image){
     float angle_score = evaluate_rotation(image, angle);
     float new_score;
     for(int i = 0; i < STEP_COUNT; i++){
-        if((newscore = 
+        if((new_score = 
                 evaluate_rotation(image, angle + STEP_SIZE)) > angle_score){
 
             angle_score = new_score;
             angle += STEP_SIZE;
         }
-        else if((newscore = 
+        else if((new_score = 
                     evaluate_rotation(image, angle - STEP_SIZE)) > angle_score){
             angle_score = new_score;
             angle -= STEP_SIZE;
@@ -70,7 +61,8 @@ int automatic_image_rotation(SDL_Surface *image){
 // higher values are better, it means that the grid lines
 // are aligned with the x and y axis
 float evaluate_rotation(SDL_Surface *image, int angle){
-    SDL_Surface *rotated_image = image_rotate(image, angle);
+    //SDL_Surface *rotated_image = image_rotate(image, angle);
+    SDL_Surface *rotated_image = image;
 
     int *projection_x = project(rotated_image, 0);
     int *projection_y = project(rotated_image, 1);
@@ -84,41 +76,33 @@ float evaluate_rotation(SDL_Surface *image, int angle){
 
     return std_x + std_y;
 }
+#define THRESHOLD 127
+// image should be locked
+int is_pixel_white(SDL_Surface *image, int x, int y){
+    Uint32 *pixel = getpixel(image, x, y);
 
-// magic function from the internet
-Uint32 getpixel(SDL_Surface *surface, int x, int y){
-    int bpp = surface->format->BytesPerPixel;
-    /* Here p is the address to the pixel we want to retrieve */
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-
-    switch (bpp){
-        case 1:
-            return *p;
-            break;
-
-        case 2:
-            return *(Uint16 *)p;
-            break;
-
-        case 3:
-            if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-                return p[0] << 16 | p[1] << 8 | p[2];
-            else
-                return p[0] | p[1] << 8 | p[2] << 16;
-            break;
-
-        case 4:
-            return *(Uint32 *)p;
-            break;
-
-        default:
-            return 0;       /* shouldn't happen, but avoids warnings */
+    if(pixel == NULL){
+        return 0;
     }
+
+    Uint8 r, g, b;
+    SDL_GetRGB(*pixel, image->format, &r, &g, &b);
+
+    return r > THRESHOLD && g > THRESHOLD && b > THRESHOLD;
+}
+
+Uint32 *getpixel(SDL_Surface *surface, int x, int y){
+    if(x < 0 || x >= surface->w || y < 0 || y >= surface->h){
+        return NULL;
+    }
+
+    int bpp = surface->format->BytesPerPixel; // = 4
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+    return p;
 }
 
 float floatabs(float x){return x > 0? x : -x;}
 
-// aka écart type
 float standard_deviation(int *xs, int size){
     if (size < 2) return 0;
 
@@ -138,5 +122,3 @@ float standard_deviation(int *xs, int size){
 
     return deviation_sum / size;
 }
-
-

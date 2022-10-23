@@ -13,7 +13,8 @@ SRC_OFILES =
 define ofiles
 	$(shell find $(BUILD_DIR)/src/$(1)/ -type f -name "*.o") \
 		$(shell find $(1)Tests/ -type f -name "test.c" | echo "$(TEST_DIR)/$(1)Tests/"`xargs basename -s .c`).o \
-		../_build/src/Utils/utils.o
+		../_build/src/Utils/utils.o \
+		../_build/src/Utils/queue.o
 endef
 
 all: MainBuild $(TARGETS)
