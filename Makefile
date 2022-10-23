@@ -40,7 +40,7 @@ $(BUILD_DIR)/%.o: %.c
 	fi;
 
 test: $(TARGET)
-	# -k: continue even if a test from another test suite fails
+# -k: continue even if a test from another test suite fails
 	$(MAKE) -k -C tests
 
 clean:
