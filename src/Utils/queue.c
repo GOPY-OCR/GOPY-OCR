@@ -10,7 +10,7 @@ queue *queue_create(){
 
 void queue_free(queue *queue){
     while(!queue_is_empty(queue)){
-        free(queue_dequeue(queue));
+        queue_dequeue(queue);
     }
     free(queue);
 }
