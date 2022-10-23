@@ -6,7 +6,7 @@ void grid_detection(SDL_Surface *image, int *x1, int *y1, int *x2, int *y2){
     *x2 = 0;
     *y2 = 0;
 
-    int angle = automatic_image_rotation(image);
+    //int angle = automatic_image_rotation(image);
 
     //SDL_Surface *rotated_image = image_rotate(max_component, angle);
 }
