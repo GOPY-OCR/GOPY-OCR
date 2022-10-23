@@ -6,11 +6,13 @@ void grid_detection(SDL_Surface *image, int *x1, int *y1, int *x2, int *y2){
     *x2 = 0;
     *y2 = 0;
 
-    SDL_Surface *max_component = max_component_detection(image);
+    SDL_Surface *max_component = max_convex_component(image);
 
     int angle = automatic_image_rotation(max_component);
 
     SDL_Surface *rotated_image = image_rotate(max_component, angle);
+
+
 }
 
 SDL_Surface *max_convex_component(SDL_Surface *image);
@@ -38,6 +40,50 @@ int *project(SDL_Surface *image, int axis){
     return projection;
 }
 
+#define STEP_SIZE 1 // 1° steps
+#define MAX_ANGLE 45 // 45° maximum angle
+#define STEP_COUNT (MAX_ANGLE / STEP_SIZE)
+int automatic_image_rotation(SDL_Surface *image){
+    int angle = 0;
+    float angle_score = evaluate_rotation(image, angle);
+    float new_score;
+    for(int i = 0; i < STEP_COUNT; i++){
+        if((newscore = 
+                evaluate_rotation(image, angle + STEP_SIZE)) > angle_score){
+
+            angle_score = new_score;
+            angle += STEP_SIZE;
+        }
+        else if((newscore = 
+                    evaluate_rotation(image, angle - STEP_SIZE)) > angle_score){
+            angle_score = new_score;
+            angle -= STEP_SIZE;
+        }
+        else{
+            break;
+        }
+    }
+
+    return angle;
+}
+
+// higher values are better, it means that the grid lines
+// are aligned with the x and y axis
+float evaluate_rotation(SDL_Surface *image, int angle){
+    SDL_Surface *rotated_image = image_rotate(image, angle);
+
+    int *projection_x = project(rotated_image, 0);
+    int *projection_y = project(rotated_image, 1);
+
+    float std_x = standard_deviation(projection_x, rotated_image->w);
+    float std_y = standard_deviation(projection_y, rotated_image->h);
+
+    free(projection_x);
+    free(projection_y);
+    SDL_FreeSurface(rotated_image);
+
+    return std_x + std_y;
+}
 
 // magic function from the internet
 Uint32 getpixel(SDL_Surface *surface, int x, int y){

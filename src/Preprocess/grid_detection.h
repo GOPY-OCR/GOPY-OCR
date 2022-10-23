@@ -19,3 +19,5 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y);
 // returns the angle at which the image is rotated
 // in degrees
 int automatic_image_rotation(SDL_Surface *image);
+
+float evaluate_rotation(SDL_Surface *image, int angle);
