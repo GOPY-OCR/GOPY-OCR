@@ -23,6 +23,10 @@ array *array_zeros(int size){
     return a;
 }
 
+void array_free(array *a){
+    matrice_free(a->data);
+    free(a);
+}
 
 double array_get(array *a, int i){
     return matrice_get(a->data, i, 0);

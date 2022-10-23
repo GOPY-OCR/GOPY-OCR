@@ -12,6 +12,8 @@ array *array_new(int size);
 array *array_range(double start, double end, double step);
 array *array_zeros(int size);
 
+void array_free(array *a);
+
 array *array_clone(array *a);
 
 // not inplace ! it clones the array before applying the function
