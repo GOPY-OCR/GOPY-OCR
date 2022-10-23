@@ -23,6 +23,7 @@ matrice *matrice_deserialize(char *str);
 matrice *matrice_clone(matrice *m);
 
 double matrice_get(matrice *m, int row, int column);
+double *matrice_get_ref(matrice *m, int row, int column);
 void matrice_set(matrice *m, int row, int column, double value);
 
 matrice *matrice_random(int rows, int columns, double min, double max);
@@ -44,6 +45,6 @@ matrice *matrice_mul(matrice *m1, matrice *m2);
 matrice *matrice_map(matrice *m, double (*f)(double));
 matrice *matrice_multiply(matrice *m, double scalar);
 
-void matrice_max(matrice *m, int *row, int *column);
+double *matrice_max(matrice *m, int *row, int *column);
 
 double matrice_sum(matrice *m);
