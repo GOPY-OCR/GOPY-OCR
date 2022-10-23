@@ -76,30 +76,7 @@ float evaluate_rotation(SDL_Surface *image, int angle){
 
     return std_x + std_y;
 }
-#define THRESHOLD 127
-// image should be locked
-int is_pixel_white(SDL_Surface *image, int x, int y){
-    Uint32 *pixel = getpixel(image, x, y);
 
-    if(pixel == NULL){
-        return 0;
-    }
-
-    Uint8 r, g, b;
-    SDL_GetRGB(*pixel, image->format, &r, &g, &b);
-
-    return r > THRESHOLD && g > THRESHOLD && b > THRESHOLD;
-}
-
-Uint32 *getpixel(SDL_Surface *surface, int x, int y){
-    if(x < 0 || x >= surface->w || y < 0 || y >= surface->h){
-        return NULL;
-    }
-
-    int bpp = surface->format->BytesPerPixel; // = 4
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
-    return p;
-}
 
 float floatabs(float x){return x > 0? x : -x;}
 
