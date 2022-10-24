@@ -1,4 +1,5 @@
 #pragma once
+#include "str_utils.h"
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,8 +18,11 @@ void matrice_print(matrice *m);
 
 matrice *matrice_from_string(char *str);
 
-char *matrice_serialize(matrice *m);
+char *matrice_serialize(matrice *m, char *name);
 matrice *matrice_deserialize(char *str);
+
+void matrice_to_csv(matrice *m, char *filename, char *name);
+matrice *matrice_read_csv(char *filename);
 
 matrice *matrice_clone(matrice *m);
 
