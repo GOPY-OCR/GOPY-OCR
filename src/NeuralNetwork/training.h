@@ -4,6 +4,7 @@
 #include "neural_network.h"
 #include "utils.h"
 #include "dataset.h"
+#include "progress_bar.h"
 
 // trains the neural network with the given training data
 // by calling the update_mini_batch function repeatedly

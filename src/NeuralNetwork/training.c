@@ -1,7 +1,8 @@
 #include "training.h"
 // see http://neuralnetworksanddeeplearning.com/chap2.html
 
-
+#define PROGRESS_BAR_WIDTH 100
+#define PROGRESS_BAR_INTERVAL 100 // in epochs
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
@@ -50,12 +51,19 @@ void train(NeuralNetwork *nn,
             if(testing_data != NULL && testing_data->size > 0) {
                 printf("Epoch %i: ", e);
                 float accuracy = evaluate(nn, testing_data, verbose - 1);
-                //matrice_set(accuracies, e, 0, accuracy);
+                matrice_set(accuracies, e, 0, accuracy);
             }
         }
+        else if (verbose == 1 && (e+1) % PROGRESS_BAR_INTERVAL == 0) {
+            progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, "Epochs");
+        }
+    }
+    if(verbose == 1) {
+        printf("\n");
     }
 
     if (verbose > 2) {
+        printf("Saving accuracies to accuracies.csv\n");
         char *message = malloc(sizeof(char) * 100);
         sprintf(message, "Accuracy over %d epochs", epochs);
         matrice_to_csv(accuracies, "accuracies.csv", message);
@@ -63,12 +71,10 @@ void train(NeuralNetwork *nn,
     }
 
     if (verbose > 0) {
-	    printf("Final Epoch: ");
-	    float accuracy = evaluate(nn, testing_data, verbose);
+        printf("Last epoch results: ");
+        float accuracy = evaluate(nn, testing_data, 1);
+        printf("\n");
     }
-
-    //matrice_free(accuracies);
-    //free(accuracies);
 }
 
 void update_mini_batch(NeuralNetwork *nn, 
@@ -132,10 +138,10 @@ void update_mini_batch(NeuralNetwork *nn,
 
 
 void backprop(NeuralNetwork *nn, 
-              matrice *input, 
-              matrice *target,
-              matrice **nabla_b, 
-              matrice **nabla_w) {
+        matrice *input, 
+        matrice *target,
+        matrice **nabla_b, 
+        matrice **nabla_w) {
     // feedforward
     matrice *output = input;
     matrice **activations = malloc((nn->nb_layers + 1) * sizeof(matrice *));
