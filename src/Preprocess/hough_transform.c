@@ -1,6 +1,6 @@
 #include "hough_transform.h"
 
-#define PEAK_CANCEL_RADIUS_RATIO 0.1
+#define PEAK_CANCEL_RADIUS_RATIO 0.01
 
 // algorithm from
 // https://towardsdatascience.com/lines-detection-with-hough-transform-84020b3b1549
