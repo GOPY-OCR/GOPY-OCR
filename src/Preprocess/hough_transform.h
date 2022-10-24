@@ -7,6 +7,18 @@
 #include "maths.h"
 #include "pixel_utils.h"
 #include "point.h"
+#include "geometry.h"
+
+
+// Finds the lines in the image and returns
+// the predicted angle of the grid based on 
+// the median angle of the image lines
+// Only work with angles between -45 and 45 degrees
+//
+// note: the returned angle is the inverse of the
+//       angle of what we want to rotate the image
+int detect_grid_rotation(SDL_Surface *image);
+
 
 // Applies the Hough transform algorithm to the given image
 //
@@ -16,7 +28,7 @@
 // - draw_lines: if draw_lines is set, the source image will be modified
 // 
 // returns: a Rect containing the detected sudoku grid
-Rect find_sudoku_grid(SDL_Surface *image, int nb_lines, int draw_lines);
+Line *find_image_lines(SDL_Surface *image, int nb_lines, int draw_lines);
 
 
 // Draws the hough transform space
@@ -38,7 +50,8 @@ matrice *create_hough_space_matrice(SDL_Surface *image,
 //                this is used to avoid detecting the same line multiple times
 //
 // returns: an array of points representing the lines
-Point *find_peaks(matrice *accumulator, int nb_lines, int cancel_radius);
+Point *find_peaks(matrice *accumulator, int nb_lines, int cancel_radius_rho, int cancel_radius_theta);
+
 
 // Draws the lines found by the Hough transform
 // on the given image
@@ -52,8 +65,6 @@ void draw_hough_lines_on_image(SDL_Surface *image,
 
 
 void draw_line(SDL_Surface *image, 
-               int x1, 
-               int y1, 
-               int x2, 
-               int y2, 
+               Line line,
                SDL_Color color);
+

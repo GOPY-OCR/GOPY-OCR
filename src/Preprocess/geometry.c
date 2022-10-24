@@ -5,9 +5,7 @@
 // by looking for the median rectangle area, and 
 // selecting the nb_rects closest to it that don't 
 // overlap
-Rect *find_rects(Line *lines, int nb_lines, int nb_rects){
-    Rect *rects = malloc(sizeof(Rect) * nb_rects);
-
+Rect *find_rects(Line *lines, int nb_lines, int *nb_rects) {
     // find all the lines intersections
     // and store them in a list
     Point *intersections = malloc(sizeof(Point) * nb_lines * nb_lines);
@@ -24,15 +22,32 @@ Rect *find_rects(Line *lines, int nb_lines, int nb_rects){
 
     // find all the rectangles formed by the lines
     // and store them in a list
-    Rect *all_rects = malloc(sizeof(Rect) * nb_intersections * nb_intersections);
-    int nb_all_rects = 0;
+    Rect *rects = malloc(sizeof(Rect) * nb_intersections * nb_intersections);
+    *nb_rects = 0;
     for (int i = 0; i < nb_intersections; i++){
         for (int j = i + 1; j < nb_intersections; j++){
             Rect rect = Rect_fromPoints(intersections[i], intersections[j]);
-            all_rects[nb_all_rects] = rect;
-            nb_all_rects++;
+
+            if (rect.p1.x == rect.p2.x || rect.p1.y == rect.p2.y)
+                continue;
+
+            rects[*nb_rects] = rect;
+            (*nb_rects)++;
         }
     }
+
+    // remove duplicates
+    for (int i = 0; i < *nb_rects; i++){
+        for (int j = i + 1; j < *nb_rects; j++){
+            if (Rect_equals(rects[i], rects[j])){
+                rects[j] = rects[*nb_rects - 1];
+                (*nb_rects)--;
+                j--;
+            }
+        }
+    }
+
+    free(intersections);
 
     return rects;
 }
@@ -65,4 +80,65 @@ Point line_intersection(Line line1, Line line2){
     int yi = (int) y + 0.5;
 
     return (Point){xi, yi};
+}
+
+// Returns the median angle of the vertical lines
+// this is used to rotate the image 
+int median_line_angle(Line *lines, int nb_lines){
+    int *angles = malloc(sizeof(int) * nb_lines);
+    int nb_angles = 0;
+    for (int i = 0; i < nb_lines; i++){
+
+        if (lines[i].p1.x == lines[i].p2.x && lines[i].p1.y == lines[i].p2.y)
+            // line is a point
+            continue;
+
+        int dx = lines[i].p2.x - lines[i].p1.x;
+        int dy = lines[i].p2.y - lines[i].p1.y;
+
+        if (intabs(dx) < intabs(dy)){
+            // this line has an angle between -45 and 45 degrees
+            if (dx < 0){
+                dx = -dx;
+                dy = -dy;
+            }
+
+            // compute the angle
+            int angle = (int) (atan2(dy, dx) * 180 / M_PI);
+
+            angles[nb_angles++] = angle;
+        }
+    }
+
+    sort_int_array(angles, nb_angles);
+
+    int median_angle = angles[nb_angles / 2];
+
+    return median_angle;
+}
+
+Line *hough_lines_to_lines(Point *lines,
+        int nb_lines,
+        array *thetas,
+        array *rhos,
+        double d){
+    Line *lines_out = malloc(sizeof(Line) * nb_lines);
+
+    for (int i = 0; i < nb_lines; i++){
+        double theta = array_get(thetas, lines[i].y);
+        double rho = array_get(rhos, lines[i].x);
+
+        // convert coordinates from hough space to cartesian space
+        double a = cos_degree(theta);
+        double b = sin_degree(theta);
+        double x0 = a * rho;
+        double y0 = b * rho;
+
+        Point p1 = (Point){(int) (x0 + d * (-b)), (int) (y0 + d * a)};
+        Point p2 = (Point){(int) (x0 - d * (-b)), (int) (y0 - d * a)};
+
+        lines_out[i] = (Line){p1, p2};
+    }
+
+    return lines_out;
 }
