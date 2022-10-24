@@ -97,7 +97,9 @@ matrice *feedforward(NeuralNetwork *nn, matrice *inputs) {
         matrice_map(output, sigmoid); // output = sigmoid(output)
 
         matrice_free(dot);
-        matrice_free(old_output);
+        if (i > 0) {
+            matrice_free(old_output);
+        }
     }
 
     return output;
