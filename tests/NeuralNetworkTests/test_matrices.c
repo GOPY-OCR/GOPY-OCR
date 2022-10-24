@@ -154,6 +154,29 @@ Test(matrices, test_clone) {
     matrice *m = matrice_clone(m1);
 
     cr_assert(matrice_equals(m, m1), "Matrices are not equal");
+
+    // Free m1 and check if m is still the same
+    matrice_free(m1);
+    setup();
+    cr_assert(matrice_equals(m, m1), "Matrices are not equal");
+}
+
+Test(matrices, test_clone_harder) {
+    setup();
+
+    matrice *copy1 = matrice_clone(big1);
+    matrice *copy2 = matrice_clone(big1);
+
+    cr_assert(matrice_equals(copy1, copy2), "Matrices are not equal");
+
+    // Free big1 and check if copy1 and copy2 are still the same
+    matrice_free(big1);
+    cr_assert(matrice_equals(copy1, copy2), "Matrices are not equal");
+
+    matrice_free(matrice_clone(copy1));
+    matrice_free(matrice_clone(copy2));
+    // nothings should have changed
+    cr_assert(matrice_equals(copy1, copy2), "Matrices are not equal");
 }
 
 Test(matrices, test_max) {

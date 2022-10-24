@@ -1,5 +1,23 @@
 #include "dataset.h"
 
+dataset *create_dataset(int size) {
+    dataset *data = malloc(sizeof(dataset));
+    data->inputs = malloc(size * sizeof(matrice *));
+    data->targets = malloc(size * sizeof(matrice *));
+    data->size = size;
+    return data;
+}
+
+void free_dataset(dataset *data) {
+    for (int i = 0; i < data->size; i++) {
+        matrice_free(data->inputs[i]);
+        matrice_free(data->targets[i]);
+    }
+    free(data->inputs);
+    free(data->targets);
+    free(data);
+}
+
 
 dataset *load_dataset(const char *path, int size) {
     dataset *data = create_dataset(size * 10);
@@ -43,16 +61,6 @@ void shuffle_dataset(dataset *data) {
         data->targets[j] = tmp;
     }
 }
-
-
-dataset *create_dataset(int size) {
-    dataset *data = malloc(sizeof(dataset));
-    data->inputs = malloc(size * sizeof(matrice *));
-    data->targets = malloc(size * sizeof(matrice *));
-    data->size = size;
-    return data;
-}
-
 
 dataset *copy_dataset(dataset *data, int deepcopy) {
     dataset *copy = create_dataset(data->size);

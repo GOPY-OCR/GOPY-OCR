@@ -91,13 +91,15 @@ matrice *feedforward(NeuralNetwork *nn, matrice *inputs) {
     matrice *output = inputs;
 
     for (int i = 0; i < nn->nb_layers; i++) {
-        matrice *old_input = output;
+        matrice *old_output = output;
         matrice *dot = matrice_dot(nn->layers[i]->weights, output);
         output = matrice_add(dot, nn->layers[i]->biases);   // output = weights * output + biases
         matrice_map(output, sigmoid); // output = sigmoid(output)
 
         matrice_free(dot);
-        matrice_free(old_input);
+        if (i > 0) {
+            matrice_free(old_output);
+        }
     }
 
     return output;
