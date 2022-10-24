@@ -7,7 +7,6 @@ TEST_DIR := $(BUILD_DIR)/tests
 $(shell mkdir -p $(TEST_DIR)/NeuralNetworkTests)
 
 LDLIBS += -lcriterion
-
 INCLUDE_DIRS = $(shell find ../src/ -type d)
 
 SRC_OFILES = 
@@ -29,8 +28,6 @@ NeuralNetwork: $(call ofiles,NeuralNetwork)
 $(TEST_DIR)/%.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
 
-$(BUILD_DIR):
-	make -C ../
 
 MainBuild:
 	$(MAKE) -C ..
