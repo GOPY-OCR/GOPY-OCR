@@ -1,6 +1,7 @@
 #pragma once
 #include "maths.h"
 #include "matrice.h"
+#include "str_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 

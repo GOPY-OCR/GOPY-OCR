@@ -17,7 +17,9 @@ define ofiles
 		../_build/src/Utils/queue.o \
 		../_build/src/Utils/array.o \
 		../_build/src/Utils/maths.o \
-		../_build/src/Utils/matrice.o
+		../_build/src/Utils/matrice.o \
+		../_build/src/Utils/str_utils.o \
+		../_build/src/Utils/progress_bar.o
 endef
 
 all: MainBuild $(TARGETS)
