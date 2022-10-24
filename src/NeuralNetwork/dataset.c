@@ -23,6 +23,9 @@ dataset *load_dataset(const char *path, int size) {
             // !TODO: set target vector
             SDL_FreeSurface(image);
         }
+
+        free(folder);
+        free(images_paths);
     }
 
     return data;
@@ -85,6 +88,9 @@ char **list_files(const char *path, int n) {
     } else {
         perror("Could not open directory");
     }
+
+    free(files);
+    free(dir);
 
     return files;
 }

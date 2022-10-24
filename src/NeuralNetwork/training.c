@@ -45,14 +45,13 @@ void train(NeuralNetwork *nn,
                               i,
                               i + batch_size);
         }
-        if (verbose) {
+        if (verbose > 1) {
 
             if(testing_data != NULL && testing_data->size > 0) {
                 printf("Epoch %i: ", e);
-                float accuracy = evaluate(nn, testing_data, verbose);
+                float accuracy = evaluate(nn, testing_data, verbose - 1);
                 matrice_set(accuracies, e, 0, accuracy);
             }
-            
         }
     }
 
@@ -60,6 +59,11 @@ void train(NeuralNetwork *nn,
         char *message = malloc(sizeof(char) * 100);
         sprintf(message, "Accuracy over %d epochs", epochs);
         matrice_to_csv(accuracies, "accuracies.csv", message);
+    }
+
+    if (verbose > 0) {
+	    printf("Final Epoch: ");
+	    float accuracy = evaluate(nn, testing_data, verbose);
     }
 }
 

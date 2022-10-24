@@ -18,7 +18,7 @@ char *double_to_string(double d) {
         p--;
     }
 
-    realloc(str, strlen(str) + 1);
+    str = realloc(str, strlen(str) + 1);
 
     return str;
 }

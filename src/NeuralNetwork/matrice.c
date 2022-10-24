@@ -318,7 +318,7 @@ char *matrice_serialize(matrice *m, char *name){
     }
     output[index] = '\0';
 
-    realloc(output, sizeof(char) * (index + 1));
+    output = realloc(output, sizeof(char) * (index + 1));
 
     return output;
 
