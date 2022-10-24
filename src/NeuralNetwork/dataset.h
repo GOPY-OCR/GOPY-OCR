@@ -1,3 +1,4 @@
+#pragma once
 #include "matrice.h"
 #include <stdlib.h>
 #include <string.h>
