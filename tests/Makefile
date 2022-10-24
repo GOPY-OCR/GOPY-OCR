@@ -20,7 +20,8 @@ define ofiles
 		../_build/src/Utils/matrice.o \
 		../_build/src/Utils/str_utils.o \
 		../_build/src/Utils/progress_bar.o \
-		../_build/src/Utils/point.o
+		../_build/src/Utils/point.o \
+		../_build/src/Utils/array_sort.o
 
 endef
 
