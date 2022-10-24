@@ -5,5 +5,5 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-
-void flood_fill(SDL_Surface *image, Point point, Uint32 color);
+// returns the number of pixels filled
+int flood_fill(SDL_Surface *image, Point point, Uint32 color);
