@@ -1,3 +1,4 @@
+#pragma once
 #include "matrice.h"
 
 typedef struct {
