@@ -1,24 +1,29 @@
 #include "xor.h"
 
+
+#define XOR_EPOCHS 4000
+#define XOR_LEARNING_RATE 5
+#define XOR_VERBOSE 3
+
 void xor_main() {
     NeuralNetwork *network = create_xor_network();
 
-    train_xor_network(network);
+    train_xor_network(network, XOR_VERBOSE);
 
     test_xor_network(network);
 }
 
 NeuralNetwork *create_xor_network() {
-    int layers[4] = {2, 2, 2, 1};
-    NeuralNetwork *network = create_neural_network(4, 2, layers);
+    int layers[3] = {3, 2, 1};
+    NeuralNetwork *network = create_neural_network(3, 2, layers);
 
     return network;
 }
 
-void train_xor_network(NeuralNetwork *network) {
+void train_xor_network(NeuralNetwork *network, int verbose) {
     dataset *data = create_xor_dataset();
 
-    train(network, 300, 0.1, 4, data, data, 2);
+    train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose);
 }
 
 

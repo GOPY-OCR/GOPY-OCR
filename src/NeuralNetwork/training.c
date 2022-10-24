@@ -1,13 +1,7 @@
 #include "training.h"
 // see http://neuralnetworksanddeeplearning.com/chap2.html
 
-// trains the neural network with the given training data
-//
-// neural_network: the neural network to train
-// epochs: the number of epochs to train the neural network
-// training_data: the training dataset to train the neural network with
-// testing_data: (optional) used to evaluate the neural network after each epoch
-// verbose_level: 0 = no output, 1 = per epoch summary, 2 = per testing data summary every epoch
+
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
@@ -34,6 +28,8 @@ void train(NeuralNetwork *nn,
 
     float mini_batch_learning_rate = learning_rate / batch_size;
 
+    matrice *accuracies = matrice_new(epochs, 1);
+
     // if testing data is the same dataset as training data, we have
     // to make a copy of it to avoid modifying the order each epoch
     if(testing_data == training_data) {
@@ -54,9 +50,16 @@ void train(NeuralNetwork *nn,
             if(testing_data != NULL && testing_data->size > 0) {
                 printf("Epoch %i: ", e);
                 float accuracy = evaluate(nn, testing_data, verbose);
+                matrice_set(accuracies, e, 0, accuracy);
             }
             
         }
+    }
+
+    if (verbose > 2) {
+        char *message = malloc(sizeof(char) * 100);
+        sprintf(message, "Accuracy over %d epochs", epochs);
+        matrice_to_csv(accuracies, "accuracies.csv", message);
     }
 }
 
@@ -86,15 +89,6 @@ void update_mini_batch(NeuralNetwork *nn, dataset *data, float learning_rate,
 
     // update NeuralNetwork weights
     for (int i = 0; i < nn->nb_layers; i++) {
-
-        //printf("nn->layers[%d]->weights = \n", i);
-        //matrice_print(nn->layers[i]->weights);
-        //printf("nabla_w[%d] = \n", i);
-        //matrice_print(nabla_w[i]);
-        //printf("nn->layers[%d]->biases = \n", i);
-        //matrice_print(nn->layers[i]->biases);
-        //printf("\n\n");
-
         nn->layers[i]->weights =
             matrice_sub(nn->layers[i]->weights,
                     matrice_multiply(nabla_w[i], (double)learning_rate));
@@ -104,10 +98,7 @@ void update_mini_batch(NeuralNetwork *nn, dataset *data, float learning_rate,
     }
 }
 
-// Returns nabla_b, nabla_w representing the
-// gradient for the cost function.  nabla_b and
-// nabla_w are arrays of matrices, similar
-// to NeuralNetwork->biases and NeuralNetwork->weights.
+
 void backprop(NeuralNetwork *nn, matrice *input, matrice *target,
         matrice **nabla_b, matrice **nabla_w) {
     // feedforward
@@ -147,18 +138,7 @@ void backprop(NeuralNetwork *nn, matrice *input, matrice *target,
     }
 }
 
-// Returns the maximum output row index
-int max_output(matrice *output) {
-    int i;
-    int j;
-    matrice_max(output, &i, &j);
-    return i;
-}
 
-// Returns the accuracy of the NeuralNetwork
-// on the given data. 
-// Will print a summary if verbose is 1 or more.
-// Will print the output of each test if verbose is 2 or more.
 float evaluate(NeuralNetwork *nn, 
         dataset *data, 
         int verbose) {
@@ -190,7 +170,7 @@ float evaluate(NeuralNetwork *nn,
         printf("%i / %i correct (%.2f%%)\n", 
                     correct, 
                     total,
-                    accuracy);
+                    accuracy * 100);
     }
 
     if(verbose > 1) {
@@ -216,100 +196,11 @@ float evaluate(NeuralNetwork *nn,
     return accuracy;
 }
 
-#define INPUT_SIZE 784
-// loads a dataset from a given path
-// dataset is a folder containing 10 folders, one for each digit
-//
-// path: path to the dataset, e.g. "data/training/"
-// size: number of images per class
-// returns: a dataset
-dataset *load_dataset(const char *path, int size) {
-    dataset *data = create_dataset(size * 10);
-    data->inputs = malloc(size * 10 * sizeof(matrice *));
-    data->targets = malloc(size * 10 * sizeof(matrice *));
 
-    int pathle = strlen(path);
-    for (int i = 0; i < 10; i++) {
-        char *folder = malloc(pathle + 2);
-        strcpy(folder, path);
-        // last folder character is the digit e.g. "data/training/0"
-        folder[pathle] = i + '0';
-        folder[pathle + 1] = '\0';
-
-        char **images_paths = list_files(folder, size);
-
-        for (int j = 0; j < size; j++) {
-            SDL_Surface *image = load_image(images_paths[j]);
-
-            // !TODO: convert image to input vector
-            // !TODO: set target vector
-            SDL_FreeSurface(image);
-        }
-    }
-
-    return data;
+int max_output(matrice *output) {
+    int i;
+    int j;
+    matrice_max(output, &i, &j);
+    return i;
 }
 
-// converts a list of images to a list of inputs
-// images: list of images
-// size: number of images
-
-// list files and sub-directories in a directory
-//
-// path: path to directory
-// n: maximum number of files to list
-// returns: list of files in directory
-char **list_files(const char *path, int n) {
-    DIR *dir;
-    struct dirent *ent;
-    char **files = malloc(n * sizeof(char *));
-    int i = 0;
-
-    if ((dir = opendir(path)) != NULL) {
-        while ((ent = readdir(dir)) != NULL && i < n) {
-            if (ent->d_type == DT_REG) {
-                files[i] = malloc(strlen(ent->d_name) + 1);
-                strcpy(files[i], ent->d_name);
-                i++;
-            }
-        }
-        closedir(dir);
-    } else {
-        perror("Could not open directory");
-    }
-
-    return files;
-}
-
-void shuffle_dataset(dataset *data) {
-    for (int i = 0; i < data->size; i++) {
-        int j = rand() % data->size;
-        matrice *tmp = data->inputs[i];
-        data->inputs[i] = data->inputs[j];
-        data->inputs[j] = tmp;
-        tmp = data->targets[i];
-        data->targets[i] = data->targets[j];
-        data->targets[j] = tmp;
-    }
-}
-
-// note that matrices are left uninitialized
-dataset *create_dataset(int size) {
-    dataset *data = malloc(sizeof(dataset));
-    data->inputs = malloc(size * sizeof(matrice *));
-    data->targets = malloc(size * sizeof(matrice *));
-    data->size = size;
-    return data;
-}
-
-// if deepcopy is 1, the matrices will be copied
-// otherwise, the dataset will only contain pointers to the matrices
-// this is useful to keep the same order of the dataset
-dataset *copy_dataset(dataset *data, int deepcopy) {
-    dataset *copy = create_dataset(data->size);
-    for (int i = 0; i < data->size; i++) {
-        copy->inputs[i] = matrice_clone(data->inputs[i]);
-        copy->targets[i] = matrice_clone(data->targets[i]);
-    }
-    return copy;
-}
