@@ -1,29 +1,20 @@
 #include "training.h"
 #include "xor.h"
-
-// Test(training, test_load_dataset){
-//     int nb_data = 15;
-//     dataset *data = load_dataset("../src/NeuralNetwork/data/training/",
-//     nb_data);
-//
-//     cr_assert(data != NULL);
-//     cr_assert(data->inputs->rows == INPUT_SIZE);
-//     cr_assert(data->inputs->cols == 10 * nb_data);
-//     cr_assert(data->outputs->rows == 11);
-// }
+#include "dataset.h"
 
 Test(training, test_xor_training) {
     NeuralNetwork *network = create_xor_network();
+    dataset *data = create_xor_dataset();
 
     cr_assert(network != NULL);
 
-    train_xor_network(network, 0);
+    train_xor_network(network, 0, data);
 
-    int test = test_xor_network(network, 0);
+    int test = test_xor_network(network, 0, data);
 
     if (!test) {
         printf("Training failed, results:\n");
-        evaluate(network, create_xor_dataset(), 1);
+        evaluate(network, data, 1);
     }
 
     cr_assert(test, "Failed to train XOR network");
