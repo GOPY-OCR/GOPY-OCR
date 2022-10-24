@@ -19,7 +19,9 @@ define ofiles
 		../_build/src/Utils/maths.o \
 		../_build/src/Utils/matrice.o \
 		../_build/src/Utils/str_utils.o \
-		../_build/src/Utils/progress_bar.o
+		../_build/src/Utils/progress_bar.o \
+		../_build/src/Utils/point.o
+
 endef
 
 all: MainBuild $(TARGETS)
