@@ -23,3 +23,8 @@ double cos_degree(double degree){
 double sin_degree(double degree){
     return sin(degree_to_radian(degree));
 }
+
+
+int intabs(int x) { 
+    return x < 0 ? -x : x; 
+}

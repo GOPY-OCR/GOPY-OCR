@@ -9,3 +9,6 @@ double degree_to_radian(double degree);
 
 double cos_degree(double degree);
 double sin_degree(double degree);
+
+
+int intabs(int x);
