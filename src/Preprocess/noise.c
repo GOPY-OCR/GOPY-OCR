@@ -11,7 +11,7 @@ Uint8 *safe_get_pixel(SDL_Surface *surface, int x, int y) {
 }
 
 Uint8 max_color_pixels(SDL_Surface *surface, int x, int y) {
-    Uint8 cur_max = safe_get_pixel(surface, x, y);
+    Uint8 cur_max = *safe_get_pixel(surface, x, y);
     if (cur_max == NULL)
         errx(1, "Preprocess - max_color_pixels: Can't find the given pixel");
 
@@ -22,31 +22,31 @@ Uint8 max_color_pixels(SDL_Surface *surface, int x, int y) {
         if (FILTER[i] == 0)
             continue;
 
-        Uint8 cur = safe_get_pixel(surface, x + i % SIZE_SIDE_FILTER, 
+        Uint8 cur = *safe_get_pixel(surface, x + i % SIZE_SIDE_FILTER, 
                                             y + i / SIZE_SIDE_FILTER);
-        if (cur != NULL && *cur > cur_max)
-            cur_max = *cur;
+        if (cur != NULL && cur > cur_max)
+            cur_max = cur;
     }
 
     return cur_max;
 }
 
 Uint8 min_color_pixels(SDL_Surface *surface, int x, int y) {
-    Uint8 cur_min = safe_get_pixel(surface, x, y);
+    Uint8 cur_min = *safe_get_pixel(surface, x, y);
     if (cur_min == NULL)
         errx(1, "Preprocess - min_color_pixels: Can't find the given pixel");
 
     x -= SIZE_SIDE_FILTER;
     y -= SIZE_SIDE_FILTER;
 
-    for (size_t i; i < SIZE_FILTER; i++) {
+    for (size_t i; i < SIZE_SIDE_FILTER * SIZE_SIDE_FILTER; i++) {
         if (FILTER[i] == 0)
             continue;
 
-        Uint8 cur = safe_get_pixel(surface, x + i % SIZE_SIDE_FILTER, 
+        Uint8 cur = *safe_get_pixel(surface, x + i % SIZE_SIDE_FILTER, 
                                             y + i / SIZE_SIDE_FILTER);
-        if (cur != NULL && *cur > cur_min)
-            cur_min = *cur;
+        if (cur != NULL && cur > cur_min)
+            cur_min = cur;
     }
 
     return cur_min;

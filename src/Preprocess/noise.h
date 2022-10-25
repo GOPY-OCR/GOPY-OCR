@@ -2,7 +2,7 @@
 #define PREPROCESS_NOISE_H
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL/SDL2.h>
+#include <SDL2/SDL.h>
 #define SIZE_SIDE_FILTER 7
 
 const int FILTER[] = {
