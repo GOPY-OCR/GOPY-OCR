@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "sdl_utils.h"
 
 SDL_Surface *new_blank_surface(SDL_Surface *base) {
     SDL_Surface* dest_surface = SDL_CreateRGBSurface(

@@ -2,7 +2,7 @@
 #include "maths.h"
 #include "matrice.h"
 #include "neural_network.h"
-#include "utils.h"
+#include "sdl_utils.h"
 #include "dataset.h"
 #include "progress_bar.h"
 
