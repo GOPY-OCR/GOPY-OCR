@@ -23,10 +23,10 @@ NeuralNetwork: $(call ofiles,NeuralNetwork)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
-SECONDEXPANSION:
+.SECONDEXPANSION:
 Solver: $(call ofiles,Solver)
-    $(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-    ./$@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	./$@
 
 # Same rule for all .o files
 $(TEST_DIR)/%.o: %.c
