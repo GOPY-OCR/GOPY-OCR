@@ -4,7 +4,7 @@ include ../compile_settings.mk
 TARGETS = NeuralNetwork  Solver
 BUILD_DIR := ../_build
 TEST_DIR := $(BUILD_DIR)/tests
-$(shell mkdir -p $(TEST_DIR)/NeuralNetworkTests)
+$(shell mkdir -p $(TEST_DIR)/NeuralNetworkTests $(TEST_DIR)/SolverTests)
 
 LDLIBS += -lcriterion
 INCLUDE_DIRS = $(shell find ../src/ -type d)
