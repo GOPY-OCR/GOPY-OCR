@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+int BOARDSIZE = 9;
 
 //PROTOTYPES
 int Contains(int list[], int x);

@@ -1,6 +1,3 @@
-#include "solver.h"
-
-
 int BOARDSIZE = 9;
 
 int board[][BOARDSIZE] = { {5, 3, 0, 0, 7, 0, 0, 0, 0},
