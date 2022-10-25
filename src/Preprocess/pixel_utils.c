@@ -20,7 +20,7 @@ Uint32 *getpixel(SDL_Surface *surface, int x, int y){
     }
 
     int bpp = surface->format->BytesPerPixel; // = 4
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+    Uint32 *p = surface->pixels + y * surface->pitch + x * bpp;
     return p;
 }
 
