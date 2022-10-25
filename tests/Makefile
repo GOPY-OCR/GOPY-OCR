@@ -1,7 +1,7 @@
 # This Makefile should be called after everything is build by the main Makefile
 include ../compile_settings.mk
 
-TARGETS = NeuralNetwork
+TARGETS = NeuralNetwork  Solver
 BUILD_DIR := ../_build
 TEST_DIR := $(BUILD_DIR)/tests
 $(shell mkdir -p $(TEST_DIR)/NeuralNetworkTests)
@@ -23,6 +23,10 @@ NeuralNetwork: $(call ofiles,NeuralNetwork)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
+SECONDEXPANSION:
+Solver: $(call ofiles,Solver)
+    $(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+    ./$@
 
 # Same rule for all .o files
 $(TEST_DIR)/%.o: %.c
