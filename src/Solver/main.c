@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <err.h>
 #include <string.h>
-#include "solver.c"
-#include "grid.c"
+#include "solver.h"
+#include "grid.h"
 
 
 int main(int argc, char **argv) 
