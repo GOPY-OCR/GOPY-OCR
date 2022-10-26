@@ -33,11 +33,15 @@ Test(board, test_contains) {
 
     for ( size_t i = 0; (int)i < BOARDSIZE; i ++){
         int contains = Contains(board[i][0], element2search);
-        if (contains != results[i])
-            if (results[i] == 0)
+        
+        if (contains != results[i]){
+            if (results[i] == 0){
                 cr_assert_fail("Wrong ! The array contains %i\n", element2search);
-            else
+            }
+            else{
                 cr_assert_fail("Wrong ! The array doesn't contain %i\n", element2search);
+            }
+        }
     }
 }
 
@@ -48,12 +52,15 @@ Test(board, test_IsLineValid){
     int results1 = 1;
     
     int lineValid = IsLineValid(board);
-    if (lineValid != results1)
-            if (results1 == 0)
+    
+    if (lineValid != results1){
+            if (results1 == 0){
                  cr_assert_fail("Wrong ! The lines are not valid\n");
-             else
+            }
+            else{
                  cr_assert_fail("Wrong ! The lines are valid\n");
-
+            }
+    }
 }
 
 
@@ -63,11 +70,15 @@ Test(board, test_IsColumnValid){
     int results2 = 1;
 
     int columnValid = IsColumnValid(board);
-    if (columnValid != results2)
-            if (results2 == 0)
+    
+    if (columnValid != results2){
+            if (results2 == 0){
                 cr_assert_fail("Wrong ! The columns are not valid\n");
-            else
+            }
+            else{
                 cr_assert_fail("Wrong ! The columns are valid\n");
+            }
+    }
     
 }
 
@@ -79,11 +90,14 @@ Test(board, test_IsBoardValid){
     
     int boardValid = IsBoardValid(board);
  
-    if (boardValid != results3)
-            if (results3 == 0)
+    if (boardValid != results3){
+            if (results3 == 0){
                 cr_assert_fail("Wrong ! The board is not valid\n");
-            else
+            }
+            else{
                 cr_assert_fail("Wrong ! The board is valid\n");
+            }
+    }
       
 }
 
@@ -95,11 +109,14 @@ Test(board, test_IsSolved){
  
      int isSolved = IsSolved(board);
 
-     if (isSolved != results4)
-             if (results4 == 0)
+     if (isSolved != results4){
+             if (results4 == 0){
                  cr_assert_fail("Wrong ! The board is not solved\n");
-             else
+             }
+             else{
                  cr_assert_fail("Wrong ! The board is solved\n");
+             }
+     }
  
 }
 
@@ -111,8 +128,9 @@ Test(board, test_Solve){
 
       for (size_t line = 0; (int)line < BOARDSIZE; line ++){
           for (size_t column = 0; column < BOARDSIZE; column ++){
-              if (board[i][j] != solved[i][j])
+              if (board[i][j] != solved[i][j]){
                   cr_assert_fail("The solution is not the expected one\n");
+              }
           }
       }
 }
