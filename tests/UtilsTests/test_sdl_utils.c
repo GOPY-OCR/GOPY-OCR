@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "sdl_utils.h"
 
 // there are 6 images, but only test with one because it takes too long
 #define CDC_NUM_TESTS 1
