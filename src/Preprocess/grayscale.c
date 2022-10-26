@@ -1,7 +1,7 @@
 #include <err.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
+#include <err.h>
 
 Uint32 pixel_to_grayscale(Uint32 pixel_color, SDL_PixelFormat* format)
 {
@@ -21,7 +21,10 @@ void surface_to_grayscale(SDL_Surface* surface)
 	Uint32* pixels = surface->pixels;
 	int len = surface->w * surface->h;
 	SDL_PixelFormat* format = surface->format;
-	SDL_LockSurface(surface);
+	if (SDL_LockSurface(surface) != 0)
+	{
+	 errx(1,"Couldn't lock surface");
+	}
 	for(int i; i<len; i++)
 	{
 		pixels[i] = pixel_to_grayscale(pixels[i],format);
