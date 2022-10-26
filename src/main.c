@@ -56,6 +56,11 @@ int main(int argc, char **argv) {
         if (argc != 3)
             exit(1);
 
+        char *final_name = format_final_name(argv[2], "detected_grid");
+
+        SDL_Surface *image = load_image(argv[2]);
+        surface_to_grayscale(image);
+        save_image(image, final_name);
     }
     else if (strcmp(argv[1], "--binarization") == 0 || strcmp(argv[1], "-b") == 0) {
         printf("Show binarization...\n");
