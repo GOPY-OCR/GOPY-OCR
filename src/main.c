@@ -4,15 +4,17 @@
 void exit(int exit_error) {
     char msg[] = "The arguments are incorrect.\n"
                  "Usage: demonstrate OPTION [FILE]\n"
-                 "  -h, --help               Show this help\n"
-                 "  -g, --grayscale IMG      Save the graysaled image in `IMG_grayscaled.png`\n"
-                 "  -r, --rotate IMG ANGLE   Save the rotated image with the given angle\n"
-                 "  -b, --binarization IMG   Save the binarized image in `IMG_bin.png`\n"
-                 "                           in `IMG_ANGLE_rotated.png`\n"
-                 "  -d, --detect IMG         Save the detected grid in `IMG_detected_grid.png`\n"
-                 "  -c, --cut IMG            Save the images in `IMG_X.png`\n"
-                 "  -s, --solve GRID         Save the result in `GRID.result`\n"
-                 "  -n, --neuralNetwork      Show a proof of concept of the neural network\n";
+                 "  -h,  --help                 Show this help\n"
+                 "  -g,  --grayscale IMG        Save the graysaled image in `IMG_grayscaled.png`\n"
+                 "  -cb, --contrast-brightness  Save the image with corrected contrast, brightness\n"
+                 "                              and noise reduced in `IMG_contrast.png`\n"
+                 "  -r,  --rotate IMG ANGLE     Save the rotated image with the given angle\n"
+                 "  -b,  --binarization IMG     Save the binarized image in `IMG_bin.png`\n"
+                 "                              in `IMG_ANGLE_rotated.png`\n"
+                 "  -d,  --detect IMG           Save the detected grid in `IMG_detected_grid.png`\n"
+                 "  -c,  --cut IMG              Save the images in `IMG_X.png`\n"
+                 "  -s,  --solve GRID           Save the result in `GRID.result`\n"
+                 "  -n,  --neuralNetwork        Show a proof of concept of the neural network\n";
 
     errx(exit_error, "%s", msg);
 }
@@ -57,6 +59,13 @@ int main(int argc, char **argv) {
     }
     else if (strcmp(argv[1], "--binarization") == 0 || strcmp(argv[1], "-b") == 0) {
         printf("Show binarization...\n");
+
+        if (argc != 3)
+            exit(1);
+
+    }
+    else if (strcmp(argv[1], "--contrast-brightness") == 0 || strcmp(argv[1], "-cb") == 0) {
+        printf("Show contrast and brightness...\n");
 
         if (argc != 3)
             exit(1);
