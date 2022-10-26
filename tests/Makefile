@@ -13,15 +13,8 @@ SRC_OFILES =
 define ofiles
 	$(shell find $(BUILD_DIR)/src/$(1)/ -type f -name "*.o") \
 		$(shell find $(1)Tests/ -type f -name "test.c" | echo "$(TEST_DIR)/$(1)Tests/"`xargs basename -s .c`).o \
-		../_build/src/Utils/utils.o \
-		../_build/src/Utils/queue.o \
-		../_build/src/Utils/array.o \
-		../_build/src/Utils/maths.o \
-		../_build/src/Utils/matrice.o \
-		../_build/src/Utils/str_utils.o \
-		../_build/src/Utils/progress_bar.o \
-		../_build/src/Utils/point.o \
-		../_build/src/Utils/array_sort.o
+		$(wildcard $(BUILD_DIR)/src/Utils/*.o)
+
 
 endef
 
