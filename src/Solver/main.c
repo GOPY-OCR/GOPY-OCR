@@ -9,7 +9,7 @@
 int main(int argc, char **argv) 
 { 
     if (argc != 1){
-        err(1);
+        errx(1, "You must give the file of the sudoku to solve");
     }
 
     else{
