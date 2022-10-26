@@ -1,8 +1,5 @@
 #include "solver.h"
 
-//size of the board
-#define BOARDSIZE 9
-
 //Contains checks if an element x is in the list
 //returns 1 if the list contains x
 //else returns 0

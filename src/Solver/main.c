@@ -14,9 +14,25 @@ int main(int argc, char **argv)
 
     else{
         int grid[81] = {0};
-        char file[strlen(file) + 7] = argv[1];
+        char file[strlen(argv[1]) + 7] = argv[1];
         load_grid_file(file, grid);
-        Solve(grid);
+        
+        int board[][9] = {0};
+        size_t line = 0;
+        size_t column = 0;
+        int count = 0;
+
+        for (size_t i = 0; i < 81; i ++){
+            if (column == 8){
+                line += 1;
+                column = 0;
+            }
+
+            board[line][column] = grid[i];
+            column += 1;
+        }
+
+        Solve(board);
         strcat(file, ".result");
         save_grid_file(grid, file);
     }

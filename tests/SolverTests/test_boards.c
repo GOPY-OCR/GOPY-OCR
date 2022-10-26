@@ -30,7 +30,7 @@ Test(board, test_contains) {
     int results[9] = {0, 0, 0, 0, 0, 1, 1, 0, 0};
 
     for ( size_t i = 0; (int)i < BOARDSIZE; i ++){
-        int contains = Contains(board[i][0], element2search);
+        int contains = Contains(board[i], element2search);
         
         if (contains != results[i]){
             if (results[i] == 0){
