@@ -6,4 +6,13 @@
 #include <SDL2/SDL_image.h>
 
 // returns the number of pixels filled
-int flood_fill(SDL_Surface *image, Point point, Uint32 color);
+//
+// params:
+//  surface: the surface to fill
+//  Point{x, y}: the starting point
+//  Uint32: the color to fill with
+//  max_fill: set do 0 to fill the entire surface,
+//            otherwise, when the max_fill is reached,
+//            the fill will be canceled, and it will
+//            return -1
+int flood_fill(SDL_Surface *image, Point point, Uint32 color, int max_fill);

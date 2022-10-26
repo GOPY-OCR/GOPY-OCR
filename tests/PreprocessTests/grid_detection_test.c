@@ -1,5 +1,6 @@
 #include "grid_detection.h"
 #include "utils.h"
+#include "point.h"
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -46,21 +47,20 @@ ParameterizedTestParameters(grid_detection, test_grid_detection) {
 ParameterizedTest(struct grid_detection_params *params, grid_detection, test_grid_detection) {
     SDL_Surface *image = load_image(params->input_file);
 
-    int x1, y1, x2, y2;
-    grid_detection(image, &x1, &y1, &x2, &y2);
+    Rect predicted_rect = grid_detection(image, 0);
 
     cr_assert(
-            x1 >= params->x1lower && 
-            x1 <= params->x1upper && 
-            y1 >= params->y1lower && 
-            y1 <= params->y1upper, 
+            predicted_rect.p1.x >= params->x1lower &&
+            predicted_rect.p1.x <= params->x1upper &&
+            predicted_rect.p1.y >= params->y1lower &&
+            predicted_rect.p1.y <= params->y1upper,
             "first grid corner is missplaced on image %s", params->input_file);
 
     cr_assert(
-            x2 >= params->x2lower && 
-            x2 <= params->x2upper && 
-            y2 >= params->y2lower && 
-            y2 <= params->y2upper, 
+            predicted_rect.p2.x >= params->x2lower &&
+            predicted_rect.p2.x <= params->x2upper &&
+            predicted_rect.p2.y >= params->y2lower &&
+            predicted_rect.p2.y <= params->y2upper,
             "second grid corner is missplaced on image %s", params->input_file);
 }
 

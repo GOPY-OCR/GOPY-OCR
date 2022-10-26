@@ -8,6 +8,7 @@
 #include "pixel_utils.h"
 #include "point.h"
 #include "geometry.h"
+#include "debug_utils.h"
 
 
 // Finds the lines in the image and returns
@@ -17,7 +18,7 @@
 //
 // note: the returned angle is the inverse of the
 //       angle of what we want to rotate the image
-int detect_grid_rotation(SDL_Surface *image);
+int detect_grid_rotation(Line *lines);
 
 
 // Applies the Hough transform algorithm to the given image
@@ -61,10 +62,4 @@ void draw_hough_lines_on_image(SDL_Surface *image,
                                array *thetas, 
                                array *rhos, 
                                double d);
-
-
-
-void draw_line(SDL_Surface *image, 
-               Line line,
-               SDL_Color color);
 

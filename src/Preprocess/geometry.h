@@ -12,7 +12,7 @@
 // if your two lines collide at (0,0)
 Point line_intersection(Line line1, Line line2);
 
-
+// Finds all the rectangles formed by the lines
 Rect *find_rects(Line *lines, int nb_lines, int *nb_rects);
 
 

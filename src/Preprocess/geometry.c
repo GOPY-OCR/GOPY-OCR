@@ -1,10 +1,6 @@
 #include "geometry.h"
 
-// Finds all the rectangles formed by the lines
-// and tries to find the sudoku grid among them
-// by looking for the median rectangle area, and 
-// selecting the nb_rects closest to it that don't 
-// overlap
+
 Rect *find_rects(Line *lines, int nb_lines, int *nb_rects) {
     // find all the lines intersections
     // and store them in a list

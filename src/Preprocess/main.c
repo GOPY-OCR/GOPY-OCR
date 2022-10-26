@@ -7,8 +7,13 @@
 int main(int argc, char **argv) {
     SDL_Surface *image = load_image(argv[1]);
 
-    int angle = detect_grid_rotation(image);
-    printf("Detected angle: %d\n", angle);
+    Line *lines = find_image_lines(image, 15, 1);
+
+    int angle = detect_grid_rotation(lines);
+
+    printf("predicted angle: %d\n", angle);
+
+    save_image(image, "output.png");
 
     return 0; 
 }

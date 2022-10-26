@@ -30,7 +30,14 @@ int Rect_equals(Rect r1, Rect r2) {
 }
 
 int Rect_Area(Rect r) {
+    int area = (r.p2.x - r.p1.x) * (r.p2.y - r.p1.y);
+    if(area <= 0)
+        return 0; // probably an overflow. these cases should not matter for our purposes
     return (r.p2.x - r.p1.x) * (r.p2.y - r.p1.y);
+}
+
+int Rect_Collides(Rect r1, Rect r2) {
+    return r1.p1.x < r2.p2.x && r1.p2.x > r2.p1.x && r1.p1.y < r2.p2.y && r1.p2.y > r2.p1.y;
 }
 
 

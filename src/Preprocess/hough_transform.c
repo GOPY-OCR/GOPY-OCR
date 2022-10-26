@@ -1,13 +1,11 @@
 #include "hough_transform.h"
 
-#define HARDCODED_PEAK_CANCEL_RADIUS_RHO 8
-#define HARDCODED_PEAK_CANCEL_RADIUS_THETA 20
-#define LINE_COLOR (SDL_Color){255, 0, 0, 255}
+#define HARDCODED_PEAK_CANCEL_RADIUS_RHO 5
+#define HARDCODED_PEAK_CANCEL_RADIUS_THETA 15
 
-
-#define ROTATION_DETECTION_LINE_COUNT 10
-int detect_grid_rotation(SDL_Surface *image) {
-    Line *lines = find_image_lines(image, ROTATION_DETECTION_LINE_COUNT, 0);
+#define ROTATION_DETECTION_LINE_COUNT 10 // only keeps the 10 strongest lines for rotation detection
+int detect_grid_rotation(Line *lines) {
+    // this function assumes that there are at least ROTATION_DETECTION_LINE_COUNT lines in the array
     int rotation = median_line_angle(lines, ROTATION_DETECTION_LINE_COUNT);
     free(lines);
 
@@ -52,12 +50,14 @@ Line *find_image_lines(SDL_Surface *image, int nb_lines, int draw_lines){
     Line *cartesian_lines = hough_lines_to_lines(lines, nb_lines, thetas, rhos, d);
     if (draw_lines){
         for (int i = 0; i < nb_lines; i++){
-            draw_line(image, cartesian_lines[i], LINE_COLOR);
+            draw_line(image, cartesian_lines[i], DEBUG_SDL_COLOR);
         }
     }
 
     array_free(thetas);
     array_free(rhos);
+    matrice_free(accumulator);
+    free(lines);
 
     return cartesian_lines;
 }
@@ -133,35 +133,3 @@ Point *find_peaks(matrice *accumulator, int nb_lines, int cancel_radius_rho, int
     return lines;
 }
 
-void draw_line(SDL_Surface *image, 
-               Line line,
-               SDL_Color color){
-    // algorithm found on https://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#C
-    int dx = abs(line.p2.x - line.p1.x);
-    int sx = line.p1.x < line.p2.x ? 1 : -1;
-    int dy = -abs(line.p2.y - line.p1.y);
-    int sy = line.p1.y < line.p2.y ? 1 : -1;
-    int err = dx + dy;
-    int e2;
-    Uint32 pixel = SDL_MapRGBA(image->format, color.r, color.g, color.b, color.a);
-
-    while (!(line.p1.x == line.p2.x && line.p1.y == line.p2.y)){
-        if (line.p1.x >= 0 && line.p1.x < image->w && line.p1.y >= 0 && line.p1.y < image->h){
-            putpixel(image, line.p1.x, line.p1.y, pixel);
-        }
-        e2 = 2 * err;
-        if (e2 >= dy){
-            err += dy;
-            line.p1.x += sx;
-        }
-        if (e2 <= dx){
-            err += dx;
-            line.p1.y += sy;
-        }
-    }
-    // modified the algorithm a bit to not have a while(1) loop
-    // and instead draw the last pixel outside the loop
-    if (line.p1.x >= 0 && line.p1.x < image->w && line.p1.y >= 0 && line.p1.y < image->h){
-        putpixel(image, line.p1.x, line.p1.y, pixel);
-    }
-}

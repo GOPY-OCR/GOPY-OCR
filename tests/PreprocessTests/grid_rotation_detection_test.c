@@ -40,7 +40,8 @@ ParameterizedTestParameters(grid_detection, grid_rotation_test){
 
 ParameterizedTest(struct grid_rotation_detection_params *params, grid_detection, grid_rotation_test){
     SDL_Surface* image = load_image(params->filename);
-    int angle_detected = detect_grid_rotation(image);
+    Line *lines = find_image_lines(image, 15, 0);
+    int angle_detected = detect_grid_rotation(lines);
     int angle_expected = params->angle;
 
     int offset = intabs(angle_detected - angle_expected);
