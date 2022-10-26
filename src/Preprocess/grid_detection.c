@@ -10,8 +10,6 @@ Rect grid_detection(SDL_Surface *image, int draw_grid){
 
     SDL_Surface *extracted_grid = extract_grid(image);
 
-    save_image(extracted_grid, "extracted_grid.png");
-
     Rect grid_rect = find_white_coners(extracted_grid);
 
     return grid_rect;
