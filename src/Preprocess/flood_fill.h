@@ -15,4 +15,8 @@
 //            otherwise, when the max_fill is reached,
 //            the fill will be canceled, and it will
 //            return -1
-int flood_fill(SDL_Surface *image, Point point, Uint32 color, int max_fill);
+//
+//
+//  THIS IS WIP:
+//  TODO: implement grid detection using flood fill
+int flood_fill(SDL_Surface *image, Point point, Uint32 color);
