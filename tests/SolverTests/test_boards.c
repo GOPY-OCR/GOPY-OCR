@@ -1,4 +1,3 @@
-int BOARDSIZE = 9;
 
 int board[][BOARDSIZE] = { {5, 3, 0, 0, 7, 0, 0, 0, 0},
                             {6, 0, 0, 1, 9, 5, 0, 0, 0},
@@ -31,7 +30,8 @@ Test(board, test_contains) {
     int results[9] = {0, 0, 0, 0, 0, 1, 1, 0, 0};
 
     for ( size_t i = 0; (int)i < BOARDSIZE; i ++){
-        if (Contains(board[i][0], element2search) != results[i])
+        int contains = Contains(board[i][0], element2search);
+        if (contains != results[i])
             if (results[i] == 0)
                 cr_assert_fail("Wrong ! The array contains %i\n", element2search);
             else
@@ -44,8 +44,9 @@ Test(board, test_IsLineValid){
     setup();
     
     int results1 = 1;
-
-    if (IsLineValid(board) != results1)
+    
+    int lineValid = IsLineValid(board);
+    if (lineValid != results1)
             if (results1 == 0)
                  cr_assert_fail("Wrong ! The lines are not valid\n");
              else
@@ -59,7 +60,8 @@ Test(board, test_IsColumnValid){
 
     int results2 = 1;
 
-    if (IsColumnValid(board) != results2)
+    int columnValid = IsColumnValid(board);
+    if (columnValid != results2)
             if (results2 == 0)
                 cr_assert_fail("Wrong ! The columns are not valid\n");
             else
@@ -72,8 +74,10 @@ Test(board, test_IsBoardValid){
     setup();
    
     int results3 = 1;
+    
+    int boardValid = IsBoardValid(board);
  
-    if (IsBoardValid(board) != results3)
+    if (boardValid != results3)
             if (results3 == 0)
                 cr_assert_fail("Wrong ! The board is not valid\n");
             else
@@ -87,7 +91,9 @@ Test(board, test_IsSolved){
     
      int results4 = 1;
  
-     if (IsSolved(board) != results4)
+     int isSolved = IsSolved(board);
+
+     if (isSolved != results4)
              if (results4 == 0)
                  cr_assert_fail("Wrong ! The board is not solved\n");
              else
