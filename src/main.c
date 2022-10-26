@@ -1,21 +1,41 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <err.h>
+#include "main.h"
 
 
 void log_error_exit() {
     char msg[] = "The arguments are incorrect.\n"
                  "Usage: demonstrate OPTION FILE\n"
-                 "  -g, --grayscale IMG      Save the graysaled image in `grayscaled.png`\n"
+                 "  -g, --grayscale IMG      Save the graysaled image in `IMG_grayscaled.png`\n"
                  "  -r, --rotate IMG ANGLE   Save the rotated image with the given angle\n"
-                 "                           in `rotated.png`\n"
-                 "  -d, --detect IMG         Save the detected grid in `detected_grid.png`\n"
-                 "  -c, --cut IMG            Save the images in `img_X.png`\n"
+                 "                           in `IMG_ANGLE_rotated.png`\n"
+                 "  -d, --detect IMG         Save the detected grid in `IMG_detected_grid.png`\n"
+                 "  -c, --cut IMG            Save the images in `IMG_X.png`\n"
                  "  -s, --solve GRID         Save the result in `GRID.result`\n"
                  "  -n, --neuralNetwork      Show a proof of concept of the neural network\n";
 
     errx(1, "%s", msg);
+}
+
+/* 
+ * Insert the string in `add` before the `.png` of `name`
+ */
+char *format_final_name(char *name, char *add) {
+    char *res = calloc(strlen(name) + strlen(add) + 4, sizeof(char));
+    size_t i = 0;
+    while (name[i] != '.') {
+        res[i] = name[i];
+        i++;
+    }
+
+    for (size_t j = 0; add[j] == 0; i++, j++)
+        res[i] = add[j];
+
+    res[i] = '.';
+    res[i + 1] = 'p';
+    res[i + 2] = 'n';
+    res[i + 3] = 'g';
+    printf("%s", res);
+
+    return res;
 }
 
 int main(int argc, char **argv) {
@@ -33,6 +53,12 @@ int main(int argc, char **argv) {
     else if (strcmp(argv[1], "--detect") || strcmp(argv[1], "-d")) {
         if (argc != 3)
             log_error_exit();
+
+        char *final_name = format_final_name(argv[2], "detected_grid");
+
+        SDL_Surface *image = load_image(argv[2]);
+        grid_detection(image, 1);
+        save_image(image, final_name);
     }
     else if (strcmp(argv[1], "--cut") || strcmp(argv[1], "-c")) {
         if (argc != 3)
