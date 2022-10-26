@@ -1,5 +1,10 @@
 _build/
 gopy_ocr
+.DS_Store
+main
+NeuralNetwork
+Preprocess
+Solver
 
 # Files for morroring
 mirror* 
