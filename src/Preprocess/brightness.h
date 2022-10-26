@@ -6,8 +6,8 @@
 #include "sdl_utils.h"
 #include "morphology.h"
 
-SDL_Surface *divide_images(SDL_Surface *numerator, SDL_Surface *denominator);
-SDL_Surface *correct_brightness(SDL_Surface *base);
+void divide_images(SDL_Surface *numerator, SDL_Surface *denominator);
+void correct_brightness(SDL_Surface *base);
 
 #endif
 
