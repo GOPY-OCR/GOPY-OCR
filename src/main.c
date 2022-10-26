@@ -21,5 +21,35 @@ int main(int argc, char **argv) {
     if (argc < 2)
         log_error_exit();
 
+    switch(argv[1]) {
+        case "--grayscale":
+            // TODO
+            break;
+
+        case "--rotate":
+            // TODO
+            break;
+        
+        case "--detect":
+            // TODO
+            break;
+
+        case "--detect":
+            // TODO
+            break;
+
+        case "--detect":
+            // TODO
+            break;
+
+        case "--detect":
+            // TODO
+            break;
+
+        default:
+            log_error_exit();
+            break;
+    }
+
     return 0;
 }
