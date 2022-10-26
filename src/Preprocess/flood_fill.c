@@ -18,11 +18,15 @@ int flood_fill(SDL_Surface *image, Point point, Uint32 color, int cancel_fill, S
     if (dest != NULL) {
         SDL_LockSurface(dest);
     }
+
+    int cr, cg, cb;
+    SDL_GetRGB(color, image->format, &cr, &cg, &cb);
+    int is_color_white = cr > 128 && cg > 128 && cb > 128;
     
     while(!queue_is_empty(q)) {
         Point *p = queue_dequeue(q);
         int inbounds = p->x >= 0 && p->x < image->w && p->y >= 0 && p->y < image->h;
-        if (inbounds && *getpixel(image, p->x, p->y) != color) {
+        if (inbounds && is_pixel_white(image, p->x, p->y) != is_color_white) {
             Uint32 *pixel = getpixel(image, p->x, p->y);
             if (filled == fill_capacity) {
                 fill_capacity *= 2;
