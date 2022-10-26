@@ -9,8 +9,8 @@ void exit(int exit_error) {
                  "  -cb, --contrast-brightness  Save the image with corrected contrast, brightness\n"
                  "                              and noise reduced in `IMG_contrast.png`\n"
                  "  -r,  --rotate IMG ANGLE     Save the rotated image with the given angle\n"
-                 "  -b,  --binarization IMG     Save the binarized image in `IMG_bin.png`\n"
                  "                              in `IMG_ANGLE_rotated.png`\n"
+                 "  -b,  --binarization IMG     Save the binarized image in `IMG_bin.png`\n"
                  "  -d,  --detect IMG           Save the detected grid in `IMG_detected_grid.png`\n"
                  "  -c,  --cut IMG              Save the images in `IMG_X.png`\n"
                  "  -s,  --solve GRID           Save the result in `GRID.result`\n"
@@ -68,6 +68,11 @@ int main(int argc, char **argv) {
         if (argc != 3)
             exit(1);
 
+        char *final_name = format_final_name(argv[2], "_bin");
+
+        SDL_Surface *image = load_image(argv[2]);
+        binarize(image);
+        save_image(image, final_name);
     }
     else if (strcmp(argv[1], "--contrast-brightness") == 0 || strcmp(argv[1], "-cb") == 0) {
         printf("Show contrast and brightness...\n");

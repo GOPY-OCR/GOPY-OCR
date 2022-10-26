@@ -9,6 +9,9 @@
 // Grayscale part
 #include "Preprocess/grayscale.h"
 
+// Binarization part
+#include "Preprocess/binarize.h"
+
 // Brightness / contrast / noise part
 #include "Preprocess/brightness.h"
 
