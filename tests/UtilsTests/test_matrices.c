@@ -185,11 +185,22 @@ Test(matrices, test_max) {
     int i;
     int j;
 
-    matrice_max(m1, &i, &j);
-
+    double *max = matrice_max(m1, &i, &j);
 
     cr_assert(i == 1 && j == 1, "Max is not in the right place");
+    cr_assert(*max == 4, "Max is not equal to 4");
+}
 
+Test(matrices, test_max_no_index) {
+    setup();
+
+    // sometimes we don't need the index of the max
+    // value, so we should be able to pass NULL
+    // as the index parameters
+
+    double *max = matrice_max(m1, NULL, NULL);
+
+    cr_assert(*max == 4, "Max is not equal to 4");
 }
 
 Test(matrices, test_sum) {
