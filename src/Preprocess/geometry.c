@@ -4,17 +4,8 @@
 Rect *find_rects(Line *lines, int nb_lines, int *nb_rects) {
     // find all the lines intersections
     // and store them in a list
-    Point *intersections = malloc(sizeof(Point) * nb_lines * nb_lines);
     int nb_intersections = 0;
-    for (int i = 0; i < nb_lines; i++){
-        for (int j = i + 1; j < nb_lines; j++){
-            Point intersection = line_intersection(lines[i], lines[j]);
-            if (intersection.x != -1 && intersection.y != -1){
-                intersections[nb_intersections] = intersection;
-                nb_intersections++;
-            }
-        }
-    }
+    Point *intersections = find_intersections(lines, nb_lines, &nb_intersections);
 
     // find all the rectangles formed by the lines
     // and store them in a list
@@ -46,6 +37,37 @@ Rect *find_rects(Line *lines, int nb_lines, int *nb_rects) {
     free(intersections);
 
     return rects;
+}
+
+Point *find_intersections(Line *lines, int nb_lines, int *nb_intersections) {
+    // find all the lines intersections
+    // and store them in a list
+    Point *intersections = malloc(sizeof(Point) * nb_lines * nb_lines);
+    *nb_intersections = 0;
+    for (int i = 0; i < nb_lines; i++){
+        for (int j = i + 1; j < nb_lines; j++){
+            Point intersection = line_intersection(lines[i], lines[j]);
+            if (intersection.x != -1 && intersection.y != -1){
+                intersections[*nb_intersections] = intersection;
+                (*nb_intersections)++;
+            }
+        }
+    }
+
+    // remove duplicates
+    for (int i = 0; i < *nb_intersections; i++){
+        for (int j = i + 1; j < *nb_intersections; j++){
+            if (Point_equals(intersections[i], intersections[j])){
+                intersections[j] = intersections[*nb_intersections - 1];
+                (*nb_intersections)--;
+                j--;
+            }
+        }
+    }
+
+    intersections = realloc(intersections, sizeof(Point) * (*nb_intersections));
+
+    return intersections;
 }
 
 Point line_intersection(Line line1, Line line2){

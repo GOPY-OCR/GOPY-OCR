@@ -14,6 +14,9 @@
 // The input image must be correctly rotated
 Rect grid_detection(SDL_Surface *image, int draw_grid);
 
+// Extracts the grid from the image
+SDL_Surface *extract_grid(SDL_Surface *image, Point *intersections, int nb_intersections);
+
 // calculates the areas of the rectangles
 // and tries to find which one are part of the grid
 // by looking for the median rectangle area, and 

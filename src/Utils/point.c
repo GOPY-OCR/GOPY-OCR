@@ -25,8 +25,12 @@ Rect Rect_fromPoints(Point p1, Point p2) {
     return r;
 }
 
+int Point_equals(Point p1, Point p2) {
+    return p1.x == p2.x && p1.y == p2.y;
+}
+
 int Rect_equals(Rect r1, Rect r2) {
-    return r1.p1.x == r2.p1.x && r1.p1.y == r2.p1.y && r1.p2.x == r2.p2.x && r1.p2.y == r2.p2.y;
+    return Point_equals(r1.p1, r2.p1) && Point_equals(r1.p2, r2.p2);
 }
 
 int Rect_Area(Rect r) {

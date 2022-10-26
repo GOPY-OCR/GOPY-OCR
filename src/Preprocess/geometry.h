@@ -5,6 +5,8 @@
 #include "maths.h"
 #include <math.h>
 
+Point *find_intersections(Line *lines, int nb_lines, int *nb_intersections);
+
 // returns the intersection point of two lines
 // or (-1,-1) if there are no intersection
 // 
