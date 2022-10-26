@@ -11,7 +11,7 @@ int is_pixel_white(SDL_Surface *image, int x, int y){
     Uint8 r, g, b;
     SDL_GetRGB(*pixel, image->format, &r, &g, &b);
 
-    return !(r==0 && g==0 && b==0);
+    return !(r < 128 && g < 128 && b < 128);
 }
 
 Uint32 *getpixel(SDL_Surface *surface, int x, int y){
