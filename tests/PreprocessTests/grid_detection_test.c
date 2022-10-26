@@ -1,5 +1,5 @@
 #include "grid_detection.h"
-#include "utils.h"
+#include "sdl_utils.h"
 #include "point.h"
 #include <stdio.h>
 #include <SDL2/SDL.h>

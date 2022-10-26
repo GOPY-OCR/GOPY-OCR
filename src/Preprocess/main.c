@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "sdl_utils.h"
 #include "hough_transform.h"
 #include "flood_fill.h"
 #include "debug_utils.h"
