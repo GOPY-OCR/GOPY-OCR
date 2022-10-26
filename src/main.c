@@ -1,9 +1,10 @@
 #include "main.h"
 
 
-void log_error_exit() {
+void exit(int exit_error) {
     char msg[] = "The arguments are incorrect.\n"
                  "Usage: demonstrate OPTION [FILE]\n"
+                 "  -h, --help               Show this help\n"
                  "  -g, --grayscale IMG      Save the graysaled image in `IMG_grayscaled.png`\n"
                  "  -r, --rotate IMG ANGLE   Save the rotated image with the given angle\n"
                  "                           in `IMG_ANGLE_rotated.png`\n"
@@ -12,7 +13,7 @@ void log_error_exit() {
                  "  -s, --solve GRID         Save the result in `GRID.result`\n"
                  "  -n, --neuralNetwork      Show a proof of concept of the neural network\n";
 
-    errx(1, "%s", msg);
+    errx(exit_error, "%s", msg);
 }
 
 /* 
@@ -41,27 +42,30 @@ char *format_final_name(char *name, char *add) {
 
 int main(int argc, char **argv) {
     if (argc < 2)
-        log_error_exit();
+        exit(1);
 
-    if (strcmp(argv[1], "--grayscale") == 0 || strcmp(argv[1], "-g") == 0) {
+    if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
+        exit(0);
+    }
+    else if (strcmp(argv[1], "--grayscale") == 0 || strcmp(argv[1], "-g") == 0) {
         printf("Show grayscalisation...\n");
 
         if (argc != 3)
-            log_error_exit();
+            exit(1);
 
     }
     else if (strcmp(argv[1], "--rotate") == 0 || strcmp(argv[1], "-r") == 0) {
         printf("Show rotation...\n");
 
         if (argc != 4)
-            log_error_exit();
+            exit(1);
 
     }
     else if (strcmp(argv[1], "--detect") == 0 || strcmp(argv[1], "-d") == 0) {
         printf("Show grid detection...\n");
 
         if (argc != 3)
-            log_error_exit();
+            exit(1);
 
         char *final_name = format_final_name(argv[2], "detected_grid");
 
@@ -73,21 +77,21 @@ int main(int argc, char **argv) {
         printf("Show cutting image...\n");
 
         if (argc != 3)
-            log_error_exit();
+            exit(1);
 
     }
     else if (strcmp(argv[1], "--solve") == 0 || strcmp(argv[1], "-s") == 0) {
         printf("Show solver...\n");
 
         if (argc != 3)
-            log_error_exit();
+            exit(1);
 
     }
     else if (strcmp(argv[1], "--neuralNetwork") == 0 || strcmp(argv[1], "-n") == 0) {
         printf("Show neural network...\n");
 
         if (argc != 2)
-            log_error_exit();
+            exit(1);
 
     }
     else
