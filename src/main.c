@@ -7,6 +7,7 @@ void exit(int exit_error) {
                  "  -h, --help               Show this help\n"
                  "  -g, --grayscale IMG      Save the graysaled image in `IMG_grayscaled.png`\n"
                  "  -r, --rotate IMG ANGLE   Save the rotated image with the given angle\n"
+                 "  -b, --binarization IMG   Save the binarized image in `IMG_bin.png`\n"
                  "                           in `IMG_ANGLE_rotated.png`\n"
                  "  -d, --detect IMG         Save the detected grid in `IMG_detected_grid.png`\n"
                  "  -c, --cut IMG            Save the images in `IMG_X.png`\n"
@@ -49,6 +50,13 @@ int main(int argc, char **argv) {
     }
     else if (strcmp(argv[1], "--grayscale") == 0 || strcmp(argv[1], "-g") == 0) {
         printf("Show grayscalisation...\n");
+
+        if (argc != 3)
+            exit(1);
+
+    }
+    else if (strcmp(argv[1], "--binarization") == 0 || strcmp(argv[1], "-b") == 0) {
+        printf("Show binarization...\n");
 
         if (argc != 3)
             exit(1);
