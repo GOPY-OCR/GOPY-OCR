@@ -1,7 +1,6 @@
 #include "solver.h"
 
-
-int board[][BOARDSIZE] = { {5, 3, 0, 0, 7, 0, 0, 0, 0},
+int board[][BOARDSIZE] =  { {5, 3, 0, 0, 7, 0, 0, 0, 0},
                             {6, 0, 0, 1, 9, 5, 0, 0, 0},
                             {0, 9, 8, 0, 0, 0, 0, 6, 0},
                             {8, 0, 0, 0, 6, 0, 0, 0, 3},
@@ -12,7 +11,7 @@ int board[][BOARDSIZE] = { {5, 3, 0, 0, 7, 0, 0, 0, 0},
                             {0, 0, 0, 0, 8, 0, 0, 7, 9}
                           };
 
-int solved[][BOARDSIZE] = { {5, 3, 4, 6, 7, 8, 9, 1, 2},
+int solved[][BOARDSIZE] =  { {5, 3, 4, 6, 7, 8, 9, 1, 2},
                              {6, 7, 2, 1, 9, 5, 3, 4, 8},
                              {1, 9, 8, 3, 4, 2, 5, 6, 7},
                              {8, 5, 9, 7, 6, 1, 4, 2, 3},
@@ -26,7 +25,6 @@ int solved[][BOARDSIZE] = { {5, 3, 4, 6, 7, 8, 9, 1, 2},
 
 
 Test(board, test_contains) {
-    setup();
     
     int element2search = 2;
     int results[9] = {0, 0, 0, 0, 0, 1, 1, 0, 0};
@@ -47,7 +45,6 @@ Test(board, test_contains) {
 
 
 Test(board, test_IsLineValid){
-    setup();
     
     int results1 = 1;
     
@@ -65,7 +62,6 @@ Test(board, test_IsLineValid){
 
 
 Test(board, test_IsColumnValid){
-    setup();
 
     int results2 = 1;
 
@@ -84,7 +80,6 @@ Test(board, test_IsColumnValid){
 
 
 Test(board, test_IsBoardValid){
-    setup();
    
     int results3 = 1;
     
@@ -103,7 +98,6 @@ Test(board, test_IsBoardValid){
 
 
 Test(board, test_IsSolved){
-     setup();
     
      int results4 = 1;
  
@@ -122,13 +116,12 @@ Test(board, test_IsSolved){
 
 
 Test(board, test_Solve){
-      setup();
 
       Solve(board);
 
       for (size_t line = 0; (int)line < BOARDSIZE; line ++){
-          for (size_t column = 0; column < BOARDSIZE; column ++){
-              if (board[i][j] != solved[i][j]){
+          for (size_t column = 0; (int)column < BOARDSIZE; column ++){
+              if (board[line][column] != solved[line][column]){
                   cr_assert_fail("The solution is not the expected one\n");
               }
           }
