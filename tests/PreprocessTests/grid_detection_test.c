@@ -21,24 +21,24 @@ char *cr_strdup(const char *str){
 }
 
 ParameterizedTestParameters(grid_detection, test_grid_detection) {
-    const size_t nb_samples = 0;
+    const size_t nb_samples = 2;
     struct grid_detection_params *params = cr_malloc(sizeof(struct grid_detection_params) * nb_samples);
 
-    //params[0] = (struct grid_detection_params) {
-    //    .input_file = cr_strdup("images/binary/1.png"),
-    //    .x1lower = 59, .x1upper = 90,
-    //    .y1lower = 71, .y1upper = 103,
-    //    .x2lower = 503, .x2upper = 535,
-    //    .y2lower = 504, .y2upper = 536,
-    //};
+    params[0] = (struct grid_detection_params) {
+        .input_file = cr_strdup("images/binary/1.png"),
+        .x1lower = 59, .x1upper = 90,
+        .y1lower = 71, .y1upper = 103,
+        .x2lower = 503, .x2upper = 535,
+        .y2lower = 504, .y2upper = 536,
+    };
 
-    //params[1] = (struct grid_detection_params) {
-    //    .input_file = cr_strdup("images/binary/2.png"),
-    //    .x1lower = 46, .x1upper = 66,
-    //    .y1lower = 55, .y1upper = 75,
-    //    .x2lower = 379, .x2upper = 399,
-    //    .y2lower = 380, .y2upper = 400,
-    //};
+    params[1] = (struct grid_detection_params) {
+        .input_file = cr_strdup("images/binary/2.png"),
+        .x1lower = 46, .x1upper = 66,
+        .y1lower = 55, .y1upper = 75,
+        .x2lower = 379, .x2upper = 399,
+        .y2lower = 380, .y2upper = 400,
+    };
     
 
     return cr_make_param_array(struct grid_detection_params, params, nb_samples);
