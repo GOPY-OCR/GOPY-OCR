@@ -28,6 +28,13 @@ typedef struct{
     Point p2;
 } Line;
 
+typedef struct{
+    Point p1;
+    Point p2;
+    Point p3;
+    Point p4;
+} Quad; // Quadrilateral (not straight rectangle)
+
 
 Rect2 Rect_toRect2(Rect r);
 Rect Rect2_toRect(Rect2 r);
