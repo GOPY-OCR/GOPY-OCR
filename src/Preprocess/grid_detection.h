@@ -12,12 +12,11 @@
 
 // Detects the grid in the image
 // The input image must be correctly rotated
-Rect grid_detection(SDL_Surface *image, int draw_grid);
+Quad grid_detection(SDL_Surface *image, int draw_grid);
 
 int grid_rotation_detection(SDL_Surface *image);
 
-
-Rect find_white_coners(SDL_Surface *extracted_grid);
+Quad find_white_coners(SDL_Surface *extracted_grid);
 
 // Extracts the grid from the image
 SDL_Surface *extract_grid(SDL_Surface *image);

@@ -1,41 +1,16 @@
 #include "grid_detection.h"
 
-// number of lines to detect
-#define NB_LINES 20
-#define NB_GRID_RECTANGLES 81
-Rect grid_detection(SDL_Surface *image, int draw_grid){
-    Line *image_lines = find_image_lines(image, NB_LINES, 0);
-    int nb_intersections = 0;
-    Point *intersections = find_intersections(image_lines, NB_LINES, &nb_intersections);
-
+Quad grid_detection(SDL_Surface *image, int draw_grid){
     SDL_Surface *extracted_grid = extract_grid(image);
 
-    Rect grid_rect = find_white_coners(extracted_grid);
+    Quad grid_quad = find_white_coners(extracted_grid);
 
-    return grid_rect;
-}
-
-Rect find_white_coners(SDL_Surface *extracted_grid){
-    Rect result = (Rect) {(Point) {0, 0}, (Point) {0, 0}};
-    for (int y = 0; y < extracted_grid->h; y++){
-        for (int x = 0; x < extracted_grid->w; x++){
-            if (is_pixel_white(extracted_grid, x, y)){
-                if (result.p1.x == 0 && result.p1.y == 0 || x < result.p1.x - (y - result.p1.y)){
-                    result.p1.x = x;
-                    result.p1.y = y;
-                }
-
-                if (y > result.p2.y - (x - result.p2.x)){
-                    result.p2.x = x;
-                    result.p2.y = y;
-                }
-            }
-        }
+    if(draw_grid){
+        draw_quad(image, grid_quad, DEBUG_SDL_COLOR, 3);
     }
 
-    return result;
+    return grid_quad;
 }
-
 
 int grid_rotation_detection(SDL_Surface *image){
     SDL_Surface *extracted_grid = extract_grid(image);
@@ -46,6 +21,39 @@ int grid_rotation_detection(SDL_Surface *image){
 
     return rotation;
 }
+
+
+Quad find_white_coners(SDL_Surface *extracted_grid){
+    Quad result = (Quad) {(Point) {0, 0}, (Point) {0, 0}, (Point) {0, 0}, (Point) {0, 0}};
+    for (int y = 0; y < extracted_grid->h; y++){
+        for (int x = 0; x < extracted_grid->w; x++){
+            if (is_pixel_white(extracted_grid, x, y)){
+                if (result.p1.x == 0 || x < result.p1.x - (y - result.p1.y)){
+                    result.p1.x = x;
+                    result.p1.y = y;
+                }
+
+                if (result.p2.x == 0 || x > result.p2.x + (y - result.p2.y)){
+                    result.p2.x = x;
+                    result.p2.y = y;
+                }
+
+                if (y > result.p3.y + (x - result.p3.x)){
+                    result.p3.x = x;
+                    result.p3.y = y;
+                }
+
+                if (y > result.p4.y - (x - result.p4.x)){
+                    result.p4.x = x;
+                    result.p4.y = y;
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 
 SDL_Surface *extract_grid(SDL_Surface *image){
     int areas_capacity = 100;
@@ -90,7 +98,7 @@ SDL_Surface *extract_grid(SDL_Surface *image){
 
     // where we found the largest white connected area,
     // we copy it to a new surface
-    flood_fill(image, areas_origin[max_area_index], black, 0, extracted_grid);
+    flood_fill(image, areas_origin[max_area_index], black, 1, extracted_grid);
 
     free(areas);
     free(areas_origin);
