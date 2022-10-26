@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <err.h>
-#include "utils.h"
+#include "sdl_utils.h"
 
 // detect grid part
 #include "Preprocess/hough_transform.h"
