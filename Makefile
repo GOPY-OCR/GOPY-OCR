@@ -41,7 +41,8 @@ $(BUILD_DIR)/%.o: %.c
 
 test: $(TARGET)
 # -k: continue even if a test from another test suite fails
-	$(MAKE) -k -C tests
+#  timeout 20: kills the tests after 20 seconds
+	timeout -v 20 $(MAKE) -k -C tests
 
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
