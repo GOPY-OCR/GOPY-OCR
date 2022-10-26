@@ -47,7 +47,7 @@ ParameterizedTestParameters(grid_detection, test_grid_detection) {
 ParameterizedTest(struct grid_detection_params *params, grid_detection, test_grid_detection) {
     SDL_Surface *image = load_image(params->input_file);
 
-    Rect predicted_rect = grid_detection(image, 0);
+    Quad predicted_rect = grid_detection(image, 0);
 
     cr_assert(
             predicted_rect.p1.x >= params->x1lower &&
@@ -57,10 +57,10 @@ ParameterizedTest(struct grid_detection_params *params, grid_detection, test_gri
             "first grid corner is missplaced on image %s", params->input_file);
 
     cr_assert(
-            predicted_rect.p2.x >= params->x2lower &&
-            predicted_rect.p2.x <= params->x2upper &&
-            predicted_rect.p2.y >= params->y2lower &&
-            predicted_rect.p2.y <= params->y2upper,
+            predicted_rect.p4.x >= params->x2lower &&
+            predicted_rect.p4.x <= params->x2upper &&
+            predicted_rect.p4.y >= params->y2lower &&
+            predicted_rect.p4.y <= params->y2upper,
             "second grid corner is missplaced on image %s", params->input_file);
 }
 
