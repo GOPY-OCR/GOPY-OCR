@@ -8,7 +8,7 @@ Rect grid_detection(SDL_Surface *image, int draw_grid){
     int nb_intersections = 0;
     Point *intersections = find_intersections(image_lines, NB_LINES, &nb_intersections);
 
-    SDL_Surface *extracted_grid = extract_grid(image, intersections, nb_intersections);
+    SDL_Surface *extracted_grid = extract_grid(image);
 
     save_image(extracted_grid, "extracted_grid.png");
 
@@ -16,12 +16,26 @@ Rect grid_detection(SDL_Surface *image, int draw_grid){
     return grid_rect;
 }
 
-SDL_Surface *extract_grid(SDL_Surface *image, Point *intersections, int nb_intersections){
+
+int grid_rotation_detection(SDL_Surface *image){
+    SDL_Surface *extracted_grid = extract_grid(image);
+
+    Line *image_lines = find_image_lines(extracted_grid, 10, 0);
+
+    int rotation = detect_grid_rotation(image_lines);
+
+    return rotation;
+}
+
+SDL_Surface *extract_grid(SDL_Surface *image){
     int areas_capacity = 100;
     int *areas = malloc(sizeof(int) * areas_capacity);
     Point *areas_origin = malloc(sizeof(Point) * areas_capacity);
     size_t nb_areas = 0;
+
+
     Uint32 black = SDL_MapRGB(image->format, 0, 0, 0);
+    
     SDL_Surface *copy = SDL_CreateRGBSurface(0, image->w, image->h, 32, 0, 0, 0, 0);
     SDL_BlitSurface(image, NULL, copy, NULL);
 
@@ -42,6 +56,7 @@ SDL_Surface *extract_grid(SDL_Surface *image, Point *intersections, int nb_inter
             nb_areas++;
         }
     }
+
     SDL_FreeSurface(copy);
 
     size_t max_area_index = 0;
@@ -56,6 +71,9 @@ SDL_Surface *extract_grid(SDL_Surface *image, Point *intersections, int nb_inter
     // where we found the largest white connected area,
     // we copy it to a new surface
     flood_fill(image, areas_origin[max_area_index], black, 0, extracted_grid);
+
+    free(areas);
+    free(areas_origin);
 
     return extracted_grid;
 }
