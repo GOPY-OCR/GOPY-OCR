@@ -1,31 +1,39 @@
 #include "xor.h"
 
-void xor_main() {
+
+#define XOR_EPOCHS 2000
+#define XOR_LEARNING_RATE 5
+
+void xor_main(int verbose) {
+    dataset *data = create_xor_dataset();
     NeuralNetwork *network = create_xor_network();
 
-    train_xor_network(network);
+    train_xor_network(network, verbose, data);
 
-    test_xor_network(network);
+    if (!test_xor_network(network, 0, data)) {
+        errx(1, "XOR network failed to learn\n");
+    }
+
+    free_neural_network(network);
 }
 
 NeuralNetwork *create_xor_network() {
-    int layers[4] = {2, 2, 2, 1};
-    NeuralNetwork *network = create_neural_network(4, 2, layers);
+    int layers[2] = {3, 1};
+    NeuralNetwork *network = create_neural_network(2, 2, layers);
 
     return network;
 }
 
-void train_xor_network(NeuralNetwork *network) {
-    dataset *data = create_xor_dataset();
-
-    train(network, 300, 0.1, 4, data, data, 2);
+void train_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
+    train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose);
 }
 
+#define MIN_ACCURACY 0.9
+int test_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
+    //data = create_xor_dataset();
+    float accuracy = evaluate(network, data, verbose);
 
-int test_xor_network(NeuralNetwork *network) {
-    // TODO
-
-    return -1;
+    return accuracy >= MIN_ACCURACY;
 }
 
 dataset *create_xor_dataset(){

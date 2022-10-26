@@ -20,9 +20,19 @@ void matrice_free(matrice *m) {
 }
 
 void matrice_print(matrice *m) {
+    int max_length = 0;
+
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
-            printf("%f ", matrice_get(m, i, j));
+            int lenght = strlen(double_to_string(matrice_get(m, i, j)));
+            if (lenght > max_length)
+                max_length = lenght;
+        }
+    }
+
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->columns; j++) {
+            printf("%*s ", max_length, double_to_string(matrice_get(m, i, j)));
         }
         printf("\n");
     }
@@ -67,8 +77,6 @@ matrice *matrice_from_string(char *str) {
             matrice_set(m, 0, i, first_line[i]);
         }
 
-        // free(first_line);
-
         int row = 1;
         int column;
         while ((line = strsep(&strcopy, ","))) {
@@ -105,13 +113,16 @@ matrice *matrice_from_string(char *str) {
     }
 }
 
+double *matrice_get_ref(matrice *m, int row, int column) {
+    return m->data + (row * m->columns + column);
+}
+
 double matrice_get(matrice *m, int row, int column) {
-    return *(m->data + (row * (m->columns) + column));
+    return *matrice_get_ref(m, row, column);
 }
 
 void matrice_set(matrice *m, int row, int column, double value) {
-    double *field = m->data + (row * (m->columns) + column);
-    *field = value;
+    *matrice_get_ref(m, row, column) = value;
 }
 
 double random_double(double min, double max) {
@@ -247,20 +258,28 @@ matrice *matrice_clone(matrice *m) {
     return m_clone;
 }
 
-void matrice_max(matrice *m, int *row, int *column) {
-    double max = matrice_get(m, 0, 0);
+double *matrice_max(matrice *m, int *row, int *column) {
+    if (row == NULL)
+        row = malloc(sizeof(int));
+
+    if (column == NULL)
+        column = malloc(sizeof(int));
+
+    double *max = matrice_get_ref(m, 0, 0);
     *row = 0;
     *column = 0;
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
-            double value = matrice_get(m, i, j);
-            if (value > max) {
-                max = value;
+            double *value = matrice_get_ref(m, i, j);
+            if (*value > *max) {
+                *max = *value;
                 *row = i;
                 *column = j;
             }
         }
     }
+
+    return max;
 }
 
 double matrice_sum(matrice *m) {
@@ -271,4 +290,98 @@ double matrice_sum(matrice *m) {
         }
     }
     return sum;
+}
+
+#define SEPARATOR ';'
+#define LINE_SEPARATOR '\n'
+char *matrice_serialize(matrice *m, char *name){
+    int size = 256;
+    if (name != NULL) {
+        size += strlen(name);
+    }
+    int index = 0;
+    char *output = malloc(sizeof(char) * size);
+    output[index] = '\0';
+
+    if (name != NULL) {
+        sprintf(output, "# %s%c", name, LINE_SEPARATOR);
+    }
+    char *dims = malloc(sizeof(char) * 256);
+    sprintf(dims, "%dx%d%c", m->rows, m->columns, LINE_SEPARATOR);
+    strcat(output, dims);
+    free(dims);
+
+    index = strlen(output);
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->columns; j++) {
+            if (index + 20 >= size) {
+                size *= 2;
+                output = realloc(output, sizeof(char) * size);
+            }
+            char *val = double_to_string(matrice_get(m, i, j));
+            for (size_t k = 0; k < strlen(val); k++) {
+                output[index++] = val[k];
+            }
+            output[index++] = SEPARATOR;
+            free(val);
+        }
+        output[index - 1] = LINE_SEPARATOR;
+    }
+    output[index] = '\0';
+
+    output = realloc(output, sizeof(char) * (index + 1));
+
+    return output;
+
+}
+
+matrice *matrice_deserialize(char *str){
+    // skip name if present
+    char *p = str;
+    if (*p == '#') {
+        while (*p != LINE_SEPARATOR) {
+            p++;
+        }
+        p++;
+    }
+
+    // get dimensions
+    int rows, columns;
+    sscanf(p, "%dx%d", &rows, &columns);
+    while (*p != LINE_SEPARATOR) {
+        p++;
+    }
+    p++;
+
+    matrice *m = matrice_new(rows, columns);
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            double val;
+            sscanf(p, "%lf", &val);
+            matrice_set(m, i, j, val);
+            while (*p != SEPARATOR && *p != LINE_SEPARATOR) {
+                p++;
+            }
+            if (*p == SEPARATOR || *p == LINE_SEPARATOR) {
+                p++;
+            }
+        }
+    }
+
+    return m;
+}
+
+
+void matrice_to_csv(matrice *m, char *filename, char *name) {
+    char *str = matrice_serialize(m, name);
+    write_to_file(filename, str);
+    free(str);
+}
+
+matrice *matrice_read_csv(char *filename) {
+    char *str = read_from_file(filename);
+    matrice *m = matrice_deserialize(str);
+    free(str);
+    return m;
 }
