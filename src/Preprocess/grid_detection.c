@@ -12,8 +12,30 @@ Rect grid_detection(SDL_Surface *image, int draw_grid){
 
     save_image(extracted_grid, "extracted_grid.png");
 
-    Rect grid_rect = (Rect) {(Point) {0, 0}, (Point) {0, 0}};
+    Rect grid_rect = find_white_coners(extracted_grid);
+
     return grid_rect;
+}
+
+Rect find_white_coners(SDL_Surface *extracted_grid){
+    Rect result = (Rect) {(Point) {0, 0}, (Point) {0, 0}};
+    for (int y = 0; y < extracted_grid->h; y++){
+        for (int x = 0; x < extracted_grid->w; x++){
+            if (is_pixel_white(extracted_grid, x, y)){
+                if (result.p1.x == 0 && result.p1.y == 0 || x < result.p1.x - (y - result.p1.y)){
+                    result.p1.x = x;
+                    result.p1.y = y;
+                }
+
+                if (y > result.p2.y - (x - result.p2.x)){
+                    result.p2.x = x;
+                    result.p2.y = y;
+                }
+            }
+        }
+    }
+
+    return result;
 }
 
 

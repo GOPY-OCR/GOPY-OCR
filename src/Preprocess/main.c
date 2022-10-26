@@ -9,6 +9,7 @@ int main(int argc, char **argv) {
 
     Rect grid = grid_detection(image, 1);
 
+    printf("Grid detected at ((%d, %d), (%d, %d))\n", grid.p1.x, grid.p1.y, grid.p2.x, grid.p2.y);
 
     save_image(image, "output.png");
 
