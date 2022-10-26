@@ -6,10 +6,13 @@
 #include <err.h>
 #include "sdl_utils.h"
 
-// grayscale part
+// Grayscale part
 #include "Preprocess/grayscale.h"
 
-// detect grid part
+// Brightness / contrast / noise part
+#include "Preprocess/brightness.h"
+
+// Detect grid part
 #include "Preprocess/hough_transform.h"
 #include "Preprocess/flood_fill.h"
 #include "Preprocess/debug_utils.h"
