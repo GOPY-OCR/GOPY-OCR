@@ -2,8 +2,12 @@
 
 // img1 and img2 must differ only by their pixel colors
 void divide_images(SDL_Surface *numerator, SDL_Surface *denominator) {
-    SDL_LockSurface(numerator);
-    SDL_LockSurface(denominator);
+    if (SDL_LockSurface(numerator)!= 0)
+        errx(1, "%s", SDL_GetError());
+
+    if (SDL_LockSurface(denominator)!= 0)
+        errx(1, "%s", SDL_GetError());
+
     Uint32 *num_pixels = numerator->pixels;
     Uint32 *den_pixels = denominator->pixels;
     int len = numerator->w * numerator->h;
