@@ -16,7 +16,7 @@ int main(int argc, char **argv)
         int grid[81] = {0};
         char file[strlen(file) + 7] = argv[1];
         load_grid_file(file, grid);
-        Solve();
+        Solve(grid);
         strcat(file, ".result");
         save_grid_file(grid, file);
     }
