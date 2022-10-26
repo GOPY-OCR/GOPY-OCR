@@ -54,14 +54,16 @@ ParameterizedTest(struct grid_detection_params *params, grid_detection, test_gri
             predicted_rect.p1.x <= params->x1upper &&
             predicted_rect.p1.y >= params->y1lower &&
             predicted_rect.p1.y <= params->y1upper,
-            "first grid corner is missplaced on image %s", params->input_file);
+            "first grid corner is missplaced on image %s: expected (%d, %d), got (%d, %d)",
+            params->input_file, params->x1lower, params->y1lower, predicted_rect.p1.x, predicted_rect.p1.y);
 
     cr_assert(
             predicted_rect.p4.x >= params->x2lower &&
             predicted_rect.p4.x <= params->x2upper &&
             predicted_rect.p4.y >= params->y2lower &&
             predicted_rect.p4.y <= params->y2upper,
-            "second grid corner is missplaced on image %s", params->input_file);
+            "second grid corner is missplaced on image %s: expected (%d, %d), got (%d, %d)",
+            params->input_file, params->x2lower, params->y2lower, predicted_rect.p4.x, predicted_rect.p4.y);
 }
 
 SDL_Surface *binary1, *binary2;
