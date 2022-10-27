@@ -1,7 +1,6 @@
 #include "progress_bar.h"
 
 void progress_bar(int bar_size, int completed, int total, char *name){
-
     char *bar = malloc(bar_size + strlen(name) + 30);
     int nb = (completed * bar_size) / total;
     int i = 0;
@@ -17,6 +16,6 @@ void progress_bar(int bar_size, int completed, int total, char *name){
     i += sprintf(bar + i, "%d/%d", completed, total);
     bar[i++] = ' ';
     i += sprintf(bar + i, "%s", name);
-
+    fflush(stdout);
     printf("%s\r", bar);
 }
