@@ -9,6 +9,8 @@ Quad grid_detection(SDL_Surface *image, int draw_grid){
         draw_quad(image, grid_quad, DEBUG_SDL_COLOR, 3);
     }
 
+    SDL_FreeSurface(extracted_grid);
+
     return grid_quad;
 }
 
@@ -25,6 +27,9 @@ int grid_rotation_detection(SDL_Surface *image){
 
 Quad find_white_coners(SDL_Surface *extracted_grid){
     Quad result = (Quad) {(Point) {0, 0}, (Point) {0, 0}, (Point) {0, 0}, (Point) {0, 0}};
+
+    SDL_LockSurface(extracted_grid);
+
     for (int y = 0; y < extracted_grid->h; y++){
         for (int x = 0; x < extracted_grid->w; x++){
             if (is_pixel_white(extracted_grid, x, y)){
@@ -51,6 +56,8 @@ Quad find_white_coners(SDL_Surface *extracted_grid){
         }
     }
 
+    SDL_UnlockSurface(extracted_grid);
+
     return result;
 }
 
@@ -59,7 +66,7 @@ SDL_Surface *extract_grid(SDL_Surface *image){
     int areas_capacity = 100;
     int *areas = malloc(sizeof(int) * areas_capacity);
     Point *areas_origin = malloc(sizeof(Point) * areas_capacity);
-    size_t nb_areas = 0;
+    int nb_areas = 0;
 
 
     Uint32 black = SDL_MapRGB(image->format, 0, 0, 0);
@@ -67,8 +74,8 @@ SDL_Surface *extract_grid(SDL_Surface *image){
     SDL_Surface *copy = SDL_CreateRGBSurface(0, image->w, image->h, 32, 0, 0, 0, 0);
     SDL_BlitSurface(image, NULL, copy, NULL);
 
-    for (size_t x = 0; x < image->w; x++) {
-        for (size_t y = 0; y < image->h; y++) {
+    for (int x = 0; x < image->w; x++) {
+        for (int y = 0; y < image->h; y++) {
             if (!is_pixel_white(copy, x, y)) {
                 continue;
             }
@@ -87,8 +94,8 @@ SDL_Surface *extract_grid(SDL_Surface *image){
 
     SDL_FreeSurface(copy);
 
-    size_t max_area_index = 0;
-    for (size_t i = 0; i < nb_areas; i++) {
+    int max_area_index = 0;
+    for (int i = 0; i < nb_areas; i++) {
         if (areas[i] > areas[max_area_index]) {
             max_area_index = i;
         }
