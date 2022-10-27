@@ -57,7 +57,7 @@ void train(NeuralNetwork *nn,
                 accuracy = evaluate(nn, testing_data, verbose - 1);
             }
 
-            if (verbose == 1 && (e+1) % PROGRESS_BAR_INTERVAL == 0) {
+            if (verbose == 1 && (e==0 || ((e+1) % PROGRESS_BAR_INTERVAL == 0))) {
                 accuracy = evaluate(nn, testing_data, 0);
 
                 char progress_indicator[20];
@@ -68,7 +68,7 @@ void train(NeuralNetwork *nn,
 
             matrice_set(accuracies, e, 0, accuracy);
         }
-        else if (verbose == 1 && (e+1) % PROGRESS_BAR_INTERVAL == 0) {
+        else if (verbose == 1 && (e==0 || ((e+1) % PROGRESS_BAR_INTERVAL == 0))) {
             progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, "Epochs");
         }
     }
