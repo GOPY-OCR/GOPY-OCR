@@ -18,6 +18,9 @@ def main():
     xs = df["x1"].values.reshape(N, N)
     ys = df["x2"].values.reshape(N, N)
 
+    # draws a square of size 1 at 0, 0
+    plt.plot([0, 1, 1, 0, 0], [0, 0, 1, 1, 0], color="red")
+
     plt.imshow(image, extent=[df["x1"][0], df["x1"][df_size-1], df["x2"][0], df["x2"][df_size-1]], cmap="gray")
     plt.show()
 

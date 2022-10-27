@@ -4,8 +4,7 @@
 #define XOR_EPOCHS 500000
 #define XOR_LEARNING_RATE 80.0
 #define SAVE_FILENAME "_build/xor_network.nn"
-#define XOR_SHAPE (int[]){2, 1}
-
+#define XOR_SHAPE (int[]){3, 2, 1}
 void display_help() {
     printf("Usage: ./main -x [-v/-vv/-vvv] [mode]\n"
            "Available modes:\n"
@@ -95,7 +94,7 @@ double test_xor_inputs(NeuralNetwork *network, int verbose, double input1, doubl
 // Main mode 3
 #define PLOT_SIZE 1000
 #define PLOT_FILENAME "_build/xor_plot.csv"
-#define PLOT_SCALE 0.1
+#define PLOT_SCALE 0.5
 void save_network_plot(NeuralNetwork *network, int verbose) {
     matrice *plot = matrice_new(PLOT_SIZE * PLOT_SIZE, 3);
     
@@ -105,8 +104,8 @@ void save_network_plot(NeuralNetwork *network, int verbose) {
 
     for (int i = 0; i < PLOT_SIZE; i++) {
         for (int j = 0; j < PLOT_SIZE; j++) {
-            double input1 = (double) i / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE;
-            double input2 = (double) j / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE;
+            double input1 = (double) i / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
+            double input2 = (double) j / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
 
             double output = test_xor_inputs(network, 0, input1, input2);
             matrice_set(plot, i * PLOT_SIZE + j, 0, input1);
@@ -126,7 +125,7 @@ void train_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
     train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose, 0);
 }
 
-#define MIN_ACCURACY 0.9
+#define MIN_ACCURACY 0.01
 int test_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
     float accuracy = evaluate(network, data, verbose);
 
