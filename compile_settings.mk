@@ -28,4 +28,4 @@ endif
 BUILD_DIR := ./_build
 
 # use bash
-SHELL := /bin/bash
+SHELL := $(shell which bash)
