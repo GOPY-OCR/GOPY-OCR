@@ -15,6 +15,9 @@
 // Brightness / contrast / noise part
 #include "Preprocess/brightness.h"
 
+// Rotation part
+#include "Preprocess/ManualRot.h"
+
 // Detect grid part
 #include "Preprocess/hough_transform.h"
 #include "Preprocess/flood_fill.h"

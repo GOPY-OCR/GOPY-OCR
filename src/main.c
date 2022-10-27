@@ -33,7 +33,7 @@ char *format_final_name(char *name, char *add) {
     res[i] = '_';
     i++;
 
-    for (size_t j = 0; add[j] == 0; i++, j++)
+    for (size_t j = 0; add[j] != 0; i++, j++)
         res[i] = add[j];
 
     res[i] = '.';
@@ -76,6 +76,8 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "bin");
 
         SDL_Surface *image = load_image(argv[2]);
+        surface_to_grayscale(image);
+        correct_brightness(image);
         binarize(image);
         save_image(image, final_name);
     }
@@ -89,6 +91,7 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "contrast");
 
         SDL_Surface *image = load_image(argv[2]);
+        surface_to_grayscale(image);
         correct_brightness(image);
         save_image(image, final_name);
     }
@@ -99,6 +102,14 @@ int main(int argc, char **argv) {
         if (argc != 4)
             exit(1);
 
+        // Transform the angle in a double
+        double angle = strtod(argv[3], NULL);
+
+        char *final_name = format_final_name(argv[2], "rotated");
+
+        SDL_Surface *image = load_image(argv[2]);
+        image = SimpleRot(image, angle);
+        save_image(image, final_name);
     }
     
     else if (strcmp(argv[1], "--detect") == 0 || strcmp(argv[1], "-d") == 0) {
@@ -110,6 +121,9 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "detected_grid");
 
         SDL_Surface *image = load_image(argv[2]);
+        surface_to_grayscale(image);
+        correct_brightness(image);
+        binarize(image);
         grid_detection(image, 1);
         save_image(image, final_name);
     }
@@ -126,7 +140,7 @@ int main(int argc, char **argv) {
 
         for (size_t i = 0; i < 81; i++) {
             char str[3] = {0};
-            sprintf(str, "%d", i);
+            sprintf(str, "%ld", i);
             
             char *final_name = format_final_name(argv[2], str);
             save_image(splitted[i], final_name);
