@@ -1,5 +1,11 @@
 _build/
 gopy_ocr
 
+.DS_Store
+
+# Files for lsp server
+compile_commands.json
+.cache/
+
 # Files for morroring
 mirror* 

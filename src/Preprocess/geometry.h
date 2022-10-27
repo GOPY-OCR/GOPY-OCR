@@ -2,6 +2,7 @@
 #include "point.h"
 #include "stdlib.h"
 #include "array.h"
+#include "array_sort.h"
 #include "maths.h"
 #include <math.h>
 
