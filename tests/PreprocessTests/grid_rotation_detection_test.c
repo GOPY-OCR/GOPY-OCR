@@ -1,7 +1,6 @@
 #include "hough_transform.h"
 #include "maths.h"
 #include <criterion/parameterized.h>
-#include <criterion/new/assert.h>
 
 #define ANGLE_RANGE 40
 #define ANGLE_STEP 10

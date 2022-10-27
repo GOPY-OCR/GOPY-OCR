@@ -1,5 +1,4 @@
 #include <criterion/parameterized.h>
-#include <criterion/new/assert.h>
 #include "neural_network.h"
 
 struct neural_network_create_params {
