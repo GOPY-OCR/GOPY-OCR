@@ -13,5 +13,7 @@ int main(int argc, char **argv) {
 
     save_image(image, "output.png");
 
+    SDL_FreeSurface(image);
+
     return 0; 
 }

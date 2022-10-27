@@ -9,6 +9,8 @@ Quad grid_detection(SDL_Surface *image, int draw_grid){
         draw_quad(image, grid_quad, DEBUG_SDL_COLOR, 3);
     }
 
+    SDL_FreeSurface(extracted_grid);
+
     return grid_quad;
 }
 

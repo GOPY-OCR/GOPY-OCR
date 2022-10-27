@@ -19,7 +19,7 @@ int flood_fill(SDL_Surface *image, Point point, Uint32 color, int cancel_fill, S
         SDL_LockSurface(dest);
     }
 
-    int cr, cg, cb;
+    Uint8 cr, cg, cb;
     SDL_GetRGB(color, image->format, &cr, &cg, &cb);
     int is_color_white = cr > 128 && cg > 128 && cb > 128;
     
