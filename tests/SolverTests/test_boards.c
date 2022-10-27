@@ -78,6 +78,23 @@ Test(board, test_IsColumnValid){
     
 }
 
+Test(board, test_IsSquareValid){
+ 
+     int results2 = 1;
+ 
+     int squareValid = IsSquareValid(board, 0, 0);
+ 
+     if (squareValid != results2){
+             if (results2 == 0){
+                 cr_assert_fail("Wrong ! square not valid\n");
+             }
+             else{
+                 cr_assert_fail("Wrong ! square valid\n");
+             }
+     }
+ 
+ }
+
 
 Test(board, test_IsBoardValid){
    

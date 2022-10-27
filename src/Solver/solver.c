@@ -15,13 +15,12 @@ int IsLineValid(int board[][BOARDSIZE]){
     for (size_t line = 0; (int)line < BOARDSIZE; line ++){
         int numbers[BOARDSIZE] = {0};
         for (size_t column = 0; (int)column < BOARDSIZE; column ++){
-            if (Contains(numbers, board[line][column]))
-                return 0;
-            else{
-                if (board[line][column] == 0)
-                    continue;
-                else{
-                    numbers[board[line][column] - 1] += 1;
+            if (board[line][column] != 0){
+                if (numbers[board[line][column] - 1] == 1){
+                    return 0;
+                }
+                else{ 
+                    numbers[board[line][column] - 1] = 1;
                 }
             }
         }
@@ -35,15 +34,14 @@ int IsColumnValid(int board[][BOARDSIZE]){
      for (size_t column = 0; (int)column < BOARDSIZE; column ++){
          int numbers[BOARDSIZE] = {0};
          for (size_t line = 0; (int)line < BOARDSIZE; line ++){
-             if (Contains(numbers, board[line][column]))
-                 return 0;
-             else{
-                 if (board[line][column] == 0)
-                     continue;
-                 else{
-                     numbers[board[line][column] - 1] += 1;
+            if (board[line][column] != 0){
+                 if (numbers[board[line][column] - 1] == 1){
+                     return 0;
                  }
-             }
+                 else{
+                     numbers[board[line][column] - 1] = 1;
+                 }
+             }         
          }
      }
 
@@ -56,15 +54,14 @@ int IsSquareValid(int board[][BOARDSIZE], int line, int column){
 
     for (size_t i = line; (int)i < line + 3; i ++){
         for (size_t j = column; (int)j < column + 3; j ++){
-            if (Contains(numbers, board[i][j]))
-                return 0;
-            else{
-                  if (board[line][column] == '.')
-                      continue;
-                  else{
-                      numbers[board[line][column] - 1] += 1;
-                  }
-            }
+            if (board[i][j] != 0){
+                 if (numbers[board[i][j] - 1] == 1){
+                     return 0;
+                 }
+                 else{
+                     numbers[board[i][j] - 1] = 1;
+                 }
+             }        
         }
     }
 
@@ -105,48 +102,44 @@ int IsSolved(int board[][BOARDSIZE]){
     return solved;
 }
 
+int zero(int list[BOARDSIZE]){
+    size_t i = 0;
+    while (i < BOARDSIZE && list[i] == 0){
+        i ++;
+    }
+    return (i == BOARDSIZE) ? 1 : 0;
+}
+
 
 //Solve solves the board
 int Solve(int board[][BOARDSIZE]){
-    int solve = 0;
-
+    
     for (size_t i = 0; (int)i < BOARDSIZE; i ++){
         for (size_t j = 0; (int)j < BOARDSIZE; j ++){
             if (board[i][j] == 0){
-                int notTested[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-                int nbElements= sizeof(notTested) / sizeof(notTested[0]);
-                while (nbElements != 0){
-                    int k = 0;
-                    while (k < 10){
-                        size_t l = 0;
-                        while ((int) l < nbElements && notTested[l] != k)
-                            l += 1;
-                        
-                        if ((int) l == nbElements){
-                            k += 1;
+                int num = 1;
+                for (; num <= BOARDSIZE; num ++){
+                    board[i][j] = num;
+                    if (IsBoardValid(board)){
+                        if (Solve(board) == 1){
+                            break;
                         }
                         else{
-                            board[i][j] = k;
-                            notTested[l] = 0;
+                            continue;
                         }
                     }
-
-                    if (IsBoardValid(board)){
-                        if (Solve(board)){
-                            solve = 1;
-                        }
-                    }
-                    board[i][j] = 0;
-                
                 }
-                solve = 0;
+ 
+                if (num == BOARDSIZE + 1){
+                    board[i][j] = 0;
+                    return 0;
+                }
             }
         }
     }
 
-    solve = 1;
-
-    return solve;
+    
+    return 1;
 }
 
 

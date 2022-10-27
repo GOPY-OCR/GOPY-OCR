@@ -9,18 +9,17 @@
 int main(int argc, char **argv) 
 { 
     if (argc != 1){
-        errx(1, "You must give the file of the sudoku to solve");
+        errx(1, "You should enter one argument");
     }
 
     else{
         int grid[81] = {0};
-        char file[strlen(argv[1]) + 7] = argv[1];
+        char *file = argv[1];
         load_grid_file(file, grid);
         
         int board[][9] = {0};
         size_t line = 0;
         size_t column = 0;
-        int count = 0;
 
         for (size_t i = 0; i < 81; i ++){
             if (column == 8){
