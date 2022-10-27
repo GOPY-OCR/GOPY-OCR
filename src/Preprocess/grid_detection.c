@@ -25,6 +25,9 @@ int grid_rotation_detection(SDL_Surface *image){
 
 Quad find_white_coners(SDL_Surface *extracted_grid){
     Quad result = (Quad) {(Point) {0, 0}, (Point) {0, 0}, (Point) {0, 0}, (Point) {0, 0}};
+
+    SDL_LockSurface(extracted_grid);
+
     for (int y = 0; y < extracted_grid->h; y++){
         for (int x = 0; x < extracted_grid->w; x++){
             if (is_pixel_white(extracted_grid, x, y)){
@@ -50,6 +53,8 @@ Quad find_white_coners(SDL_Surface *extracted_grid){
             }
         }
     }
+
+    SDL_UnlockSurface(extracted_grid);
 
     return result;
 }
