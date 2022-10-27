@@ -4,7 +4,7 @@
 #define XOR_EPOCHS 500000
 #define XOR_LEARNING_RATE 80.0
 #define SAVE_FILENAME "_build/xor_network.nn"
-#define XOR_SHAPE (int[]){3, 2, 1}
+#define XOR_SHAPE (int[]){2, 1}
 void display_help() {
     printf("Usage: ./main -x [-v/-vv/-vvv] [mode]\n"
            "Available modes:\n"
