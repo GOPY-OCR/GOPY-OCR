@@ -64,7 +64,7 @@ SDL_Surface *extract_grid(SDL_Surface *image){
     int areas_capacity = 100;
     int *areas = malloc(sizeof(int) * areas_capacity);
     Point *areas_origin = malloc(sizeof(Point) * areas_capacity);
-    size_t nb_areas = 0;
+    int nb_areas = 0;
 
 
     Uint32 black = SDL_MapRGB(image->format, 0, 0, 0);
@@ -72,8 +72,8 @@ SDL_Surface *extract_grid(SDL_Surface *image){
     SDL_Surface *copy = SDL_CreateRGBSurface(0, image->w, image->h, 32, 0, 0, 0, 0);
     SDL_BlitSurface(image, NULL, copy, NULL);
 
-    for (size_t x = 0; x < image->w; x++) {
-        for (size_t y = 0; y < image->h; y++) {
+    for (int x = 0; x < image->w; x++) {
+        for (int y = 0; y < image->h; y++) {
             if (!is_pixel_white(copy, x, y)) {
                 continue;
             }
@@ -92,8 +92,8 @@ SDL_Surface *extract_grid(SDL_Surface *image){
 
     SDL_FreeSurface(copy);
 
-    size_t max_area_index = 0;
-    for (size_t i = 0; i < nb_areas; i++) {
+    int max_area_index = 0;
+    for (int i = 0; i < nb_areas; i++) {
         if (areas[i] > areas[max_area_index]) {
             max_area_index = i;
         }

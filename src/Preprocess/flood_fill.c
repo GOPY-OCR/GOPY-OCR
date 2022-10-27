@@ -5,7 +5,7 @@ int flood_fill(SDL_Surface *image, Point point, Uint32 color, int cancel_fill, S
     queue *q = queue_create();  // queue of points
     int filled = 0;             // number of pixels filled
 
-    size_t fill_capacity = INITIAL_FILL_CAPACITY;
+    int fill_capacity = INITIAL_FILL_CAPACITY;
     // this array is used to keep track of which pixels have been filled
     Uint32 **filled_pixels = malloc(sizeof(Uint32 *) * fill_capacity);
     
