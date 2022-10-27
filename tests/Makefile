@@ -1,10 +1,10 @@
 # This Makefile should be called after everything is build by the main Makefile
 include ../compile_settings.mk
 
-TARGETS = NeuralNetwork Preprocess Utils
+TARGETS = NeuralNetwork Preprocess Utils Solver
 BUILD_DIR := ../_build
 TEST_DIR := $(BUILD_DIR)/tests
-$(shell mkdir -p $(TEST_DIR)/NeuralNetworkTests $(TEST_DIR)/PreprocessTests $(TEST_DIR)/UtilsTests)
+$(shell mkdir -p $(TEST_DIR)/NeuralNetworkTests $(TEST_DIR)/PreprocessTests $(TEST_DIR)/UtilsTests $(TEST_DIR)/SolverTests)
 
 LDLIBS += -lcriterion
 INCLUDE_DIRS = $(shell find ../src/ -type d)
@@ -27,6 +27,7 @@ NeuralNetwork: $(call ofiles,NeuralNetwork)
 	./$@
 
 .SECONDEXPANSION:
+
 Preprocess: $(call ofiles,Preprocess)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
@@ -36,7 +37,10 @@ Utils: $(call ofiles,Utils)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
-
+.SECONDEXPANSION:
+Solver: $(call ofiles,Solver)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	./$@
 
 # Same rule for all .o files
 $(TEST_DIR)/%.o: %.c
