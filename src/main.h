@@ -30,6 +30,8 @@
 #include "Solver/grid.h"
 #include "Solver/solver.h"
 
+// Neural Network part
+#include "NeuralNetwork/xor.h"
 
 #endif
 

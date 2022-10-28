@@ -14,7 +14,7 @@ void exit(int exit_error) {
                  "  -d,  --detect IMG           Save the detected grid in `IMG_detected_grid.png`\n"
                  "  -c,  --cut IMG              Save the images in `IMG_X.png`\n"
                  "  -s,  --solve GRID           Save the result in `GRID.result`\n"
-                 "  -n,  --neuralNetwork        Show a proof of concept of the neural network\n";
+                 "  -n,  --neural-network        Show a proof of concept of the neural network\n";
 
     errx(exit_error, "%s", msg);
 }
@@ -165,11 +165,13 @@ int main(int argc, char **argv) {
         free(file);
     }
     
-    else if (strcmp(argv[1], "--neuralNetwork") == 0 || strcmp(argv[1], "-n") == 0) {
+    else if (strcmp(argv[1], "--neural-network") == 0 || strcmp(argv[1], "-n") == 0) {
         printf("Show neural network...\n");
 
-        if (argc != 2)
-            exit(1);
+        int verbose = strcmp(argv[2], "-v") == 0 ? 2 : 1;
+        int args_offset = 1 + verbose;
+
+        xor_main(verbose, argc - args_offset, argv + args_offset);
 
     }
     
