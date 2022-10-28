@@ -89,9 +89,9 @@ NeuralNetwork *load_neural_network(char *filename) {
 
 matrice *feedforward(NeuralNetwork *nn, matrice *inputs) {
     matrice *output = inputs;
-
+    matrice *old_output;
     for (int i = 0; i < nn->nb_layers; i++) {
-        matrice *old_output = output;
+        old_output = output;
         matrice *dot = matrice_dot(nn->layers[i]->weights, output);
         output = matrice_add(dot, nn->layers[i]->biases);   // output = weights * output + biases
         matrice_map(output, sigmoid); // output = sigmoid(output)
@@ -101,6 +101,8 @@ matrice *feedforward(NeuralNetwork *nn, matrice *inputs) {
             matrice_free(old_output);
         }
     }
+
+    //matrice_free(old_output);
 
     return output;
 }

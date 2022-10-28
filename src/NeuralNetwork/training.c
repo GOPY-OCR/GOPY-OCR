@@ -1,15 +1,17 @@
 #include "training.h"
 // see http://neuralnetworksanddeeplearning.com/chap2.html
 
-#define PROGRESS_BAR_WIDTH 100
-#define PROGRESS_BAR_INTERVAL 100 // in epochs
+#define PROGRESS_BAR_WIDTH 20
+#define PROGRESS_BAR_INTERVAL 1000 // in epochs
+#define ACCURACIES_CSV_FILE "_build/accuracies.csv"
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
            int batch_size,
            dataset *training_data, 
            dataset *testing_data,
-           int verbose) {
+           int verbose,
+           int save_accuracies) {
 
     int training_nb = training_data->size;
 
@@ -30,6 +32,7 @@ void train(NeuralNetwork *nn,
     float mini_batch_learning_rate = learning_rate / batch_size;
 
     matrice *accuracies = matrice_new(epochs, 1);
+    float accuracy;
 
     // if testing data is the same dataset as training data, we have
     // to make a copy of it to avoid modifying the order each epoch
@@ -46,27 +49,43 @@ void train(NeuralNetwork *nn,
                               i,
                               i + batch_size);
         }
-        if (verbose > 1) {
 
-            if(testing_data != NULL && testing_data->size > 0) {
+
+        if(testing_data != NULL && testing_data->size > 0) {
+            if (verbose > 1) {
                 printf("Epoch %i: ", e);
-                float accuracy = evaluate(nn, testing_data, verbose - 1);
-                matrice_set(accuracies, e, 0, accuracy);
+                accuracy = evaluate(nn, testing_data, verbose - 1);
             }
+
+            if (verbose == 1 && (e==0 || ((e+1) % PROGRESS_BAR_INTERVAL == 0))) {
+                accuracy = evaluate(nn, testing_data, 0);
+
+                char progress_indicator[20];
+                sprintf(progress_indicator, "Epochs (%.2f%%)", accuracy * 100);
+                
+                progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, progress_indicator);
+            }
+
+            matrice_set(accuracies, e, 0, accuracy);
         }
-        else if (verbose == 1 && (e+1) % PROGRESS_BAR_INTERVAL == 0) {
+        else if (verbose == 1 && (e==0 || ((e+1) % PROGRESS_BAR_INTERVAL == 0))) {
             progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, "Epochs");
         }
     }
-    if(verbose == 1) {
+    if (verbose == 1) {
+        progress_bar(PROGRESS_BAR_WIDTH, epochs, epochs, "Epochs");
         printf("\n");
     }
 
-    if (verbose > 2) {
-        printf("Saving accuracies to accuracies.csv\n");
+    if (save_accuracies) {
+
+        if (verbose) {
+            printf("Saving accuracies to %s\n", ACCURACIES_CSV_FILE);
+        }
+
         char *message = malloc(sizeof(char) * 100);
         sprintf(message, "Accuracy over %d epochs", epochs);
-        matrice_to_csv(accuracies, "accuracies.csv", message);
+        matrice_to_csv(accuracies, ACCURACIES_CSV_FILE, message);
         free(message);
     }
 
