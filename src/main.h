@@ -26,6 +26,9 @@
 // Cut part
 #include "Preprocess/split.h"
 
+// Solver part
+#include "Solver/grid.h"
+#include "Solver/solver.h"
 
 
 #endif
