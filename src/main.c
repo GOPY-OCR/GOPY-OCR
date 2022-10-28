@@ -177,7 +177,7 @@ int main(int argc, char **argv) {
     }
     
     else
-        printf("%s", argv[1]);
+        exit(1);
 
     return 0;
 }
