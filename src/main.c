@@ -1,9 +1,8 @@
 #include "main.h"
 
 
-void exit(int exit_error) {
-    char msg[] = "The arguments are incorrect.\n"
-                 "Usage: demonstrate OPTION [FILE]\n"
+void exit_help(int error) {
+    char msg[] = "Usage: demonstrate OPTION [FILE]\n"
                  "  -h,  --help                 Show this help\n"
                  "  -g,  --grayscale IMG        Save the graysaled image in `IMG_grayscaled.png`\n"
                  "  -cb, --contrast-brightness  Save the image with corrected contrast, brightness\n"
@@ -11,13 +10,20 @@ void exit(int exit_error) {
                  "  -r,  --rotate IMG ANGLE     Save the rotated image with the given angle\n"
                  "                              in `IMG_ANGLE_rotated.png`\n"
                  "  -b,  --binarization IMG     Save the binarized image in `IMG_bin.png`\n"
-                 "  -d,  --detect IMG           Save the detected grid in `IMG_detected_grid.png`\n"
+                 "  -d,  --detect-grid IMG      Save the detected grid in `IMG_detected_grid.png`\n"
                  "  -c,  --cut IMG              Save the images in `IMG_X.png`\n"
                  "  -s,  --solve GRID           Save the result in `GRID.result`\n"
                  "  -n,  --neural-network       Show a proof of concept of the neural network\n"
-                 "                              Type `-n' to show help message about neural network\n";
+                 "                              Type `-n` to show help message about neural network\n";
+    
+    if (error != 0) {
+        printf("The arguments are incorrect.\n");
+        printf("%s", msg);
+        exit(error);
+    }
 
-    errx(exit_error, "%s", msg);
+    printf("%s", msg);
+    exit(0);
 }
 
 /* 
@@ -49,17 +55,17 @@ char *format_final_name(char *name, char *add) {
 
 int main(int argc, char **argv) {
     if (argc < 2)
-        exit(1);
+        exit_help(1);
 
     if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
-        exit(0);
+        exit_help(0);
     }
     
     else if (strcmp(argv[1], "--grayscale") == 0 || strcmp(argv[1], "-g") == 0) {
         printf("Show grayscalisation...\n");
 
         if (argc != 3)
-            exit(1);
+            exit_help(1);
 
         char *final_name = format_final_name(argv[2], "grayscaled");
 
@@ -72,7 +78,7 @@ int main(int argc, char **argv) {
         printf("Show binarization...\n");
 
         if (argc != 3)
-            exit(1);
+            exit_help(1);
 
         char *final_name = format_final_name(argv[2], "bin");
 
@@ -87,7 +93,7 @@ int main(int argc, char **argv) {
         printf("Show contrast and brightness...\n");
 
         if (argc != 3)
-            exit(1);
+            exit_help(1);
 
         char *final_name = format_final_name(argv[2], "contrast");
 
@@ -101,7 +107,7 @@ int main(int argc, char **argv) {
         printf("Show rotation...\n");
 
         if (argc != 4)
-            exit(1);
+            exit_help(1);
 
         // Transform the angle in a double
         double angle = strtod(argv[3], NULL);
@@ -113,11 +119,11 @@ int main(int argc, char **argv) {
         save_image(image, final_name);
     }
     
-    else if (strcmp(argv[1], "--detect") == 0 || strcmp(argv[1], "-d") == 0) {
+    else if (strcmp(argv[1], "--detect-grid") == 0 || strcmp(argv[1], "-d") == 0) {
         printf("Show grid detection...\n");
 
         if (argc != 3)
-            exit(1);
+            exit_help(1);
 
         char *final_name = format_final_name(argv[2], "detected_grid");
 
@@ -133,7 +139,7 @@ int main(int argc, char **argv) {
         printf("Show cutting image...\n");
 
         if (argc != 3)
-            exit(1);
+            exit_help(1);
 
         SDL_Surface *image = load_image(argv[2]);
         SDL_Surface *splitted[81] = {NULL};
@@ -152,7 +158,7 @@ int main(int argc, char **argv) {
         printf("Show solver...\n");
 
         if (argc != 3)
-            exit(1);
+            exit_help(1);
 
         int board[9][9] = {{0}};
         char *file = calloc(strlen(argv[2]) + 7, sizeof(char));
@@ -177,7 +183,7 @@ int main(int argc, char **argv) {
     }
     
     else
-        exit(1);
+        exit_help(1);
 
     return 0;
 }
