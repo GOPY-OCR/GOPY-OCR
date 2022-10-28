@@ -5,7 +5,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <criterion/parameterized.h>
-#include <criterion/new/assert.h>
 
 struct grid_detection_params {
     char *input_file;
