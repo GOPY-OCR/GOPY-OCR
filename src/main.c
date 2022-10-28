@@ -14,7 +14,8 @@ void exit(int exit_error) {
                  "  -d,  --detect IMG           Save the detected grid in `IMG_detected_grid.png`\n"
                  "  -c,  --cut IMG              Save the images in `IMG_X.png`\n"
                  "  -s,  --solve GRID           Save the result in `GRID.result`\n"
-                 "  -n,  --neural-network        Show a proof of concept of the neural network\n";
+                 "  -n,  --neural-network       Show a proof of concept of the neural network\n"
+                 "           [-v]               Those options will make this proof of concept more verbose\n";
 
     errx(exit_error, "%s", msg);
 }
