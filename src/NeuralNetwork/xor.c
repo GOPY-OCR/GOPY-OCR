@@ -125,7 +125,7 @@ void train_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
     train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose, 0);
 }
 
-#define MIN_ACCURACY 0.01
+#define MIN_ACCURACY 0.9
 int test_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
     float accuracy = evaluate(network, data, verbose);
 
