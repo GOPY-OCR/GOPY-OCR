@@ -2,11 +2,6 @@ _build/
 gopy_ocr
 .DS_Store
 main
-NeuralNetwork
-Preprocess
-Solver
-
-.DS_Store
 
 # Files for lsp server
 compile_commands.json
