@@ -48,8 +48,6 @@ char *format_final_name(char *name, char *add) {
     res[i + 2] = 'n';
     res[i + 3] = 'g';
 
-    printf("%s", res);
-
     return res;
 }
 
