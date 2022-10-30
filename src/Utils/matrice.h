@@ -1,15 +1,13 @@
 #pragma once
 #include "str_utils.h"
+#include "matrice_multithread.h"
+#include "matrice_type.h"
+#include "str_utils.h"
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct matrice {
-    int rows;
-    int columns;
-    double *data;
-} matrice;
 
 matrice *matrice_new(int rows, int columns);
 void matrice_free(matrice *m);
@@ -48,6 +46,9 @@ matrice *matrice_mul(matrice *m1, matrice *m2);
 // inplace operations
 matrice *matrice_map(matrice *m, double (*f)(double));
 matrice *matrice_multiply(matrice *m, double scalar);
+
+void matrice_add_inplace(matrice *dest, const matrice *source);
+void matrice_sub_inplace(matrice *dest, const matrice *source);
 
 double *matrice_max(matrice *m, int *row, int *column);
 
