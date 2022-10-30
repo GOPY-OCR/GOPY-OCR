@@ -101,7 +101,6 @@ void update_mini_batch(NeuralNetwork *nn,
         int start, int end) {
     matrice **nabla_b = malloc(nn->nb_layers * sizeof(matrice *));
     matrice **nabla_w = malloc(nn->nb_layers * sizeof(matrice *));
-    matrice *tofree = NULL;
 
     for (int i = 0; i < nn->nb_layers; i++) {
         Layer *layer = nn->layers[i];
@@ -118,17 +117,11 @@ void update_mini_batch(NeuralNetwork *nn,
 
     // update NeuralNetwork weights
     for (int i = 0; i < nn->nb_layers; i++) {
-        tofree = nn->layers[i]->weights;
-        nn->layers[i]->weights =
-            matrice_sub(nn->layers[i]->weights,
-                    matrice_multiply(nabla_w[i], (double)learning_rate));
-        matrice_free(tofree);
+        matrice_sub_inplace(nn->layers[i]->weights, 
+                matrice_multiply(nabla_w[i], (double)learning_rate));
 
-        tofree = nn->layers[i]->biases;
-        nn->layers[i]->biases =
-            matrice_sub(nn->layers[i]->biases,
-                    matrice_multiply(nabla_b[i], (double)learning_rate));
-        matrice_free(tofree);
+        matrice_sub_inplace(nn->layers[i]->biases,
+                matrice_multiply(nabla_b[i], (double)learning_rate));
 
         matrice_free(nabla_b[i]);
         matrice_free(nabla_w[i]);
@@ -170,10 +163,8 @@ void backprop(NeuralNetwork *nn,
     matrice *transpose;
 
     for (int i = 0; i < nn->nb_layers; i++) {
-        dot = matrice_dot(nn->layers[i]->weights, output);
-
-        output = matrice_add(dot, nn->layers[i]->biases);
-        matrice_free(dot);
+        output = matrice_dot(nn->layers[i]->weights, output);
+        matrice_add_inplace(output, nn->layers[i]->biases);
 
         zs[i] = matrice_clone(output);
         matrice_map(output, sigmoid);
@@ -233,7 +224,6 @@ void backprop(NeuralNetwork *nn,
     free(zs);
     free(activations);
 }
-
 
 float evaluate(NeuralNetwork *nn, 
         dataset *data, 
