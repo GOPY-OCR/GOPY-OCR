@@ -29,14 +29,17 @@ int main(int argc, char **argv) {
 
 
     if (strcmp(argv[1], "-t") == 0 || strcmp(argv[1], "--train") == 0) {
-        // TODO: train 
+        digit_recognition_main(argc, argv, verbosity);
+
     } else if (strcmp(argv[1], "-p") == 0 ||
                strcmp(argv[1], "--predict") == 0) {
         if (argc < 3) {
             errx(EXIT_FAILURE, "error: file not specified");
         }
-        // TODO: predict
         
+        int prediction = predict_digit(argv[2]);
+
+        printf("Prediction: %d\n", prediction);
 
     } else if (strcmp(argv[1], "-h") == 0 ||
                strcmp(argv[1], "--help") == 0) {
