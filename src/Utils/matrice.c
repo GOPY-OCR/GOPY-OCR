@@ -1,5 +1,11 @@
 #include "matrice.h"
 
+#define USE_MULTITHREADING 0
+// after doing some quick hand benchmarking,
+// it seems that multithreading is not worth it
+// under ~100 x 100 matrices
+#define MULTITHREADING_THRESHOLD 10000
+
 matrice *matrice_new(int rows, int columns) {
     matrice *m = malloc(sizeof(matrice));
     m->rows = rows;
@@ -114,6 +120,9 @@ matrice *matrice_from_string(char *str) {
 }
 
 double *matrice_get_ref(matrice *m, int row, int column) {
+    if (row >= m->rows || column >= m->columns)
+        errx(EXIT_FAILURE, "matrice_get_ref: index out of bounds");
+
     return m->data + (row * m->columns + column);
 }
 
@@ -165,23 +174,38 @@ int matrice_equals(matrice *m1, matrice *m2) {
     return 1;
 }
 
-matrice *matrice_dot(matrice *m1, matrice *m2) {
-    matrice *m = matrice_new(m1->rows, m2->columns);
+void matrice_dot_sthreaded(matrice *m1, matrice *m2, matrice *r){
     for (int i = 0; i < m1->rows; i++) {
         for (int j = 0; j < m2->columns; j++) {
-            double sum = 0;
+            double *sum = matrice_get_ref(r, i, j);
+            *sum = 0;
             for (int k = 0; k < m1->columns; k++) {
-                sum += matrice_get(m1, i, k) * matrice_get(m2, k, j);
+                *sum += matrice_get(m1, i, k) * matrice_get(m2, k, j);
             }
-            matrice_set(m, i, j, sum);
         }
     }
-    return m;
+}
+
+matrice *matrice_dot(matrice *m1, matrice *m2) {
+    if (m1->columns != m2->rows)
+        errx(EXIT_FAILURE, "matrice_dot: incompatible matrice sizes, "
+                            "m1 is %d x %d, m2 is %d x %d",
+                            m1->rows, m1->columns, m2->rows, m2->columns);
+
+    matrice *r = matrice_new(m1->rows, m2->columns);
+
+    if (USE_MULTITHREADING && m1->rows * m2->columns > MULTITHREADING_THRESHOLD)
+        matrice_dot_mthreaded(m1, m2, r);
+    else
+        matrice_dot_sthreaded(m1, m2, r);
+
+    return r;
 }
 
 matrice *matrice_elementwise_inner(matrice *m1, matrice *m2,
                                    double (*f)(double, double),
                                    const char *function_name) {
+
     if (m1->rows != m2->rows || m1->columns != m2->columns) {
         errx(EXIT_FAILURE,
              "%s: matrice dimensions do not match, "
@@ -232,10 +256,41 @@ matrice *matrice_transpose(matrice *m) {
 matrice *matrice_map(matrice *m, double (*f)(double)) {
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
-            matrice_set(m, i, j, f(matrice_get(m, i, j)));
+            double *field = matrice_get_ref(m, i, j);
+            *field = f(*field);
         }
     }
     return m;
+}
+
+void matrice_add_inplace(matrice *dest, const matrice *source){
+    if (dest->rows != source->rows || dest->columns != source->columns)
+        errx(EXIT_FAILURE, "matrice_add_inplace: incompatible matrice sizes, "
+                            "dest is %d x %d, source is %d x %d",
+                            dest->rows, dest->columns,
+                            source->rows, source->columns);
+
+    for (int i = 0; i < dest->rows; i++) {
+        for (int j = 0; j < dest->columns; j++) {
+            double *dest_field = matrice_get_ref(dest, i, j);
+            *dest_field += matrice_get(source, i, j);
+        }
+    }
+}
+
+void matrice_sub_inplace(matrice *dest, const matrice *source){
+    if (dest->rows != source->rows || dest->columns != source->columns)
+        errx(EXIT_FAILURE, "matrice_add_inplace: incompatible matrice sizes, "
+                            "dest is %d x %d, source is %d x %d",
+                            dest->rows, dest->columns,
+                            source->rows, source->columns);
+
+    for (int i = 0; i < dest->rows; i++) {
+        for (int j = 0; j < dest->columns; j++) {
+            double *dest_field = matrice_get_ref(dest, i, j);
+            *dest_field -= matrice_get(source, i, j);
+        }
+    }
 }
 
 matrice *matrice_multiply(matrice *m, double scalar) {
@@ -272,7 +327,7 @@ double *matrice_max(matrice *m, int *row, int *column) {
         for (int j = 0; j < m->columns; j++) {
             double *value = matrice_get_ref(m, i, j);
             if (*value > *max) {
-                *max = *value;
+                max = value;
                 *row = i;
                 *column = j;
             }
