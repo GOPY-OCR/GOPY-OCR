@@ -2,7 +2,7 @@
 // see http://neuralnetworksanddeeplearning.com/chap2.html
 
 #define PROGRESS_BAR_WIDTH 20
-#define PROGRESS_BAR_INTERVAL 1000 // in epochs
+#define PROGRESS_BAR_INTERVAL 1 // in epochs
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
 void train(NeuralNetwork *nn, 
            int epochs, 
@@ -254,7 +254,7 @@ float evaluate(NeuralNetwork *nn,
 
         matrice_set(accuracy_matrice, 0, i, acc);
 
-        correct += acc >= 0.5;
+        correct += max_output(outputs[i]) == max_output(data->targets[i]);
 
         matrice_free(error);
     }
@@ -271,11 +271,10 @@ float evaluate(NeuralNetwork *nn,
     if(verbose > 1) {
         printf("\n");
         for (int i = 0; i < total; i++) {
-            printf("Test %i: \n", i);
-            matrice_print(data->inputs[i]);
-            printf("Target: ");
+            printf("Test %i:\n", i);
+            printf("Target:\n");
             matrice_print(data->targets[i]);
-            printf("Output: ");
+            printf("Output:\n");
             matrice_print(outputs[i]);
             printf("\n");
         }
