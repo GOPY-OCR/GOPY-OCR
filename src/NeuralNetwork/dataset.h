@@ -6,6 +6,7 @@
 #include <dirent.h>
 #include "matrice.h"
 #include "sdl_utils.h"
+#include "pixel_utils.h"
 
 #define INPUT_SIZE 784 // 28x28 pixel images
 
@@ -33,11 +34,14 @@ dataset *copy_dataset(dataset *data, int deepcopy);
 // returns: a dataset
 dataset *load_dataset(const char *path, int size);
 
+matrice *image_to_matrice(SDL_Surface *image);
+
 void shuffle_dataset(dataset *data);
 
 // list files and sub-directories in a directory
 //
 // path: path to directory
 // n: maximum number of files to list
+// append_path: if true, filenames will be prefixed with the path
 // returns: list of files in directory
-char **list_files(const char *path, int n);
+char **list_files(const char *path, int n, int append_path);
