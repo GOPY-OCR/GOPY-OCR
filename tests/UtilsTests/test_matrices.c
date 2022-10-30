@@ -148,6 +148,17 @@ Test(matrices, test_map) {
     cr_assert(matrice_equals(m1, expected), "Matrices are not equal");
 }
 
+Test(matrices, test_add_inplace) {
+    setup();
+
+    matrice *expected = matrice_from_string("6 8,"
+                                            "10 12");
+    matrice_add_inplace(m1, m2);
+
+    cr_assert(matrice_equals(m1, expected), "Matrices are not equal");
+}
+
+
 Test(matrices, test_clone) {
     setup();
 
@@ -189,6 +200,24 @@ Test(matrices, test_max) {
 
     cr_assert(i == 1 && j == 1, "Max is not in the right place");
     cr_assert(*max == 4, "Max is not equal to 4");
+}
+
+Test(matrices, test_max_dont_modify) {
+    setup();
+
+    matrice *copy = matrice_clone(m1);
+
+    int i,j;
+
+    matrice_max(m1, &i, &j);
+
+    cr_assert(matrice_equals(m1, copy), "Max modified the matrix (m1)");
+
+    copy = matrice_clone(big1);
+
+    matrice_max(big1, &i, &j);
+
+    cr_assert(matrice_equals(big1, copy), "Max modified the matrix (big1)");
 }
 
 Test(matrices, test_max_no_index) {
@@ -255,5 +284,5 @@ Test(matrices, test_csv_read_write) {
     matrice_to_csv(big2, filename, message);
     m = matrice_read_csv(filename);
     cr_assert(matrice_equals(m, big2), "Matrices are not equal");
-
 }
+
