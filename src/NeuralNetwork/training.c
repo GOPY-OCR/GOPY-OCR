@@ -4,8 +4,9 @@
 #define PROGRESS_BAR_WIDTH 20
 #define PROGRESS_BAR_INTERVAL 1 // in epochs
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
+#define COMPUTE_TRAINING_ACCURACY 1 
 
-#define ENABLE_MULTITHREADING 0
+#define ENABLE_MULTITHREADING 1
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
@@ -33,7 +34,7 @@ void train(NeuralNetwork *nn,
 
     float mini_batch_learning_rate = learning_rate / batch_size;
 
-    matrice *accuracies = matrice_new(epochs, 1);
+    matrice *accuracies = matrice_new(epochs, 1 + COMPUTE_TRAINING_ACCURACY);
     float accuracy;
 
     // if testing data is the same dataset as training data, we have
@@ -72,6 +73,14 @@ void train(NeuralNetwork *nn,
         }
         else if (verbose == 1 && (e==0 || ((e+1) % PROGRESS_BAR_INTERVAL == 0))) {
             progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, "Epochs");
+        }
+        if (COMPUTE_TRAINING_ACCURACY) {
+            accuracy = evaluate(nn, training_data, 0);
+            matrice_set(accuracies, e, 1, accuracy);
+
+            if (verbose > 1) {
+                printf(" (training accuracy: %.2f%%)\n", accuracy * 100);
+            }
         }
     }
     if (verbose == 1) {

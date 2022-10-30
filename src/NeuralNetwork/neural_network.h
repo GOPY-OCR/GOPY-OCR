@@ -4,6 +4,7 @@
 #include "str_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 typedef struct Layer {
     matrice *weights;
@@ -33,6 +34,8 @@ void free_neural_network(NeuralNetwork *nn);
 
 
 void save_neural_network(NeuralNetwork *nn, char *filename);
+// Loads a neural network from a file
+// Returns NULL if the file doesn't exist
 NeuralNetwork *load_neural_network(char *filename);
 
 
