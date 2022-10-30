@@ -1,10 +1,12 @@
 #pragma once
 #include "maths.h"
 #include "matrice.h"
+#include "matrice_multithread.h"
 #include "neural_network.h"
 #include "sdl_utils.h"
 #include "dataset.h"
 #include "progress_bar.h"
+#include <pthread.h>
 
 // trains the neural network with the given training data
 // by calling the update_mini_batch function repeatedly
@@ -34,6 +36,16 @@ void update_mini_batch(NeuralNetwork *nn,
                        int start, 
                        int end);
 
+struct backprop_thread_args {
+    NeuralNetwork *nn;
+    dataset *data;
+    int start;
+    int end;
+    matrice **nabla_b;
+    matrice **nabla_w;
+};
+
+void *backprog_thread(void *arg);
 // Returns nabla_b, nabla_w representing the
 // gradient for the cost function.  nabla_b and
 // nabla_w are arrays of matrices, similar
@@ -52,3 +64,6 @@ float evaluate(NeuralNetwork *nn, dataset *data, int verbose);
 
 // Returns the maximum output row index
 int max_output(matrice *output);
+
+
+int is_correct(matrice *output, matrice *target);

@@ -4,6 +4,8 @@
 #define PROGRESS_BAR_WIDTH 20
 #define PROGRESS_BAR_INTERVAL 1 // in epochs
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
+
+#define ENABLE_MULTITHREADING 0
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
@@ -102,12 +104,37 @@ void update_mini_batch(NeuralNetwork *nn,
         int start, int end) {
     matrice **nabla_b = malloc(nn->nb_layers * sizeof(matrice *));
     matrice **nabla_w = malloc(nn->nb_layers * sizeof(matrice *));
+    pthread_t threads[THREADS_COUNT];
 
     for (int i = 0; i < nn->nb_layers; i++) {
         Layer *layer = nn->layers[i];
         nabla_b[i] = matrice_zeros(layer->biases->rows, layer->biases->columns);
         nabla_w[i] =
             matrice_zeros(layer->weights->rows, layer->weights->columns);
+    }
+    if (ENABLE_MULTITHREADING) {
+        int batch_size = (end - start) / THREADS_COUNT;
+        for (int i = 0; i < THREADS_COUNT; i++) {
+            int start_index = start + i * batch_size;
+            int end_index = start_index + batch_size;
+            if (i == THREADS_COUNT - 1) {
+                end_index = end;
+            }
+            struct backprop_thread_args *args = malloc(sizeof(struct backprop_thread_args));
+            args->nn = nn;
+            args->data = data;
+            args->start = start_index;
+            args->end = end_index;
+            args->nabla_b = nabla_b;
+            args->nabla_w = nabla_w;
+            pthread_create(&threads[i], NULL, backprog_thread, args);
+        }
+
+        for (int i = 0; i < THREADS_COUNT; i++) {
+            pthread_join(threads[i], NULL);
+        }
+
+        start = start + THREADS_COUNT * batch_size; // this is to avoid missing the lasts samples
     }
 
     for (int i = start; i < end; i++) {
@@ -132,17 +159,13 @@ void update_mini_batch(NeuralNetwork *nn,
     free(nabla_w);
 }
 
-struct backprop_thread_args {
-    NeuralNetwork *nn;
-    matrice *input;
-    matrice *target;
-    matrice **delta_nabla_b;
-    matrice **delta_nabla_w;
-};
-
 void *backprog_thread(void *arg) {
     struct backprop_thread_args *args = (struct backprop_thread_args *)arg;
-    backprop(args->nn, args->input, args->target, args->delta_nabla_b, args->delta_nabla_w);
+    for (int i = args->start; i < args->end; i++) {
+        matrice *input = args->data->inputs[i];
+        matrice *target = args->data->targets[i];
+        backprop(args->nn, input, target, args->nabla_b, args->nabla_w);
+    }
     return NULL;
 }
 
@@ -246,8 +269,15 @@ float evaluate(NeuralNetwork *nn,
 
         matrice_set(accuracy_matrice, 0, i, acc);
 
-        correct += max_output(outputs[i]) == max_output(data->targets[i]);
-
+        if (is_correct(outputs[i], data->targets[i])) {
+            correct++;
+        } else if (verbose > 1) {
+            printf("Test %i:\n", i);
+            printf("expected: %i, got: %i\n", 
+                    max_output(data->targets[i]), 
+                    max_output(outputs[i]));
+        }
+        
         matrice_free(error);
     }
 
@@ -260,28 +290,19 @@ float evaluate(NeuralNetwork *nn,
                 accuracy * 100);
     }
 
-    if(verbose > 1) {
-        printf("\n");
-        for (int i = 0; i < total; i++) {
-            printf("Test %i:\n", i);
-            printf("Target:\n");
-            matrice_print(data->targets[i]);
-            printf("Output:\n");
-            matrice_print(outputs[i]);
-            printf("\n");
-        }
-        printf("\n\n");
-    }
-
     for (int i = 0; i < total; i++) {
         matrice_free(outputs[i]);
     }
+
     matrice_free(accuracy_matrice);
     free(outputs);
 
     return accuracy;
 }
 
+int is_correct(matrice *output, matrice *target) {
+    return max_output(target) == max_output(output);
+}
 
 int max_output(matrice *output) {
     int i;
