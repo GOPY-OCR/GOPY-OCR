@@ -15,6 +15,7 @@ src/NeuralNetwork/env/
 
 .DS_Store
 
+
 # Files for lsp server
 compile_commands.json
 .cache/
