@@ -18,18 +18,21 @@ void free_dataset(dataset *data) {
     free(data);
 }
 
-
+// these values where computed accross the whole dataset previously
+// and are used to normalize the inputs
+#define IMAGE_MEAN 0.1331258163
+#define IMAGE_STD 0.3397106611
 matrice *image_to_matrice(SDL_Surface *image) {
     matrice *m = matrice_new(image->w * image->h, 1);
+
     for (int i = 0; i < image->w; i++) {
         for (int j = 0; j < image->h; j++) {
-            Uint32 pixel = *getpixel(image, i, j);
-            Uint8 r, g, b;
-            SDL_GetRGB(pixel, image->format, &r, &g, &b);
-            double value = (r + g + b) / 3.0 / 255.0;
+            double value = is_pixel_white(image, i, j);
+            value = (value - IMAGE_MEAN) / IMAGE_STD;
             matrice_set(m, i * image->h + j, 0, value);
         }
     }
+
     return m;
 }
 
@@ -97,37 +100,3 @@ dataset *copy_dataset(dataset *data, int deepcopy) {
     return copy;
 }
 
-
-char **list_files(const char *path, int n, int append_path) {
-    DIR *dir;
-    struct dirent *ent;
-    char **files = malloc(n * sizeof(char *));
-    int i = 0;
-
-    int pathle = strlen(path);
-    pathle -= pathle > 0 && path[pathle - 1] == '/'; // ignore trailing slash
-    if ((dir = opendir(path)) != NULL) {
-        while ((ent = readdir(dir)) != NULL && i < n) {
-            if (ent->d_type == DT_REG) {
-                if (append_path) {
-                    int filele = strlen(ent->d_name);
-                    files[i] = malloc(pathle + filele + 2);
-                    strcpy(files[i], path);
-                    files[i][pathle] = '/';
-                    strcpy(files[i] + pathle + 1, ent->d_name);
-                } else {
-                    files[i] = malloc(strlen(ent->d_name) + 1);
-                    strcpy(files[i], ent->d_name);
-                }
-                if (files[i] != NULL) {
-                    i++;
-                }
-            }
-        }
-        closedir(dir);
-    } else {
-        perror("Could not open directory");
-    }
-
-    return files;
-}
