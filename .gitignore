@@ -2,9 +2,10 @@ _build/
 gopy_ocr
 .DS_Store
 main
-NeuralNetwork
-Preprocess
-Solver
+# the followings prevent files in src from being tracked
+#NeuralNetwork
+#Preprocess
+#Solver
 
 .DS_Store
 
