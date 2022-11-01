@@ -31,7 +31,7 @@ void *matrice_dot_thread(void *args){
 }
 
 void matrice_dot_mthreaded(matrice *m1, matrice *m2, matrice *r){
-    int i, zAj;
+    int i;
     pthread_t threads[THREADS_COUNT];
 
     int thread_jobs = r->rows * r->columns / THREADS_COUNT;
