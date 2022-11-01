@@ -45,12 +45,12 @@ ParameterizedTestParameters(neuralnetworks, test_save_load_neural_network) {
     return cr_make_param_array(struct neural_network_create_params, params, nb_params);
 }
 
-#define EPSILON 0.000001
+#define EPSILON 0.000000001
 ParameterizedTest(struct neural_network_create_params *params, neuralnetworks, test_save_load_neural_network){
     NeuralNetwork *nn = create_neural_network(params->nb_layers, params->input_size, params->nb_neurons);
     
     char *filename = malloc(200);
-    sprintf(filename, "../_build/tests/TEMP_test_neural_network_%i.nn", nn->nb_layers);
+    sprintf(filename, "../_build/tests/NeuralNetworkTests/TEMP_test_neural_network_%i.nn", nn->nb_layers);
 
     save_neural_network(nn, filename);
     NeuralNetwork *nn2 = load_neural_network(filename);
@@ -64,12 +64,14 @@ ParameterizedTest(struct neural_network_create_params *params, neuralnetworks, t
         matrice *weights_diff = matrice_sub(nn->layers[i]->weights, nn2->layers[i]->weights);
         matrice_map(weights_diff, doubleabs);
         double mean_diff = matrice_sum(weights_diff) / (weights_diff->rows * weights_diff->columns);
-        cr_assert(mean_diff < EPSILON, "matrices are not equal");
+        cr_assert(mean_diff < EPSILON, "loaded neural network weights are not the same as saved neural network weights\n"
+                                       "mean difference: %.20f (should be less than %.20f)\n", mean_diff, EPSILON);
 
         matrice *biases_diff = matrice_sub(nn->layers[i]->biases, nn2->layers[i]->biases);
         matrice_map(biases_diff, doubleabs);
         mean_diff = matrice_sum(biases_diff) / (biases_diff->rows * biases_diff->columns);
-        cr_assert(mean_diff < EPSILON, "matrices are not equal");
+        cr_assert(mean_diff < EPSILON, "loaded neural network biases are not the same as saved neural network biases\n"
+                                       "mean difference: %.20f (should be less than %.20f)\n", mean_diff, EPSILON);
     }
     free_neural_network(nn);
 }
