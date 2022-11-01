@@ -2,6 +2,12 @@ _build/
 sodoko
 .DS_Store
 main
+# the followings prevent files in src from being tracked
+#NeuralNetwork
+#Preprocess
+#Solver
+
+.DS_Store
 
 # Files for lsp server
 compile_commands.json
