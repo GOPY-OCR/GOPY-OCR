@@ -5,11 +5,12 @@ from sys import argv
 
 def main():
     path = argv[1]
-    df = pd.read_csv(path, skiprows=2, names=['accuracy'])
+    df = pd.read_csv(path, names=['test accuracy', 'train accuracy'], sep=";")
 
-    plt.plot(df['accuracy'])
-    plt.xlabel('Epoch')
-    plt.ylabel('Accuracy')
+    print(df)
+
+    df.plot(kind='line', color=['red', 'blue'], title='Learning accuracy', y=['test accuracy', 'train accuracy'])
+    
     plt.show()
 
 
