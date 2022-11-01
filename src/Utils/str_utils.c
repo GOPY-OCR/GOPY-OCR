@@ -1,9 +1,10 @@
 #include "str_utils.h"
 
+#define DOUBLE_PRECISION 13
 
 char *double_to_string(double d) {
     char *str = malloc(100);
-    sprintf(str, "%f", d);
+    sprintf(str, "%.*f", DOUBLE_PRECISION, d);
 
     // remove trailing zeros
     char *p = str + strlen(str) - 1;
@@ -45,7 +46,9 @@ char *read_from_file(char *filename) {
     fseek(f, 0, SEEK_SET);
 
     char *data = malloc(fsize + 1);
-    fread(data, fsize, 1, f);
+    if(fread(data, fsize, 1, f) != 1) {
+        errx(1, "read_from_file: Could not read file %s\n", filename);
+    }
     fclose(f);
 
     data[fsize] = '\0';
