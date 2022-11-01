@@ -263,7 +263,7 @@ matrice *matrice_map(matrice *m, double (*f)(double)) {
     return m;
 }
 
-void matrice_add_inplace(matrice *dest, const matrice *source){
+void matrice_add_inplace(matrice *dest, matrice *source){
     if (dest->rows != source->rows || dest->columns != source->columns)
         errx(EXIT_FAILURE, "matrice_add_inplace: incompatible matrice sizes, "
                             "dest is %d x %d, source is %d x %d",
@@ -278,7 +278,7 @@ void matrice_add_inplace(matrice *dest, const matrice *source){
     }
 }
 
-void matrice_sub_inplace(matrice *dest, const matrice *source){
+void matrice_sub_inplace(matrice *dest, matrice *source){
     if (dest->rows != source->rows || dest->columns != source->columns)
         errx(EXIT_FAILURE, "matrice_add_inplace: incompatible matrice sizes, "
                             "dest is %d x %d, source is %d x %d",
@@ -346,6 +346,24 @@ double matrice_sum(matrice *m) {
     }
     return sum;
 }
+
+double matrice_mean(matrice *m) {
+    return matrice_sum(m) / (m->rows * m->columns);
+}
+
+// std = standard deviation = écart type = sqrt(variance)
+double matrice_std(matrice *m){
+    double mean = matrice_mean(m);
+    double sum = 0;
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->columns; j++) {
+            double value = matrice_get(m, i, j);
+            sum += (value - mean) * (value - mean);
+        }
+    }
+    return sqrt(sum / (m->rows * m->columns));
+}
+
 
 #define SEPARATOR ';'
 #define LINE_SEPARATOR '\n'
