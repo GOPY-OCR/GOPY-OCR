@@ -36,11 +36,21 @@ int main(int argc, char **argv) {
         if (argc < 3) {
             errx(EXIT_FAILURE, "error: file not specified");
         }
+
+        char save_filename[] = "_build/ocr_save.nn";
+        NeuralNetwork *nn = load_neural_network(save_filename);
+        int le = strlen(argv[2]);
+        int is_dir = argv[2][le - 1] == '/';
+
+        if (strcmp(argv[2], "all") == 0) {
+            predict_all_images(nn);
+        } else if (is_dir) {
+            predict_all_images_in_dir(nn, argv[2]);
+        } else {
+            predict_image(nn, argv[2]);
+        }
+
         
-        int prediction = predict_digit(argv[2]);
-
-        printf("Prediction: %d\n", prediction);
-
     } else if (strcmp(argv[1], "-h") == 0 ||
                strcmp(argv[1], "--help") == 0) {
 
@@ -56,3 +66,4 @@ int main(int argc, char **argv) {
 
     return EXIT_SUCCESS;
 }
+
