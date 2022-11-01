@@ -26,7 +26,8 @@ void train(NeuralNetwork *nn,
            dataset *training_data, 
            dataset *testing_data, 
            int verbose,
-           int save_accuracies);
+           int save_accuracies,
+           int multithread);
 
 // Applies the backpropagation algorithm to a mini-batch.
 // A mini-batch is a subset of the training data.
@@ -34,7 +35,9 @@ void update_mini_batch(NeuralNetwork *nn,
                        dataset *data, 
                        float learning_rate,
                        int start, 
-                       int end);
+                       int end,
+                       int multithread);
+
 
 struct backprop_thread_args {
     NeuralNetwork *nn;
