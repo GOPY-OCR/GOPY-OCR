@@ -7,6 +7,12 @@ main
 #Preprocess
 #Solver
 
+# the followings are dupplicates of files
+src/NeuralNetwork/data/testing/
+src/NeuralNetwork/data/training/
+src/NeuralNetwork/env/
+
+
 .DS_Store
 
 # Files for lsp server
