@@ -1,12 +1,10 @@
 #include "training.h"
 // see http://neuralnetworksanddeeplearning.com/chap2.html
 
-#define PROGRESS_BAR_WIDTH 20
+#define PROGRESS_BAR_WIDTH 30
 #define PROGRESS_BAR_INTERVAL 1 // in epochs
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
-#define COMPUTE_TRAINING_ACCURACY 1 
-
-#define ENABLE_MULTITHREADING 1
+#define COMPUTE_TRAINING_ACCURACY 0 
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
@@ -14,8 +12,10 @@ void train(NeuralNetwork *nn,
            dataset *training_data, 
            dataset *testing_data,
            int verbose,
-           int save_accuracies) {
+           int save_accuracies,
+           int multithread) {
 
+    int testing_nb = testing_data != NULL ? testing_data->size : 0;
     int training_nb = training_data->size;
 
     if(verbose > 0)
@@ -27,7 +27,7 @@ void train(NeuralNetwork *nn,
                 "Epochs: %d\n"
                 "----------------------------\n",
                 training_nb, 
-                testing_data->size, 
+                testing_nb, 
                 learning_rate, 
                 batch_size, 
                 epochs);
@@ -35,7 +35,7 @@ void train(NeuralNetwork *nn,
     float mini_batch_learning_rate = learning_rate / batch_size;
 
     matrice *accuracies = matrice_new(epochs, 1 + COMPUTE_TRAINING_ACCURACY);
-    float accuracy;
+    float accuracy = -1;
 
     // if testing data is the same dataset as training data, we have
     // to make a copy of it to avoid modifying the order each epoch
@@ -50,7 +50,8 @@ void train(NeuralNetwork *nn,
                               training_data,
                               mini_batch_learning_rate, 
                               i,
-                              i + batch_size);
+                              i + batch_size,
+                              multithread);
         }
 
 
@@ -71,18 +72,20 @@ void train(NeuralNetwork *nn,
 
 
             matrice_set(accuracies, e, 0, accuracy);
+
+            if (COMPUTE_TRAINING_ACCURACY) {
+                accuracy = evaluate(nn, training_data, 0);
+                matrice_set(accuracies, e, 1, accuracy);
+
+                if (verbose > 1) {
+                    printf(" (training accuracy: %.2f%%)\n", accuracy * 100);
+                }
+            }
         }
         else if (verbose == 1 && (e==0 || ((e+1) % PROGRESS_BAR_INTERVAL == 0))) {
             progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, "Epochs");
         }
-        if (COMPUTE_TRAINING_ACCURACY) {
-            accuracy = evaluate(nn, training_data, 0);
-            matrice_set(accuracies, e, 1, accuracy);
 
-            if (verbose > 1) {
-                printf(" (training accuracy: %.2f%%)\n", accuracy * 100);
-            }
-        }
     }
     if (verbose == 1) {
         progress_bar(PROGRESS_BAR_WIDTH, epochs, epochs, "Epochs");
@@ -101,7 +104,7 @@ void train(NeuralNetwork *nn,
         free(message);
     }
 
-    if (verbose > 0) {
+    if (testing_data != NULL && testing_data->size > 0 && verbose > 0) {
         printf("Last epoch results: ");
         evaluate(nn, testing_data, 1);
         printf("\n");
@@ -110,7 +113,8 @@ void train(NeuralNetwork *nn,
 
 void update_mini_batch(NeuralNetwork *nn, 
         dataset *data, float learning_rate,
-        int start, int end) {
+        int start, int end,
+        int multithread) {
     matrice **nabla_b = malloc(nn->nb_layers * sizeof(matrice *));
     matrice **nabla_w = malloc(nn->nb_layers * sizeof(matrice *));
     pthread_t threads[THREADS_COUNT];
@@ -121,7 +125,7 @@ void update_mini_batch(NeuralNetwork *nn,
         nabla_w[i] =
             matrice_zeros(layer->weights->rows, layer->weights->columns);
     }
-    if (ENABLE_MULTITHREADING) {
+    if (multithread) {
         int batch_size = (end - start) / THREADS_COUNT;
         for (int i = 0; i < THREADS_COUNT; i++) {
             int start_index = start + i * batch_size;
