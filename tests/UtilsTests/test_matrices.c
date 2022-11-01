@@ -240,6 +240,24 @@ Test(matrices, test_sum) {
     cr_assert(sum == 10, "Sum is not equal to 10");
 }
 
+Test(matrices, test_mean){
+    setup();
+
+    double mean = matrice_mean(m1);
+
+    cr_assert(mean == 2.5, "Mean is not equal to 2.5");
+}
+
+Test(matrices, test_std){
+    setup();
+
+    double std = matrice_std(m1);
+
+    cr_assert(std == 1.118033988749895, "Std is not equal to 1.118033988749895");
+}
+
+
+
 Test(matrices, test_serialize) {
     setup();
 

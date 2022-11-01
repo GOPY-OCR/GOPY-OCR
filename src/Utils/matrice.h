@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <maths.h>
 
 
 matrice *matrice_new(int rows, int columns);
@@ -47,9 +48,12 @@ matrice *matrice_mul(matrice *m1, matrice *m2);
 matrice *matrice_map(matrice *m, double (*f)(double));
 matrice *matrice_multiply(matrice *m, double scalar);
 
-void matrice_add_inplace(matrice *dest, const matrice *source);
-void matrice_sub_inplace(matrice *dest, const matrice *source);
+void matrice_add_inplace(matrice *dest, matrice *source);
+void matrice_sub_inplace(matrice *dest, matrice *source);
 
 double *matrice_max(matrice *m, int *row, int *column);
 
 double matrice_sum(matrice *m);
+double matrice_mean(matrice *m);
+// std = standard deviation = écart type = sqrt(variance)
+double matrice_std(matrice *m);
