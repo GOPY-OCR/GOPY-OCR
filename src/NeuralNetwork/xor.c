@@ -1,7 +1,7 @@
 #include "xor.h"
 
 
-#define XOR_EPOCHS 500000
+#define XOR_EPOCHS 1000
 #define XOR_LEARNING_RATE 80.0
 #define SAVE_FILENAME "_build/xor_network.nn"
 #define XOR_SHAPE (int[]){2, 1}
@@ -59,7 +59,7 @@ void xor_train(int verbose, int argc, char **argv) {
         learning_rate = strtod(argv[1], NULL);
     }
 
-    train(network, epochs, learning_rate, 4, data, data, verbose, 1);
+    train(network, epochs, learning_rate, 4, data, data, verbose, 1, 0);
 
     if (!test_xor_network(network, 0, data)) {
         errx(1, "XOR network failed to learn\n");
@@ -122,7 +122,7 @@ void save_network_plot(NeuralNetwork *network, int verbose) {
 }
 
 void train_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
-    train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose, 0);
+    train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose, 0, 0);
 }
 
 #define MIN_ACCURACY 0.9
