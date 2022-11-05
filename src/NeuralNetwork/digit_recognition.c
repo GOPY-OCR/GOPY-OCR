@@ -13,7 +13,8 @@
 
 #define ENABLE_MULTITHREADING 1
 
-#define RUN_EVALUATIONS 1 // way slower with evaluations
+#define RUN_EVALUATIONS 1
+#define RUN_EVALUATIONS_ON_TRAINING 1
 
 #define SAVE_FILENAME "_build/ocr_save.nn"
 int digit_recognition_main(int argc, char **argv, int verbose){
@@ -40,7 +41,7 @@ int digit_recognition_main(int argc, char **argv, int verbose){
     }
 
     // Train the neural network
-    train(nn, epochs, LEARNING_RATE, BATCH_SIZE, train_dataset, test_dataset, verbose, RUN_EVALUATIONS, ENABLE_MULTITHREADING);
+    train(nn, epochs, LEARNING_RATE, BATCH_SIZE, train_dataset, test_dataset, verbose, RUN_EVALUATIONS, ENABLE_MULTITHREADING, RUN_EVALUATIONS_ON_TRAINING);
 
     // Save the neural network
     if (verbose)
