@@ -4,7 +4,6 @@
 #define PROGRESS_BAR_WIDTH 30
 #define PROGRESS_BAR_INTERVAL 1 // in epochs
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
-#define COMPUTE_TRAINING_ACCURACY 1
 // number of training examples to use for computing training accuracy
 #define NB_TRAINING_SAMPLES 1000
 void train(NeuralNetwork *nn, 
@@ -15,7 +14,8 @@ void train(NeuralNetwork *nn,
            dataset *testing_data,
            int verbose,
            int save_accuracies,
-           int multithread) {
+           int multithread,
+           int compute_training_accuracy) {
 
     int testing_nb = testing_data != NULL ? testing_data->size : 0;
     int training_nb = training_data->size;
@@ -36,13 +36,14 @@ void train(NeuralNetwork *nn,
 
     float mini_batch_learning_rate = learning_rate / batch_size;
 
-    matrice *accuracies = matrice_new(epochs, 1 + COMPUTE_TRAINING_ACCURACY);
+    matrice *accuracies = matrice_new(epochs, 1 + compute_training_accuracy);
     float accuracy = -1;
     
     dataset *training_samples = NULL;
-    if(COMPUTE_TRAINING_ACCURACY){
+    if(compute_training_accuracy){
         shuffle_dataset(training_data);
-        training_samples = dataset_slice(training_data, 0, NB_TRAINING_SAMPLES);
+        int nb_training_samples = training_data->size < NB_TRAINING_SAMPLES ? training_data->size : NB_TRAINING_SAMPLES;
+        training_samples = dataset_slice(training_data, 0, nb_training_samples);
     }
 
     // if testing data is the same dataset as training data, we have
@@ -80,7 +81,7 @@ void train(NeuralNetwork *nn,
 
             matrice_set(accuracies, e, 0, accuracy);
 
-            if (COMPUTE_TRAINING_ACCURACY) {
+            if (compute_training_accuracy) {
                 accuracy = evaluate(nn, training_samples, 0);
                 matrice_set(accuracies, e, 1, accuracy);
 
