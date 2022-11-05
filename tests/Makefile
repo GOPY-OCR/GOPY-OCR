@@ -1,5 +1,6 @@
 # This Makefile should be called after everything is build by the main Makefile
 include ../compile_settings.mk
+include ../prettyprint.mk
 
 TARGETS = NeuralNetwork Preprocess Utils Solver
 BUILD_DIR := ../_build
@@ -23,28 +24,27 @@ all: MainBuild $(TARGETS)
 
 .SECONDEXPANSION:
 NeuralNetwork: $(call ofiles,NeuralNetwork)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 .SECONDEXPANSION:
-
 Preprocess: $(call ofiles,Preprocess)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 .SECONDEXPANSION:
 Utils: $(call ofiles,Utils)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 .SECONDEXPANSION:
 Solver: $(call ofiles,Solver)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 # Same rule for all .o files
 $(TEST_DIR)/%.o: %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
+	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
 
 
 MainBuild:
