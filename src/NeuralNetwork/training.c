@@ -4,7 +4,9 @@
 #define PROGRESS_BAR_WIDTH 30
 #define PROGRESS_BAR_INTERVAL 1 // in epochs
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
-#define COMPUTE_TRAINING_ACCURACY 0 
+#define COMPUTE_TRAINING_ACCURACY 1
+// number of training examples to use for computing training accuracy
+#define NB_TRAINING_SAMPLES 1000
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
@@ -36,6 +38,12 @@ void train(NeuralNetwork *nn,
 
     matrice *accuracies = matrice_new(epochs, 1 + COMPUTE_TRAINING_ACCURACY);
     float accuracy = -1;
+    
+    dataset *training_samples = NULL;
+    if(COMPUTE_TRAINING_ACCURACY){
+        shuffle_dataset(training_data);
+        training_samples = dataset_slice(training_data, 0, NB_TRAINING_SAMPLES);
+    }
 
     // if testing data is the same dataset as training data, we have
     // to make a copy of it to avoid modifying the order each epoch
@@ -74,7 +82,7 @@ void train(NeuralNetwork *nn,
             matrice_set(accuracies, e, 0, accuracy);
 
             if (COMPUTE_TRAINING_ACCURACY) {
-                accuracy = evaluate(nn, training_data, 0);
+                accuracy = evaluate(nn, training_samples, 0);
                 matrice_set(accuracies, e, 1, accuracy);
 
                 if (verbose > 1) {
