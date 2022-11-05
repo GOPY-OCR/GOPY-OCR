@@ -6,6 +6,7 @@
 #include "sdl_utils.h"
 #include "dataset.h"
 #include "progress_bar.h"
+#include "str_utils.h"
 #include <pthread.h>
 
 // trains the neural network with the given training data
@@ -65,6 +66,13 @@ void backprop(NeuralNetwork *nn,
 // Will print a summary if verbose is 1 or more.
 // Will print the output of each test if verbose is 2 or more.
 float evaluate(NeuralNetwork *nn, dataset *data, int verbose);
+
+
+
+void apply_learning_rate_decay(matrice *accuracies, 
+                               int epoch, 
+                               float *learning_rate, 
+                               int verbose);
 
 // Returns the maximum output row index
 int max_output(matrice *output);

@@ -1,11 +1,39 @@
 #include "training.h"
 // see http://neuralnetworksanddeeplearning.com/chap2.html
 
+
+
+// Optimizations to be made:
+// - adaptive learning rate (eg *=0.8 if accuracy is not improving for 5 epochs)
+// - different loss functions (cross entropy, MSE)
+// - data augmentation (eg random rotation, translation, distortion)
+// - regularization (eg dropout)
+// - convolutional layers
+// - early stopping (eg add parameter to stop training if accuracy is not improving for X epochs)
+
+// Currently used techniques:
+// - data normalization in image_to_matrix()
+
+// progress bar is visible with verbose=1
 #define PROGRESS_BAR_WIDTH 30
 #define PROGRESS_BAR_INTERVAL 1 // in epochs
+
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
-// number of training examples to use for computing training accuracy
+// max number of training examples to use for computing training accuracy
 #define NB_TRAINING_SAMPLES 1000
+
+// if enabled, the learning rate will be
+// multiplied by LEARNING_RATE_DECAY_FACTOR
+// if the accuracy is not improving for
+// LEARNING_RATE_DECAY_INTERVAL epochs
+// 
+// LEARNING_RATE_DECAY_DELTA is the minimum
+// improvement in accuracy required to consider
+// that the network is improving
+#define ENABLE_LEARNING_RATE_DECAY 1
+#define LEARNING_RATE_DECAY_FACTOR 0.8
+#define LEARNING_RATE_DECAY_INTERVAL 5 // in epochs
+#define LEARNING_RATE_DECAY_DELTA 0.00001
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
@@ -20,21 +48,41 @@ void train(NeuralNetwork *nn,
     int testing_nb = testing_data != NULL ? testing_data->size : 0;
     int training_nb = training_data->size;
 
-    if(verbose > 0)
+    if(verbose > 0){
         printf( "----- TRAINING SUMMARY -----\n"
                 "Training on %d samples\n"
                 "Testing on %d samples\n"
-                "Learning rate: %f\n"
+                "Learning rate: %s\n"
                 "Batch size: %d\n"
-                "Epochs: %d\n"
-                "----------------------------\n",
+                "Epochs: %d\n",
                 training_nb, 
                 testing_nb, 
-                learning_rate, 
+                double_to_string(learning_rate),
                 batch_size, 
                 epochs);
 
-    float mini_batch_learning_rate = learning_rate / batch_size;
+        if(verbose > 1){
+            printf("\nOptions enabled: ");
+            if(multithread) printf("[multithread] ");
+            if(save_accuracies) printf("[save accuracies] ");
+            if(ENABLE_LEARNING_RATE_DECAY) 
+                printf("[learning_rate_decay (factor: %s, interval: %s, delta: %s)]", 
+                        double_to_string(LEARNING_RATE_DECAY_FACTOR), 
+                        double_to_string(LEARNING_RATE_DECAY_INTERVAL), 
+                        double_to_string(LEARNING_RATE_DECAY_DELTA));
+            printf("\n");
+
+            printf("Network shape: {");
+            for(int i=0; i<nn->nb_layers; i++){
+                printf("%d", nn->layers[i]->biases->rows);
+                if(i < nn->nb_layers-1) printf(", ");
+            }
+            printf("}\n");
+        }
+
+        printf("-----------------------------\n");
+    }
+
 
     matrice *accuracies = matrice_new(epochs, 1 + compute_training_accuracy);
     float accuracy = -1;
@@ -54,6 +102,10 @@ void train(NeuralNetwork *nn,
 
     for (int e = 0; e < epochs; e++) {
         shuffle_dataset(training_data);
+
+
+        float mini_batch_learning_rate = learning_rate / batch_size;
+
         for (int i = 0; i <= training_nb - batch_size; i += batch_size) {
             update_mini_batch(nn, 
                               training_data,
@@ -95,6 +147,8 @@ void train(NeuralNetwork *nn,
             progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, "Epochs");
         }
 
+        if (ENABLE_LEARNING_RATE_DECAY)
+            apply_learning_rate_decay(accuracies, e, &learning_rate, verbose);
     }
     if (verbose == 1) {
         progress_bar(PROGRESS_BAR_WIDTH, epochs, epochs, "Epochs");
@@ -108,7 +162,7 @@ void train(NeuralNetwork *nn,
         }
 
         char *message = malloc(sizeof(char) * 100);
-        sprintf(message, "Accuracy over %d epochs", epochs);
+        sprintf(message, "Accuracy over %d epochs (test;train)", epochs);
         matrice_to_csv(accuracies, ACCURACIES_CSV_FILE, message);
         free(message);
     }
@@ -320,6 +374,23 @@ float evaluate(NeuralNetwork *nn,
     free(outputs);
 
     return accuracy;
+}
+
+void apply_learning_rate_decay(matrice *accuracies, 
+                               int epoch, 
+                               float *learning_rate, 
+                               int verbose) {
+    if (epoch > LEARNING_RATE_DECAY_INTERVAL) {
+        float current_accuracy = matrice_get(accuracies, 1, epoch);
+        float previous_accuracy = matrice_get(accuracies, 1, epoch - LEARNING_RATE_DECAY_INTERVAL);
+
+        if (current_accuracy - previous_accuracy < LEARNING_RATE_DECAY_DELTA) {
+            *learning_rate *= LEARNING_RATE_DECAY_FACTOR;
+            if (verbose > 1) {
+                printf("Learning rate decayed to %.2f\n", *learning_rate);
+            }
+        }
+    }
 }
 
 int is_correct(matrice *output, matrice *target) {
