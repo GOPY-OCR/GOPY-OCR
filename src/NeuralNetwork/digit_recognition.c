@@ -1,19 +1,19 @@
 #include "digit_recognition.h"
 
 #define NUM_INPUTS 784
-#define NN_LAYERS (int[]){64, 10}
+#define NN_LAYERS (int[]){10}
 
 // corresponding datasets are 10 times larger
 #define TRAINING_SAMPLES_PER_DIGIT 5000 // upto 5000
 #define TEST_SAMPLES_PER_DIGIT 100 // upto 800
 
 #define EPOCHS 100
-#define LEARNING_RATE 5
-#define BATCH_SIZE 1000
+#define LEARNING_RATE 3.0
+#define BATCH_SIZE 5000
 
 #define ENABLE_MULTITHREADING 1
 
-#define RUN_EVALUATIONS 0 // way slower with evaluations
+#define RUN_EVALUATIONS 1 // way slower with evaluations
 
 #define SAVE_FILENAME "_build/ocr_save.nn"
 int digit_recognition_main(int argc, char **argv, int verbose){
@@ -38,28 +38,6 @@ int digit_recognition_main(int argc, char **argv, int verbose){
     if (RUN_EVALUATIONS){
         test_dataset = load_dataset("data/testing/", TEST_SAMPLES_PER_DIGIT);
     }
-
-    // TEMP
-    // computes the mean and standard deviation of the training dataset
-    // and prints it to the console
-    // this is used to normalize the input data
-    matrice *concat = matrice_new(train_dataset->inputs[0]->rows, train_dataset->inputs[0]->columns * train_dataset->size);
-
-    for (int i = 0; i < train_dataset->size; i++){
-        int offset = i * train_dataset->inputs[0]->columns;
-        for (int row = 0; row < train_dataset->inputs[i]->rows; row++){
-            for (int col = 0; col < train_dataset->inputs[i]->columns; col++){
-                matrice_set(concat, row, offset + col, matrice_get(train_dataset->inputs[i], row, col));
-            }
-        }
-    }
-
-    double mean = matrice_mean(concat);
-    double std = matrice_std(concat);
-    
-    printf("mean: %.20f, std: %.20f\n", mean, std);
-    
-    // TEMP
 
     // Train the neural network
     train(nn, epochs, LEARNING_RATE, BATCH_SIZE, train_dataset, test_dataset, verbose, RUN_EVALUATIONS, ENABLE_MULTITHREADING);
@@ -129,10 +107,12 @@ void predict_all_images_in_dir(NeuralNetwork *nn, char *folder){
 
 void predict_all_images(NeuralNetwork *nn) {
     int results[100] = {0};
+    int tot_files = 0;
     for (int i = 0; i < 10; i++) {
         char folder[100];
         sprintf(folder, "data/testing/%d/", i);
         int nb_files = count_files_in_dir(folder);
+        tot_files += nb_files;
         char **files = list_files(folder, nb_files, 1);
         for (int j = 0; j < nb_files; j++) {
             int prediction = predict_digit(files[j], nn);
@@ -147,7 +127,7 @@ void predict_all_images(NeuralNetwork *nn) {
         printf("|      %d       |", i);
         for (int j = 0; j < 10; j++) {
             if (results[i * 10 + j] > 0) {
-                printf("%5d|", results[i * 10 + j]);
+                printf("%5d|", results[j * 10 + i]);
             } else {
                 printf("     |");
             }
@@ -168,6 +148,7 @@ void predict_all_images(NeuralNetwork *nn) {
         grand_total += total;
     }
     printf("\n");
-    printf("Grand total: %d\n", grand_total);
+    printf("Grand total: %d/%d misses (%.2f%% accuracy)\n", 
+            grand_total, tot_files, 100.0 * (tot_files - grand_total) / tot_files);
 }
 
