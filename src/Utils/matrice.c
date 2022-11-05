@@ -120,8 +120,10 @@ matrice *matrice_from_string(char *str) {
 }
 
 double *matrice_get_ref(matrice *m, int row, int column) {
-    if (row >= m->rows || column >= m->columns)
-        errx(EXIT_FAILURE, "matrice_get_ref: index out of bounds");
+    // the following out of bounds check is commented out
+    // because this function is by far the most called
+    //if (row >= m->rows || column >= m->columns)
+    //    errx(EXIT_FAILURE, "matrice_get_ref: index out of bounds");
 
     return m->data + (row * m->columns + column);
 }
