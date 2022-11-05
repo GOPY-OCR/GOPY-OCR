@@ -20,15 +20,17 @@ void free_dataset(dataset *data) {
 
 // these values where computed accross the whole dataset previously
 // and are used to normalize the inputs
-#define IMAGE_MEAN 0.1331258163
-#define IMAGE_STD 0.3397106611
+#define IMAGE_MEAN 100.602216505102035171148600056767
+#define IMAGE_STD 236.326521859361037058988586068153
 matrice *image_to_matrice(SDL_Surface *image) {
     matrice *m = matrice_new(image->w * image->h, 1);
 
     for (int i = 0; i < image->w; i++) {
         for (int j = 0; j < image->h; j++) {
-            double value = is_pixel_white(image, i, j);
-            value = (value - IMAGE_MEAN) / IMAGE_STD;
+            Uint8 r, g, b;
+            SDL_GetRGB(*getpixel(image, i, j), image->format, &r, &g, &b);
+            double value = (r + g + b);
+            value = (value - IMAGE_MEAN) / IMAGE_STD; // normalization based on precomputed values
             matrice_set(m, i * image->h + j, 0, value);
         }
     }
