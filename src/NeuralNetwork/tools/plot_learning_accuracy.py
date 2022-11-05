@@ -2,14 +2,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sys import argv
 
-
 def main():
     path = argv[1]
     df = pd.read_csv(path, names=['test accuracy', 'train accuracy'], sep=";")
 
+    df = df.dropna(how='any')
+
+    df['test accuracy'] = df['test accuracy'].astype(float)
+
     print(df)
 
-    df.plot(kind='line', color=['red', 'blue'], title='Learning accuracy', y=['test accuracy', 'train accuracy'])
+    df.plot(kind='line', color=['red', 'blue'], y=['test accuracy', 'train accuracy'])
     
     plt.show()
 
