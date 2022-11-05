@@ -100,3 +100,14 @@ dataset *copy_dataset(dataset *data, int deepcopy) {
     return copy;
 }
 
+dataset *dataset_slice(dataset *data, int start, int end) {
+    // even more shallow copy than copy_dataset with deepcopy = 0
+    // this is so that we don't have to worry about freeing
+    // the output of this function
+    dataset *copy = malloc(sizeof(dataset)); 
+    copy->inputs = data->inputs + start;
+    copy->targets = data->targets + start;
+    copy->size = end - start;
+    return copy;
+}
+
