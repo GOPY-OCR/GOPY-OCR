@@ -39,3 +39,5 @@ matrice *image_to_matrice(SDL_Surface *image);
 
 void shuffle_dataset(dataset *data);
 
+
+dataset *dataset_slice(dataset *data, int start, int end);
