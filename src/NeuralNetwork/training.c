@@ -16,24 +16,12 @@
 
 // progress bar is visible with verbose=1
 #define PROGRESS_BAR_WIDTH 30
-#define PROGRESS_BAR_INTERVAL 1 // in epochs
+#define PROGRESS_BAR_INTERVAL 10000 // in epochs
 
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
 // max number of training examples to use for computing training accuracy
-#define NB_TRAINING_SAMPLES 1000
+#define NB_TRAINING_SAMPLES 50000
 
-// if enabled, the learning rate will be
-// multiplied by LEARNING_RATE_DECAY_FACTOR
-// if the accuracy is not improving for
-// LEARNING_RATE_DECAY_INTERVAL epochs
-// 
-// LEARNING_RATE_DECAY_DELTA is the minimum
-// improvement in accuracy required to consider
-// that the network is improving
-#define ENABLE_LEARNING_RATE_DECAY 1
-#define LEARNING_RATE_DECAY_FACTOR 0.8
-#define LEARNING_RATE_DECAY_INTERVAL 5 // in epochs
-#define LEARNING_RATE_DECAY_DELTA 0.00001
 void train(NeuralNetwork *nn, 
            int epochs, 
            float learning_rate, 
@@ -43,7 +31,8 @@ void train(NeuralNetwork *nn,
            int verbose,
            int save_accuracies,
            int multithread,
-           int compute_training_accuracy) {
+           int compute_training_accuracy,
+           float learning_rate_decay) {
 
     int testing_nb = testing_data != NULL ? testing_data->size : 0;
     int training_nb = training_data->size;
@@ -65,11 +54,9 @@ void train(NeuralNetwork *nn,
             printf("\nOptions enabled: ");
             if(multithread) printf("[multithread] ");
             if(save_accuracies) printf("[save accuracies] ");
-            if(ENABLE_LEARNING_RATE_DECAY) 
-                printf("[learning_rate_decay (factor: %s, interval: %s, delta: %s)]", 
-                        double_to_string(LEARNING_RATE_DECAY_FACTOR), 
-                        double_to_string(LEARNING_RATE_DECAY_INTERVAL), 
-                        double_to_string(LEARNING_RATE_DECAY_DELTA));
+            if(learning_rate_decay != 0) 
+                printf("[learning_rate_decay (factor: %s)]", 
+                        double_to_string(learning_rate_decay));
             printf("\n");
 
             printf("Network shape: {");
@@ -147,8 +134,7 @@ void train(NeuralNetwork *nn,
             progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, "Epochs");
         }
 
-        if (ENABLE_LEARNING_RATE_DECAY)
-            apply_learning_rate_decay(accuracies, e, &learning_rate, verbose);
+        apply_learning_rate_decay(e, &learning_rate, verbose, learning_rate_decay);
     }
     if (verbose == 1) {
         progress_bar(PROGRESS_BAR_WIDTH, epochs, epochs, "Epochs");
@@ -376,21 +362,19 @@ float evaluate(NeuralNetwork *nn,
     return accuracy;
 }
 
-void apply_learning_rate_decay(matrice *accuracies, 
-                               int epoch, 
+void apply_learning_rate_decay(int epoch, 
                                float *learning_rate, 
-                               int verbose) {
-    if (epoch > LEARNING_RATE_DECAY_INTERVAL) {
-        float current_accuracy = matrice_get(accuracies, 1, epoch);
-        float previous_accuracy = matrice_get(accuracies, 1, epoch - LEARNING_RATE_DECAY_INTERVAL);
+                               int verbose,
+                               float decay_rate) {
 
-        if (current_accuracy - previous_accuracy < LEARNING_RATE_DECAY_DELTA) {
-            *learning_rate *= LEARNING_RATE_DECAY_FACTOR;
-            if (verbose > 1) {
-                printf("Learning rate decayed to %.2f\n", *learning_rate);
-            }
-        }
+    if (*learning_rate < 0.000001 || *learning_rate > 10000000){
+        // this is to prevent the learning rate from exploding or vanishing
+        return;
     }
+    *learning_rate *= (1 - decay_rate);
+
+    if (verbose > 1)
+        printf("Learning rate decayed to %.2f\n", *learning_rate);
 }
 
 int is_correct(matrice *output, matrice *target) {
