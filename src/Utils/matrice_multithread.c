@@ -19,7 +19,7 @@ void *matrice_dot_thread(void *args){
 
     for (int i = arg->i; i < r->rows && n > 0; i ++){
         for (int j = arg->j; j < r->columns && n > 0; j ++){
-            double *sum = matrice_get_ref(r, i, j);
+            float *sum = matrice_get_ref(r, i, j);
             *sum = 0;
             for (int k = 0; k < m1->columns; k ++){
                 *sum += matrice_get(m1, i, k) * matrice_get(m2, k, j);

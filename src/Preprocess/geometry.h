@@ -25,7 +25,7 @@ Line *hough_lines_to_lines(Point *lines,
                            int nb_lines,
                            array *thetas,
                            array *rhos,
-                           double d);
+                           float d);
 
 
 
@@ -35,4 +35,4 @@ Line *hough_lines_to_lines(Point *lines,
                            int nb_lines,
                            array *thetas,
                            array *rhos,
-                           double d);
+                           float d);

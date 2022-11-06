@@ -8,7 +8,7 @@ void xor_main(int verbose, int argc, char **argv);
 // Mode 1: Trains, tests and saves the network
 void xor_train(int verbose, int argc, char **argv);
 // Mode 2: Loads the network and tests it
-double test_xor_inputs(NeuralNetwork *network, int verbose, double input1, double input2);
+float test_xor_inputs(NeuralNetwork *network, int verbose, float input1, float input2);
 // Mode 3: Loads the network and plot the output
 void save_network_plot(NeuralNetwork *network, int verbose);
 

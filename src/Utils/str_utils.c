@@ -2,7 +2,7 @@
 
 #define DOUBLE_PRECISION 13
 
-char *double_to_string(double d) {
+char *float_to_string(float d) {
     char *str = malloc(100);
     sprintf(str, "%.*f", DOUBLE_PRECISION, d);
 
