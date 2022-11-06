@@ -25,7 +25,7 @@ void setup(void) {
 
     serialized_big1 = "# big1\n"
                             "6x9\n"
-                            "9.123;12.73;8129;837;2871;1;2;3;4\n"
+                            "9.1230001449585;12.7299995422363;8129;837;2871;1;2;3;4\n"
                             "1;2;3;4;5;6;7;8;9\n"
                             "9;8;7;6;5;4;3;2;1\n"
                             "0;0;0;0;0;0;0;0;0\n"
@@ -52,7 +52,7 @@ Test(matrices, test_from_string) {
         matrice_print(m);
         cr_assert_fail("Parsed matrix is not equal to the expected one");
     }
-    cr_assert_eq(matrice_get(big1, 0, 0), 9.123);
+    cr_assert_eq(matrice_get(big1, 1, 1), 2);
     cr_assert_eq(matrice_get(big1, 5, 0), -9999);
     cr_assert_eq(matrice_get(big1, 5, 8), -9999);
 }
@@ -253,7 +253,7 @@ Test(matrices, test_std){
 
     float std = matrice_std(m1);
 
-    cr_assert(std == 1.118033988749895, "Std is not equal to 1.118033988749895");
+    cr_assert(std - 1.11803 < 0.00001, "Std is not equal to 1.118033988749895");
 }
 
 
