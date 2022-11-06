@@ -46,7 +46,7 @@ void train(NeuralNetwork *nn,
                 "Epochs: %d\n",
                 training_nb, 
                 testing_nb, 
-                double_to_string(learning_rate),
+                float_to_string(learning_rate),
                 batch_size, 
                 epochs);
 
@@ -56,7 +56,7 @@ void train(NeuralNetwork *nn,
             if(save_accuracies) printf("[save accuracies] ");
             if(learning_rate_decay != 0) 
                 printf("[learning_rate_decay (factor: %s)]", 
-                        double_to_string(learning_rate_decay));
+                        float_to_string(learning_rate_decay));
             printf("\n");
 
             printf("Network shape: {");
@@ -208,10 +208,10 @@ void update_mini_batch(NeuralNetwork *nn,
     // update NeuralNetwork weights
     for (int i = 0; i < nn->nb_layers; i++) {
         matrice_sub_inplace(nn->layers[i]->weights, 
-                matrice_multiply(nabla_w[i], (double)learning_rate));
+                matrice_multiply(nabla_w[i], (float)learning_rate));
 
         matrice_sub_inplace(nn->layers[i]->biases,
-                matrice_multiply(nabla_b[i], (double)learning_rate));
+                matrice_multiply(nabla_b[i], (float)learning_rate));
 
         matrice_free(nabla_b[i]);
         matrice_free(nabla_w[i]);
@@ -326,8 +326,8 @@ float evaluate(NeuralNetwork *nn,
 
         // compute accuracy
         matrice *error = matrice_sub(outputs[i] , data->targets[i]); // error = output - target
-        matrice_map(error, doubleabs);
-        double acc = 1 - matrice_sum(error) / target_size; // accuracy = 1 - mean(abs(error))
+        matrice_map(error, floatabs);
+        float acc = 1 - matrice_sum(error) / target_size; // accuracy = 1 - mean(abs(error))
 
         matrice_set(accuracy_matrice, 0, i, acc);
 

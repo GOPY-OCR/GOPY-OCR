@@ -21,18 +21,18 @@ int detect_grid_rotation(Line *lines) {
 // algorithm from
 // https://towardsdatascience.com/lines-detection-with-hough-transform-84020b3b1549
 Line *find_image_lines(SDL_Surface *image, int nb_lines, int draw_lines){
-    double width = image->w;
-    double height = image->h;
+    float width = image->w;
+    float height = image->h;
 
     // pythagorean theorem to calculate the diagonal
-    double d = sqrt(width*width + height*height);
+    float d = sqrt(width*width + height*height);
 
-    double num_thetas = 180;
-    double num_rhos = d * 2;
+    float num_thetas = 180;
+    float num_rhos = d * 2;
 
     // step sizes
-    double dtheta = 180.0 / num_thetas;
-    double drho = (2*d) / num_rhos;
+    float dtheta = 180.0 / num_thetas;
+    float drho = (2*d) / num_rhos;
 
     array *thetas = array_range(0, 180, dtheta);
     array *rhos = array_range(-d, d, drho);
@@ -65,8 +65,8 @@ Line *find_image_lines(SDL_Surface *image, int nb_lines, int draw_lines){
 matrice *create_hough_space_matrice(SDL_Surface *image, 
                                     array *thetas, 
                                     array *rhos, 
-                                    double d, 
-                                    double drho){
+                                    float d, 
+                                    float drho){
     matrice *accumulator = matrice_zeros(rhos->size, thetas->size);
 
     // precompute the sin and cos values of thetas
@@ -74,7 +74,7 @@ matrice *create_hough_space_matrice(SDL_Surface *image,
     array *sin_thetas = array_map(thetas, sin_degree);
     
 
-    double rho;
+    float rho;
     size_t i;
 
     SDL_LockSurface(image);

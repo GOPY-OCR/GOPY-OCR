@@ -62,13 +62,13 @@ ParameterizedTest(struct neural_network_create_params *params, neuralnetworks, t
         // instead of checking matrice_equals because of rounding errors
         // when saving and loading
         matrice *weights_diff = matrice_sub(nn->layers[i]->weights, nn2->layers[i]->weights);
-        matrice_map(weights_diff, doubleabs);
-        double mean_diff = matrice_sum(weights_diff) / (weights_diff->rows * weights_diff->columns);
+        matrice_map(weights_diff, floatabs);
+        float mean_diff = matrice_sum(weights_diff) / (weights_diff->rows * weights_diff->columns);
         cr_assert(mean_diff < EPSILON, "loaded neural network weights are not the same as saved neural network weights\n"
                                        "mean difference: %.20f (should be less than %.20f)\n", mean_diff, EPSILON);
 
         matrice *biases_diff = matrice_sub(nn->layers[i]->biases, nn2->layers[i]->biases);
-        matrice_map(biases_diff, doubleabs);
+        matrice_map(biases_diff, floatabs);
         mean_diff = matrice_sum(biases_diff) / (biases_diff->rows * biases_diff->columns);
         cr_assert(mean_diff < EPSILON, "loaded neural network biases are not the same as saved neural network biases\n"
                                        "mean difference: %.20f (should be less than %.20f)\n", mean_diff, EPSILON);
@@ -76,13 +76,13 @@ ParameterizedTest(struct neural_network_create_params *params, neuralnetworks, t
     free_neural_network(nn);
 }
 
-double max_value(matrice *m){
+float max_value(matrice *m){
     int i, j;
     matrice_max(m, &i, &j);
     return matrice_get(m, i, j);
 }
 
-double min_value(matrice *m){
+float min_value(matrice *m){
     int i, j;
     matrice_max(matrice_multiply(m,-1), &i, &j);
     return -matrice_get(m, i, j);
@@ -103,13 +103,13 @@ Test(neuralnetworks, test_create_neural_network_easy) {
 
 
     for (int i = 0; i < nn->nb_layers; i++) {
-        double max_weight = max_value(nn->layers[i]->weights);
-        double min_weight = min_value(nn->layers[i]->weights);
+        float max_weight = max_value(nn->layers[i]->weights);
+        float min_weight = min_value(nn->layers[i]->weights);
         cr_assert(max_weight <= 1, "max weight is greater than 1");
         cr_assert(min_weight >= -1, "min weight is less than -1");
 
-        double max_bias = max_value(nn->layers[i]->biases);
-        double min_bias = min_value(nn->layers[i]->biases);
+        float max_bias = max_value(nn->layers[i]->biases);
+        float min_bias = min_value(nn->layers[i]->biases);
         cr_assert(max_bias <= 1, "max bias is greater than 1");
         cr_assert(min_bias >= -1, "min bias is less than -1");
     }
@@ -135,13 +135,13 @@ Test(neuralnetowks, test_create_neural_network_hard) {
     // ... this should be enough
 
     for (int i = 0; i < nn->nb_layers; i++) {
-        double max_weight = max_value(nn->layers[i]->weights);
-        double min_weight = min_value(nn->layers[i]->weights);
+        float max_weight = max_value(nn->layers[i]->weights);
+        float min_weight = min_value(nn->layers[i]->weights);
         cr_assert(max_weight <= 1, "max weight is greater than 1");
         cr_assert(min_weight >= -1, "min weight is less than -1");
 
-        double max_bias = max_value(nn->layers[i]->biases);
-        double min_bias = min_value(nn->layers[i]->biases);
+        float max_bias = max_value(nn->layers[i]->biases);
+        float min_bias = min_value(nn->layers[i]->biases);
         cr_assert(max_bias <= 1, "max bias is greater than 1");
         cr_assert(min_bias >= -1, "min bias is less than -1");
     }

@@ -3,5 +3,5 @@
 typedef struct matrice {
     int rows;
     int columns;
-    double *data;
+    float *data;
 } matrice;

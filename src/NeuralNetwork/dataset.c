@@ -29,7 +29,7 @@ matrice *image_to_matrice(SDL_Surface *image) {
         for (int j = 0; j < image->h; j++) {
             Uint8 r, g, b;
             SDL_GetRGB(*getpixel(image, i, j), image->format, &r, &g, &b);
-            double value = (r + g + b);
+            float value = (r + g + b);
             value = (value - IMAGE_MEAN) / IMAGE_STD; // normalization based on precomputed values
             matrice_set(m, i * image->h + j, 0, value);
         }

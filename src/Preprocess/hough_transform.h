@@ -39,8 +39,8 @@ Line *find_image_lines(SDL_Surface *image, int nb_lines, int draw_lines);
 matrice *create_hough_space_matrice(SDL_Surface *image, 
         array *thetas, 
         array *rhos, 
-        double d,
-        double drho);
+        float d,
+        float drho);
 
 
 // finds the top nb_lines peaks in the accumulator matrix.
@@ -61,5 +61,5 @@ void draw_hough_lines_on_image(SDL_Surface *image,
                                int nb_lines,
                                array *thetas, 
                                array *rhos, 
-                               double d);
+                               float d);
 
