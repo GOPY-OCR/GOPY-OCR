@@ -8,10 +8,12 @@
 #define TEST_SAMPLES_PER_DIGIT 100 // upto 800
 
 #define EPOCHS 100
-#define LEARNING_RATE 3.0
-#define BATCH_SIZE 5000
+#define LEARNING_RATE 5.0
+#define BATCH_SIZE 400
 
 #define ENABLE_MULTITHREADING 1
+
+#define ENABLE_LEARNING_RATE_DECAY 1
 
 #define RUN_EVALUATIONS 1
 #define RUN_EVALUATIONS_ON_TRAINING 1
@@ -32,6 +34,10 @@ int digit_recognition_main(int argc, char **argv, int verbose){
     if (argc > 3){
         epochs = atoi(argv[3]);
     }
+    float learning_rate = LEARNING_RATE;
+    if (argc > 4){
+        learning_rate = atof(argv[4]);
+    }
 
     // Load the data
     dataset *train_dataset = load_dataset("data/training/", TRAINING_SAMPLES_PER_DIGIT);
@@ -41,7 +47,18 @@ int digit_recognition_main(int argc, char **argv, int verbose){
     }
 
     // Train the neural network
-    train(nn, epochs, LEARNING_RATE, BATCH_SIZE, train_dataset, test_dataset, verbose, RUN_EVALUATIONS, ENABLE_MULTITHREADING, RUN_EVALUATIONS_ON_TRAINING);
+    train(nn, 
+          epochs, 
+          learning_rate, 
+          BATCH_SIZE, 
+          train_dataset, 
+          test_dataset, 
+          verbose, 
+          RUN_EVALUATIONS, 
+          ENABLE_MULTITHREADING, 
+          RUN_EVALUATIONS_ON_TRAINING,
+          ENABLE_LEARNING_RATE_DECAY);
+
 
     // Save the neural network
     if (verbose)
@@ -49,7 +66,7 @@ int digit_recognition_main(int argc, char **argv, int verbose){
 
     save_neural_network(nn, SAVE_FILENAME);
 
-    float accuracy = evaluate(nn, test_dataset!=NULL?test_dataset:train_dataset, verbose > 0);
+    evaluate(nn, test_dataset!=NULL?test_dataset:train_dataset, verbose > 0);
 
     return 0;
 }

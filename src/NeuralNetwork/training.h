@@ -29,7 +29,8 @@ void train(NeuralNetwork *nn,
            int verbose,
            int save_accuracies,
            int multithread,
-           int compute_training_accuracy);
+           int compute_training_accuracy,
+           float learning_rate_decay);
 
 // Applies the backpropagation algorithm to a mini-batch.
 // A mini-batch is a subset of the training data.
@@ -69,10 +70,10 @@ float evaluate(NeuralNetwork *nn, dataset *data, int verbose);
 
 
 
-void apply_learning_rate_decay(matrice *accuracies, 
-                               int epoch, 
+void apply_learning_rate_decay(int epoch, 
                                float *learning_rate, 
-                               int verbose);
+                               int verbose,
+                               float learning_rate_decay);
 
 // Returns the maximum output row index
 int max_output(matrice *output);

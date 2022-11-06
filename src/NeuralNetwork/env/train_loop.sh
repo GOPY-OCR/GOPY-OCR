@@ -1,8 +1,8 @@
 #!/bin/bash
 
 i=1
-max=5
-checkpoint_interval=1
+max=50
+checkpoint_interval=20
 while [ $i -le $max ]
 do
     ./main -t -vv $checkpoint_interval
