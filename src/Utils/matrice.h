@@ -18,7 +18,7 @@ void matrice_print(matrice *m);
 matrice *matrice_from_string(char *str);
 
 char *matrice_serialize(matrice *m, char *name);
-matrice *matrice_deserialize(char *str);
+matrice *matrice_deserialize(char *str, char **endptr);
 
 void matrice_to_csv(matrice *m, char *filename, char *name);
 matrice *matrice_read_csv(char *filename);
