@@ -393,10 +393,12 @@ char *matrice_serialize(matrice *m, char *name){
                 size *= 2;
                 output = realloc(output, sizeof(char) * size);
             }
+
             char *val = float_to_string(matrice_get(m, i, j));
-            for (size_t k = 0; k < strlen(val); k++) {
-                output[index++] = val[k];
-            }
+            size_t le = strlen(val);
+            memcpy(output + index, val, le);
+            index += le;
+
             output[index++] = SEPARATOR;
             free(val);
         }
@@ -407,10 +409,10 @@ char *matrice_serialize(matrice *m, char *name){
     output = realloc(output, sizeof(char) * (index + 1));
 
     return output;
-
 }
 
-matrice *matrice_deserialize(char *str){
+
+matrice *matrice_deserialize(char *str, char **endptr){
     // skip name if present
     char *p = str;
     if (*p == '#') {
@@ -444,6 +446,10 @@ matrice *matrice_deserialize(char *str){
         }
     }
 
+    if (endptr != NULL) {
+        *endptr = p;
+    }
+
     return m;
 }
 
@@ -456,7 +462,7 @@ void matrice_to_csv(matrice *m, char *filename, char *name) {
 
 matrice *matrice_read_csv(char *filename) {
     char *str = read_from_file(filename);
-    matrice *m = matrice_deserialize(str);
+    matrice *m = matrice_deserialize(str, NULL);
     free(str);
     return m;
 }

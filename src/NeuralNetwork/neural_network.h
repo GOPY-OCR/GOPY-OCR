@@ -6,6 +6,7 @@
 #include "matrice.h"
 #include "str_utils.h"
 #include "sdl_utils.h"
+#include "cost_functions.h"
 
 typedef struct Layer {
     matrice *weights;
@@ -15,6 +16,7 @@ typedef struct Layer {
 typedef struct NeuralNetwork {
     int nb_layers;
     Layer **layers;
+    CostFunction cost_function;
 } NeuralNetwork;
 
 Layer *create_layer(int nb_neurons, int nb_inputs);
