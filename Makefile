@@ -1,9 +1,8 @@
 # Name of the final executable
-TARGET := gopy_ocr
+TARGET := sodoko
 
 include compile_settings.mk
 include prettyprint.mk
-
 
 # Find all subdirectories
 SRC_DIRS := $(shell find ./src -type d -not -path "*_build*")
@@ -40,8 +39,8 @@ $(BUILD_DIR)/%.o: %.c
 	fi;
 
 test: $(TARGET)
-# -k: continue even if a test from another test suite fails
-#  timeout 20: kills the tests after 20 seconds
+	# -k: continue even if a test from another test suite fails
+	#  timeout 20: kills the tests after 20 seconds
 	timeout -v 20 $(MAKE) -k -C tests
 
 clean:
