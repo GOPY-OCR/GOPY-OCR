@@ -434,15 +434,9 @@ matrice *matrice_deserialize(char *str, char **endptr){
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-            float val;
-            sscanf(p, "%f", &val);
+            float val = strtof(p, &p);
             matrice_set(m, i, j, val);
-            while (*p != SEPARATOR && *p != LINE_SEPARATOR) {
-                p++;
-            }
-            if (*p == SEPARATOR || *p == LINE_SEPARATOR) {
-                p++;
-            }
+            p++;
         }
     }
 
