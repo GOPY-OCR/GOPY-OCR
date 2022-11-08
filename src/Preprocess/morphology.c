@@ -1,5 +1,4 @@
 #include "morphology.h"
-#define SIZE_SIDE_FILTER 7
 
 const int FILTER[] = {
     0, 0, 1, 1, 1, 0, 0,
@@ -11,18 +10,9 @@ const int FILTER[] = {
     0, 0, 1, 1, 1, 0, 0
 };
 
-Uint32 *safe_get_pixel(SDL_Surface *surface, int x, int y) {
-    if(x < 0 || x >= surface->w || y < 0 || y >= surface->h){
-        return NULL;
-    }
-
-    int bpp = surface->format->BytesPerPixel; // = 4
-    Uint32 *p = surface->pixels + y * surface->pitch + x * bpp;
-    return p;
-}
 
 Uint32 max_color_pixels(SDL_Surface *surface, int x, int y) {
-    Uint32 *cur_max = safe_get_pixel(surface, x, y);
+    Uint32 *cur_max = getpixel(surface, x, y);
     if (cur_max == NULL)
         errx(1, "Preprocess - max_color_pixels: Can't find the given pixel");
 
@@ -33,7 +23,7 @@ Uint32 max_color_pixels(SDL_Surface *surface, int x, int y) {
         if (FILTER[i] == 0)
             continue;
 
-        Uint32 *cur = safe_get_pixel(surface, x + i % SIZE_SIDE_FILTER, 
+        Uint32 *cur = getpixel(surface, x + i % SIZE_SIDE_FILTER, 
                                             y + i / SIZE_SIDE_FILTER);
         if (cur != NULL && *cur > *cur_max)
             cur_max = cur;
@@ -43,7 +33,7 @@ Uint32 max_color_pixels(SDL_Surface *surface, int x, int y) {
 }
 
 Uint32 min_color_pixels(SDL_Surface *surface, int x, int y) {
-    Uint32 *cur_min = safe_get_pixel(surface, x, y);
+    Uint32 *cur_min = getpixel(surface, x, y);
     if (cur_min == NULL)
         errx(1, "Preprocess - min_color_pixels: Can't find the given pixel");
 
@@ -54,7 +44,7 @@ Uint32 min_color_pixels(SDL_Surface *surface, int x, int y) {
         if (FILTER[i] == 0)
             continue;
 
-        Uint32 *cur = safe_get_pixel(surface, x + i % SIZE_SIDE_FILTER, 
+        Uint32 *cur = getpixel(surface, x + i % SIZE_SIDE_FILTER, 
                                             y + i / SIZE_SIDE_FILTER);
         if (cur != NULL && *cur < *cur_min)
             cur_min = cur;
