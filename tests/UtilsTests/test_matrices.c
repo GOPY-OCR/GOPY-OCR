@@ -1,6 +1,6 @@
 #include "matrice.h"
 
-matrice *m1, *m2, *m3, *m4, *big1, *big2;
+matrice *m1, *m2, *m3, *m4, *big1, *big2, *weird;
 char *serialized_big1, *serialized_m1;
 
 void setup(void) {
@@ -25,7 +25,7 @@ void setup(void) {
 
     serialized_big1 = "# big1\n"
                             "6x9\n"
-                            "9.1230001449585;12.7299995422363;8129;837;2871;1;2;3;4\n"
+                            "9.123000144958;12.72999954224;8129;837;2871;1;2;3;4\n"
                             "1;2;3;4;5;6;7;8;9\n"
                             "9;8;7;6;5;4;3;2;1\n"
                             "0;0;0;0;0;0;0;0;0\n"
@@ -36,6 +36,9 @@ void setup(void) {
                     "3;4\n";
 
     big2 = matrice_from_string("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41");
+
+    weird = matrice_from_string("1234567891011121314,"
+                                "0.00000000000000000000000000001");
 }
 
 Test(matrices, test_from_string) {
@@ -286,6 +289,9 @@ Test(matrices, test_deserialize) {
 
     m = matrice_deserialize(serialized_m1, NULL);
     cr_assert(matrice_equals(m, m1), "Serialized m1 with no name is not equal to m1");
+
+    m = matrice_deserialize(matrice_serialize(weird, "weird"), NULL);
+    cr_assert(matrice_equals(m, weird), "Serialized matrice \"weird\" is not equal to matrice \"weird\"");
 
     char *ptr = NULL;
     m = matrice_deserialize(serialized_m1, &ptr);
