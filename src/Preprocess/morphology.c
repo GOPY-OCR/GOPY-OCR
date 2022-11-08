@@ -1,15 +1,4 @@
 #include "morphology.h"
-#define SIZE_SIDE_FILTER 7
-
-const int FILTER[] = {
-    0, 0, 1, 1, 1, 0, 0,
-    0, 1, 1, 1, 1, 1, 0,
-    1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1,
-    0, 1, 1, 1, 1, 1, 0,
-    0, 0, 1, 1, 1, 0, 0
-};
 
 Uint32 max_color_pixels(SDL_Surface *surface, int x, int y) {
     Uint32 *cur_max = getpixel(surface, x, y);
