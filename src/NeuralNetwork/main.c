@@ -39,15 +39,24 @@ int main(int argc, char **argv) {
 
         char save_filename[] = "_build/ocr_save.nn";
         NeuralNetwork *nn = load_neural_network(save_filename);
-        int le = strlen(argv[2]);
-        int is_dir = argv[2][le - 1] == '/';
 
-        if (strcmp(argv[2], "all") == 0) {
-            predict_all_images(nn);
+
+        int argi = 2 + (verbosity > 0);
+
+        int le = strlen(argv[argi]);
+        int is_dir = argv[argi][le - 1] == '/';
+
+        if (strcmp(argv[argi], "all") == 0) {
+            argi++;
+            predict_all_images(nn, 
+                               argc - argi, 
+                               argv + argi,
+                               verbosity);
+
         } else if (is_dir) {
-            predict_all_images_in_dir(nn, argv[2]);
+            predict_all_images_in_dir(nn, argv[argi]);
         } else {
-            predict_image(nn, argv[2]);
+            predict_image(nn, argv[argi]);
         }
 
         
