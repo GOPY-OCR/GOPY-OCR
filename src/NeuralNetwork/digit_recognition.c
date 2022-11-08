@@ -1,22 +1,24 @@
 #include "digit_recognition.h"
 
 #define NUM_INPUTS 784
-#define NN_LAYERS (int[]){10}
+#define NN_LAYERS (int[]){784, 10}
 
 // corresponding datasets are 10 times larger
 #define TRAINING_SAMPLES_PER_DIGIT 5000 // upto 5000
 #define TEST_SAMPLES_PER_DIGIT 100 // upto 800
 
 #define EPOCHS 100
-#define LEARNING_RATE 5.0
-#define BATCH_SIZE 400
+#define LEARNING_RATE 0.5
+#define BATCH_SIZE 720
 
 #define ENABLE_MULTITHREADING 1
 
-#define ENABLE_LEARNING_RATE_DECAY 1
+#define LEARNING_RATE_DECAY 0 //0.004
 
 #define RUN_EVALUATIONS 1
 #define RUN_EVALUATIONS_ON_TRAINING 1
+
+#define COST_FUNCTION cross_entropy_cost
 
 #define SAVE_FILENAME "_build/ocr_save.nn"
 int digit_recognition_main(int argc, char **argv, int verbose){
@@ -27,9 +29,10 @@ int digit_recognition_main(int argc, char **argv, int verbose){
         nn = load_neural_network(SAVE_FILENAME);
     } else {
         printf("Creating new neural network\n");
-        nn = createOCRNeuralNetwork();
+        nn = create_OCR_Neural_Network();
     }
 
+    // temporary usage: ./main -t -v/vv/vvv [epochs] [learning rate] [batch size]
     int epochs = EPOCHS;
     if (argc > 3){
         epochs = atoi(argv[3]);
@@ -37,6 +40,10 @@ int digit_recognition_main(int argc, char **argv, int verbose){
     float learning_rate = LEARNING_RATE;
     if (argc > 4){
         learning_rate = atof(argv[4]);
+    }
+    int batch_size = BATCH_SIZE;
+    if (argc > 5){
+        batch_size = atoi(argv[5]);
     }
 
     // Load the data
@@ -50,14 +57,14 @@ int digit_recognition_main(int argc, char **argv, int verbose){
     train(nn, 
           epochs, 
           learning_rate, 
-          BATCH_SIZE, 
+          batch_size, 
           train_dataset, 
           test_dataset, 
           verbose, 
           RUN_EVALUATIONS, 
           ENABLE_MULTITHREADING, 
           RUN_EVALUATIONS_ON_TRAINING,
-          ENABLE_LEARNING_RATE_DECAY);
+          LEARNING_RATE_DECAY);
 
 
     // Save the neural network
@@ -72,10 +79,12 @@ int digit_recognition_main(int argc, char **argv, int verbose){
 }
 
 
-NeuralNetwork* createOCRNeuralNetwork() {
+NeuralNetwork* create_OCR_Neural_Network() {
     int nb_layers = sizeof(NN_LAYERS) / sizeof(int);
 
     NeuralNetwork* nn = create_neural_network(nb_layers, NUM_INPUTS, NN_LAYERS);
+
+    nn->cost_function = COST_FUNCTION;
 
     return nn;
 }
@@ -123,9 +132,42 @@ void predict_all_images_in_dir(NeuralNetwork *nn, char *folder){
     }
 }
 
-void predict_all_images(NeuralNetwork *nn) {
+void predict_all_images(NeuralNetwork *nn, int argc, char **argv, int verbose) {
     int results[100] = {0};
     int tot_files = 0;
+
+    char *misses_folder = "data/misses/";
+    int le = strlen(misses_folder);
+    char *subfolder = malloc(le + 3);
+
+    int save_misses = (argc > 0 && (strcmp(argv[0], "-s") == 0 
+                                 || strcmp(argv[0], "--save-misses") == 0));
+
+    if (save_misses){
+        // deletes the old misses folder, and recreate it empty
+        if (dir_exists(misses_folder)){
+            if (verbose)
+                printf("Deleting old misses folder: %s\n", misses_folder);
+
+            delete_dir_recursive(misses_folder);
+        }
+
+        if (verbose)
+            printf("Creating new misses folder: %s\n", misses_folder);
+        
+        mkdir(misses_folder, 0777);
+
+        subfolder[le + 1] = '/';
+        subfolder[le + 2] = '\0';
+        strcpy(subfolder, misses_folder);
+        for (int i = 0; i < 10; i++) {
+            subfolder[le] = '0' + i;
+            if (!dir_exists(subfolder)){
+                mkdir(subfolder, 0777);
+            }
+        }
+    }
+
     for (int i = 0; i < 10; i++) {
         char folder[100];
         sprintf(folder, "data/testing/%d/", i);
@@ -135,16 +177,28 @@ void predict_all_images(NeuralNetwork *nn) {
         for (int j = 0; j < nb_files; j++) {
             int prediction = predict_digit(files[j], nn);
             results[i * 10 + prediction]++;
+
+            if (prediction != i && save_misses){
+                subfolder[le] = '0' + i;
+                char *new_filename = malloc(strlen(subfolder) + strlen(files[j]) + 1);
+                strcpy(new_filename, subfolder);
+                
+                // this is the length of "data/testing/"
+                const int prefix_trim = 15; 
+
+                strcat(new_filename, files[j] + prefix_trim);
+                copy_file(files[j], new_filename);
+            }
         }
     }
     printf("Running predictions on all images in data/testing/\n");
-    // this is one line, the formatting is to avoid 80 char limit
+    // this is one line, this formatting is to avoid 80 char limit
     printf("|predict\\expect"
            "|  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |\n");
     for (int i = 0; i < 10; i++) {
         printf("|      %d       |", i);
         for (int j = 0; j < 10; j++) {
-            if (results[i * 10 + j] > 0) {
+            if (results[j * 10 + i] > 0) {
                 printf("%5d|", results[j * 10 + i]);
             } else {
                 printf("     |");
@@ -162,7 +216,7 @@ void predict_all_images(NeuralNetwork *nn) {
                 total += results[i * 10 + j];
             }
         }
-        printf("%-5d|", total);
+        printf("%5d|", total);
         grand_total += total;
     }
     printf("\n");
