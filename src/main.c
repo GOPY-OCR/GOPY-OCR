@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "rotated");
 
         SDL_Surface *image = load_image(argv[2]);
-        image = SimpleRot(image, angle);
+        image = manual_rot(image, angle);
         save_image(image, final_name);
     }
     
