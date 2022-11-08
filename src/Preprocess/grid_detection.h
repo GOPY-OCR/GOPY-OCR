@@ -2,7 +2,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "sdl_utils.h"
-#include "image_rotation.h"
 #include "pixel_utils.h"
 #include "geometry.h"
 #include "hough_transform.h"
