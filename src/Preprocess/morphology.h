@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include "sdl_utils.h"
+#include "pixel_utils.h"
 
-Uint32 *safe_get_pixel(SDL_Surface *surface, int x, int y);
 Uint32 max_color_pixels(SDL_Surface *surface, int x, int y);
 Uint32 min_pixel(SDL_Surface *surface, int x, int y);
 SDL_Surface *dilation(SDL_Surface *base);
