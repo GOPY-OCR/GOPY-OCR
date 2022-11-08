@@ -394,7 +394,7 @@ char *matrice_serialize(matrice *m, char *name){
                 output = realloc(output, sizeof(char) * size);
             }
 
-            char *val = float_to_string(matrice_get(m, i, j));
+            char *val = serialize_float(matrice_get(m, i, j));
             size_t le = strlen(val);
             memcpy(output + index, val, le);
             index += le;
