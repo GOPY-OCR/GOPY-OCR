@@ -4,7 +4,6 @@
 
 
 // Optimizations to be made:
-// - adaptive learning rate (eg *=0.8 if accuracy is not improving for 5 epochs)
 // - different loss functions (cross entropy, MSE)
 // - data augmentation (eg random rotation, translation, distortion)
 // - regularization (eg dropout)
@@ -13,14 +12,16 @@
 
 // Currently used techniques:
 // - data normalization in image_to_matrix()
+// - adaptive learning rate (exponential decay)
+// - better initialization of weights (1/sqrt(n))
 
 // progress bar is visible with verbose=1
 #define PROGRESS_BAR_WIDTH 30
-#define PROGRESS_BAR_INTERVAL 10000 // in epochs
+#define PROGRESS_BAR_INTERVAL 1 // in epochs
 
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
 // max number of training examples to use for computing training accuracy
-#define NB_TRAINING_SAMPLES 50000
+#define NB_TRAINING_SAMPLES 1000
 
 void train(NeuralNetwork *nn, 
            int epochs, 
@@ -50,22 +51,20 @@ void train(NeuralNetwork *nn,
                 batch_size, 
                 epochs);
 
-        if(verbose > 1){
-            printf("\nOptions enabled: ");
-            if(multithread) printf("[multithread] ");
-            if(save_accuracies) printf("[save accuracies] ");
-            if(learning_rate_decay != 0) 
-                printf("[learning_rate_decay (factor: %s)]", 
-                        float_to_string(learning_rate_decay));
-            printf("\n");
+        printf("\nOptions enabled: ");
+        if(multithread) printf("[multithread] ");
+        if(save_accuracies) printf("[save accuracies] ");
+        if(learning_rate_decay != 0) 
+            printf("[learning_rate_decay (factor: %s)]", 
+                    float_to_string(learning_rate_decay));
+        printf("\n");
 
-            printf("Network shape: {");
-            for(int i=0; i<nn->nb_layers; i++){
-                printf("%d", nn->layers[i]->biases->rows);
-                if(i < nn->nb_layers-1) printf(", ");
-            }
-            printf("}\n");
+        printf("Network shape: {");
+        for(int i=0; i<nn->nb_layers; i++){
+            printf("%d", nn->layers[i]->biases->rows);
+            if(i < nn->nb_layers-1) printf(", ");
         }
+        printf("}\n");
 
         printf("-----------------------------\n");
     }
@@ -85,6 +84,10 @@ void train(NeuralNetwork *nn,
     // to make a copy of it to avoid modifying the order each epoch
     if(testing_data == training_data) {
         testing_data = copy_dataset(testing_data, 0); // 0 = shallow copy, no need to copy the data, only the order
+    }
+
+    if (batch_size > training_nb) {
+        batch_size = training_nb;
     }
 
     for (int e = 0; e < epochs; e++) {
@@ -257,20 +260,15 @@ void backprop(NeuralNetwork *nn,
     }
 
     // backpropagation
-    // delta = cost_derivative(activations, target) * sigmoid_prime(zs[-1])
-    // delta = (ouput - target) * map(zs[nn->nb_layers - 1], sigmoid_prime);
-    sig = matrice_clone(zs[nn->nb_layers - 1]);
-    matrice_map(sig, sigmoid_prime);
-    sub = matrice_sub(output, target);
-    delta = matrice_mul(sub, sig);
+   
+    delta = nn->cost_function.delta(zs[nn->nb_layers - 1], activations[nn->nb_layers], target);
+
     transpose = matrice_transpose(activations[nn->nb_layers - 1]);
     dot = matrice_dot(delta, transpose);
 
     matrice_add_inplace(nabla_b[nn->nb_layers - 1], delta);
     matrice_add_inplace(nabla_w[nn->nb_layers - 1], dot);
 
-    matrice_free(sig);
-    matrice_free(sub);
     matrice_free(transpose);
     matrice_free(dot);
 
