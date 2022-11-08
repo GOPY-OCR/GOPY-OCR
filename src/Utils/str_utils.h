@@ -10,3 +10,6 @@ char *float_to_string(float d);
 void write_to_file(char *filename, char *data);
 
 char *read_from_file(char *filename);
+
+
+char *serialize_float(float f);

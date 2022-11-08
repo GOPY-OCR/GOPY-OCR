@@ -2,12 +2,8 @@
 
 #define DOUBLE_PRECISION 13
 
-char *float_to_string(float d) {
-    char *str = malloc(100);
-    sprintf(str, "%.*f", DOUBLE_PRECISION, d);
-
-    // remove trailing zeros
-    char *p = str + strlen(str) - 1;
+void remove_trailing_zeros(char *str) {
+    char *p = str;
     while (*p == '0') {
         *p = '\0';
         p--;
@@ -18,8 +14,23 @@ char *float_to_string(float d) {
         *p = '\0';
         p--;
     }
+}
 
-    str = realloc(str, strlen(str) + 1);
+#define MAX_FLOAT_STR_LEN 100
+char *float_to_string(float f) {
+    char *str = malloc(MAX_FLOAT_STR_LEN);
+
+    sprintf(str, "%.*f", DOUBLE_PRECISION, f);
+
+    remove_trailing_zeros(str + strlen(str) - 1);
+
+    return str;
+}
+
+char *serialize_float(float f){
+    char *str = malloc(MAX_FLOAT_STR_LEN);
+    
+    sprintf(str, "%.*g", DOUBLE_PRECISION, f);
 
     return str;
 }
