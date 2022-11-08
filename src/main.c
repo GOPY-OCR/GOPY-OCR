@@ -240,7 +240,6 @@ int main(int argc, char **argv) {
         int args_offset = 1 + verbose;
 
         xor_main(verbose, argc - args_offset, argv + args_offset);
-<<<<<<< HEAD
     }
 
     else if (strcmp(argv[1], "--postprocess") == 0 || strcmp(argv[1], "-p") == 0) {
@@ -259,8 +258,6 @@ int main(int argc, char **argv) {
         SDL_FreeSurface(res);
         free(grid);
         free(solved);
-=======
->>>>>>> 541e43b (Fix memory leaks)
     }
     
     else
