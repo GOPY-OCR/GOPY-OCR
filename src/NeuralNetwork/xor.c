@@ -1,11 +1,11 @@
 #include "xor.h"
 
 
-#define XOR_EPOCHS 3000
-#define XOR_LEARNING_RATE 32.0
+#define XOR_EPOCHS 1000
+#define XOR_LEARNING_RATE 7.0
 #define SAVE_FILENAME "_build/xor_network.nn"
 #define XOR_SHAPE (int[]){2, 1}
-#define DECAY_RATE -0.006
+#define DECAY_RATE -0.005
 void display_help() {
     printf("Usage: ./main -x [-v/-vv/-vvv] [mode]\n"
            "Available modes:\n"
@@ -158,6 +158,9 @@ NeuralNetwork *load_xor_network(int verbose){
 
 NeuralNetwork *create_xor_network() {
     NeuralNetwork *network = create_neural_network(sizeof(XOR_SHAPE) / sizeof(int), 2, XOR_SHAPE);
+
+    network->cost_function = cross_entropy_cost;
+
     return network;
 }
 

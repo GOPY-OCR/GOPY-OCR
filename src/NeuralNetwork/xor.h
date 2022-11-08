@@ -2,6 +2,7 @@
 #include "neural_network.h"
 #include "training.h"
 #include "matrice.h"
+#include "cost_functions.h"
 
 // Calls one of the modes below
 void xor_main(int verbose, int argc, char **argv);
