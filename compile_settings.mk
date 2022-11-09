@@ -9,14 +9,14 @@ CFLAGS = -Wall -Wextra `pkg-config --cflags $(USED_LIBS)` $(OPTFLAGS)
 OPTFLAGS := -O3
 CPPFLAGS = -MMD $(addprefix -I, $(INCLUDE_DIRS))
 LDFLAGS :=
-LDLIBS := `pkg-config --libs $(USED_LIBS)` -lm
+LDLIBS := `pkg-config --libs $(USED_LIBS)` -lm -lpthread
 
 # Debug mode can be enabled by executing `make DEBUG=1 rule_name`
 DEBUG := 0
 
 ifneq ($(DEBUG), 0)
-	OPTFLAGS = -O1
-	CFLAGS += -g -fsanitize=address,undefined
+	OPTFLAGS = -O0
+	CFLAGS += -g -pg -fsanitize=address,undefined
 	LDFLAGS += -fsanitize=address,undefined
 	CPPFLAGS += -DDEBUG # define DEBUG like `#define DEBUG` in all C files
 endif

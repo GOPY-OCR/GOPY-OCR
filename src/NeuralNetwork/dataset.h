@@ -1,5 +1,8 @@
 #pragma once
 #include "matrice.h"
+#include "sdl_utils.h"
+#include "pixel_utils.h"
+#include "file_utils.h"
 #include <stdlib.h>
 #include <string.h>
 #include <SDL2/SDL.h>
@@ -32,11 +35,9 @@ dataset *copy_dataset(dataset *data, int deepcopy);
 // returns: a dataset
 dataset *load_dataset(const char *path, int size);
 
+matrice *image_to_matrice(SDL_Surface *image);
+
 void shuffle_dataset(dataset *data);
 
-// list files and sub-directories in a directory
-//
-// path: path to directory
-// n: maximum number of files to list
-// returns: list of files in directory
-char **list_files(const char *path, int n);
+
+dataset *dataset_slice(dataset *data, int start, int end);

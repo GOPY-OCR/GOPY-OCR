@@ -18,7 +18,6 @@ DFILES := $(OFILES:%.o=%.d)
 ### RULES PART ###
 
 all: $(TARGET)
-	echo $(CFILES)
 
 $(TARGET): $(OFILES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
@@ -32,7 +31,7 @@ $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ $(LDFLAGS) $(LDLIBS)
 
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
+	rm -rf $(BUILD_DIR) $(TARGET) gmon.out
 
 .PHONY: clean all format
 -include $(D_FILES)

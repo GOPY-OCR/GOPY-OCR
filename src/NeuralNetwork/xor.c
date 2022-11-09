@@ -1,10 +1,11 @@
 #include "xor.h"
 
 
-#define XOR_EPOCHS 500000
-#define XOR_LEARNING_RATE 80.0
+#define XOR_EPOCHS 1000
+#define XOR_LEARNING_RATE 7.0
 #define SAVE_FILENAME "_build/xor_network.nn"
 #define XOR_SHAPE (int[]){2, 1}
+#define DECAY_RATE -0.005
 void display_help() {
     printf("Usage: ./main -x [-v/-vv/-vvv] [mode]\n"
            "Available modes:\n"
@@ -31,8 +32,8 @@ void xor_main(int verbose, int argc, char **argv){
         }
         NeuralNetwork *network = load_xor_network(verbose);
 
-        double output = test_xor_inputs(network, verbose, strtod(argv[1], NULL), strtod(argv[2], NULL));
-        printf("XOR Neural Network Output: %f\n", output);
+        float output = test_xor_inputs(network, verbose, strtod(argv[1], NULL), strtod(argv[2], NULL));
+        printf("XOR Neural Network Output: %.15f\n", output);
 
     } else if (strcmp(argv[0], "plot") == 0) {
         NeuralNetwork *network = load_xor_network(verbose);
@@ -50,7 +51,7 @@ void xor_train(int verbose, int argc, char **argv) {
     NeuralNetwork *network = create_xor_network();
 
     int epochs = XOR_EPOCHS;
-    double learning_rate = XOR_LEARNING_RATE;
+    float learning_rate = XOR_LEARNING_RATE;
 
     if (argc > 0) {
         epochs = strtol(argv[0], NULL, 10);
@@ -59,7 +60,7 @@ void xor_train(int verbose, int argc, char **argv) {
         learning_rate = strtod(argv[1], NULL);
     }
 
-    train(network, epochs, learning_rate, 4, data, data, verbose, 1);
+    train(network, epochs, learning_rate, 4, data, data, verbose, 1, 0, 0, DECAY_RATE);
 
     if (!test_xor_network(network, 0, data)) {
         errx(1, "XOR network failed to learn\n");
@@ -76,14 +77,14 @@ void xor_train(int verbose, int argc, char **argv) {
 }
 
 // Main mode 2
-double test_xor_inputs(NeuralNetwork *network, int verbose, double input1, double input2) {
+float test_xor_inputs(NeuralNetwork *network, int verbose, float input1, float input2) {
     matrice *input = matrice_new(2, 1);
     matrice_set(input, 0, 0, input1);
     matrice_set(input, 1, 0, input2);
 
     matrice *output = feedforward(network, input);
 
-    double result = matrice_get(output, 0, 0);
+    float result = matrice_get(output, 0, 0);
 
     matrice_free(input);
     matrice_free(output);
@@ -104,10 +105,10 @@ void save_network_plot(NeuralNetwork *network, int verbose) {
 
     for (int i = 0; i < PLOT_SIZE; i++) {
         for (int j = 0; j < PLOT_SIZE; j++) {
-            double input1 = (double) i / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
-            double input2 = (double) j / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
+            float input1 = (float) i / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
+            float input2 = (float) j / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
 
-            double output = test_xor_inputs(network, 0, input1, input2);
+            float output = test_xor_inputs(network, 0, input1, input2);
             matrice_set(plot, i * PLOT_SIZE + j, 0, input1);
             matrice_set(plot, i * PLOT_SIZE + j, 1, input2);
             matrice_set(plot, i * PLOT_SIZE + j, 2, output);
@@ -122,10 +123,10 @@ void save_network_plot(NeuralNetwork *network, int verbose) {
 }
 
 void train_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
-    train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose, 0);
+    train(network, XOR_EPOCHS, XOR_LEARNING_RATE, 4, data, data, verbose, 0, 0, 0, DECAY_RATE);
 }
 
-#define MIN_ACCURACY 0.9
+#define MIN_ACCURACY 0.9999
 int test_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
     float accuracy = evaluate(network, data, verbose);
 
@@ -157,6 +158,9 @@ NeuralNetwork *load_xor_network(int verbose){
 
 NeuralNetwork *create_xor_network() {
     NeuralNetwork *network = create_neural_network(sizeof(XOR_SHAPE) / sizeof(int), 2, XOR_SHAPE);
+
+    network->cost_function = cross_entropy_cost;
+
     return network;
 }
 

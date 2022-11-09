@@ -951,12 +951,12 @@ SDL_Surface* rotateSurface90Degrees(SDL_Surface* src, int numClockwiseTurns)
 \param sanglezoom The cosine of the angle adjusted by the zoom factor.
 
 */
-void _rotozoomSurfaceSizeTrig(int width, int height, double angle, double zoomx, double zoomy, 
+void _rotozoomSurfaceSizeTrig(int width, int height, float angle, float zoomx, float zoomy, 
 	int *dstwidth, int *dstheight, 
-	double *canglezoom, double *sanglezoom)
+	float *canglezoom, float *sanglezoom)
 {
-	double x, y, cx, cy, sx, sy;
-	double radangle;
+	float x, y, cx, cy, sx, sy;
+	float radangle;
 	int dstwidthhalf, dstheighthalf;
 
 	/*
@@ -967,8 +967,8 @@ void _rotozoomSurfaceSizeTrig(int width, int height, double angle, double zoomx,
 	*canglezoom = cos(radangle);
 	*sanglezoom *= zoomx;
 	*canglezoom *= zoomy;
-	x = (double)(width / 2);
-	y = (double)(height / 2);
+	x = (float)(width / 2);
+	y = (float)(height / 2);
 	cx = *canglezoom * x;
 	cy = *canglezoom * y;
 	sx = *sanglezoom * x;
@@ -993,9 +993,9 @@ void _rotozoomSurfaceSizeTrig(int width, int height, double angle, double zoomx,
 \param dstwidth The calculated width of the rotozoomed destination surface.
 \param dstheight The calculated height of the rotozoomed destination surface.
 */
-void rotozoomSurfaceSizeXY(int width, int height, double angle, double zoomx, double zoomy, int *dstwidth, int *dstheight)
+void rotozoomSurfaceSizeXY(int width, int height, float angle, float zoomx, float zoomy, int *dstwidth, int *dstheight)
 {
-	double dummy_sanglezoom, dummy_canglezoom;
+	float dummy_sanglezoom, dummy_canglezoom;
 
 	_rotozoomSurfaceSizeTrig(width, height, angle, zoomx, zoomy, dstwidth, dstheight, &dummy_sanglezoom, &dummy_canglezoom);
 }
@@ -1010,9 +1010,9 @@ void rotozoomSurfaceSizeXY(int width, int height, double angle, double zoomx, do
 \param dstwidth The calculated width of the rotozoomed destination surface.
 \param dstheight The calculated height of the rotozoomed destination surface.
 */
-void rotozoomSurfaceSize(int width, int height, double angle, double zoom, int *dstwidth, int *dstheight)
+void rotozoomSurfaceSize(int width, int height, float angle, float zoom, int *dstwidth, int *dstheight)
 {
-	double dummy_sanglezoom, dummy_canglezoom;
+	float dummy_sanglezoom, dummy_canglezoom;
 
 	_rotozoomSurfaceSizeTrig(width, height, angle, zoom, zoom, dstwidth, dstheight, &dummy_sanglezoom, &dummy_canglezoom);
 }
@@ -1032,7 +1032,7 @@ or 32bit RGBA/ABGR it will be converted into a 32bit RGBA format on the fly.
 
 \return The new rotozoomed surface.
 */
-SDL_Surface *rotozoomSurface(SDL_Surface * src, double angle, double zoom, int smooth)
+SDL_Surface *rotozoomSurface(SDL_Surface * src, float angle, float zoom, int smooth)
 {
 	return rotozoomSurfaceXY(src, angle, zoom, zoom, smooth);
 }
@@ -1053,12 +1053,12 @@ or 32bit RGBA/ABGR it will be converted into a 32bit RGBA format on the fly.
 
 \return The new rotozoomed surface.
 */
-SDL_Surface *rotozoomSurfaceXY(SDL_Surface * src, double angle, double zoomx, double zoomy, int smooth)
+SDL_Surface *rotozoomSurfaceXY(SDL_Surface * src, float angle, float zoomx, float zoomy, int smooth)
 {
 	SDL_Surface *rz_src;
 	SDL_Surface *rz_dst;
-	double zoominv;
-	double sanglezoom, canglezoom, sanglezoominv, canglezoominv;
+	float zoominv;
+	float sanglezoom, canglezoom, sanglezoominv, canglezoominv;
 	int dstwidthhalf, dstwidth, dstheighthalf, dstheight;
 	int is32bit;
 	int i, src_converted;
@@ -1308,7 +1308,7 @@ The minimum size of the target surface is 1. The input factors can be positive o
 \param dstwidth Pointer to an integer to store the calculated width of the zoomed target surface.
 \param dstheight Pointer to an integer to store the calculated height of the zoomed target surface.
 */
-void zoomSurfaceSize(int width, int height, double zoomx, double zoomy, int *dstwidth, int *dstheight)
+void zoomSurfaceSize(int width, int height, float zoomx, float zoomy, int *dstwidth, int *dstheight)
 {
 	/*
 	* Make zoom factors positive 
@@ -1332,8 +1332,8 @@ void zoomSurfaceSize(int width, int height, double zoomx, double zoomy, int *dst
 	/*
 	* Calculate target size 
 	*/
-	*dstwidth = (int) floor(((double) width * zoomx) + 0.5);
-	*dstheight = (int) floor(((double) height * zoomy) + 0.5);
+	*dstwidth = (int) floor(((float) width * zoomx) + 0.5);
+	*dstheight = (int) floor(((float) height * zoomy) + 0.5);
 	if (*dstwidth < 1) {
 		*dstwidth = 1;
 	}
@@ -1358,7 +1358,7 @@ If zoom factors are negative, the image is flipped on the axes.
 
 \return The new, zoomed surface.
 */
-SDL_Surface *zoomSurface(SDL_Surface * src, double zoomx, double zoomy, int smooth)
+SDL_Surface *zoomSurface(SDL_Surface * src, float zoomx, float zoomy, int smooth)
 {
 	SDL_Surface *rz_src;
 	SDL_Surface *rz_dst;
