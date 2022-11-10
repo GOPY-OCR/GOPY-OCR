@@ -5,8 +5,6 @@ int find_grid_number() {
 
     // Init regex part to recognize grid files
     regex_t regex;
-    int reti;
-    reti = regcomp(&regex, "grid_[0-9][0-9]", REG_EXTENDED);
 
     // Open the current dir and list all files in it
     DIR *d;
@@ -65,9 +63,11 @@ void load_grid_file(const char *filename, int grid[][9]) {
             continue;
 
         if (c == '.')
-            grid[i / 9][i++ % 9] = 0;
+            grid[i / 9][i % 9] = 0;
 
         else
-            grid[i / 9][i++ % 9] = c - '0';
+            grid[i / 9][i % 9] = c - '0';
+
+        i++;
     }
 }

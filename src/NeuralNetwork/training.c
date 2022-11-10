@@ -52,11 +52,6 @@ void train(NeuralNetwork *nn,
 
 
         if(testing_data != NULL && testing_data->size > 0) {
-            if (verbose > 1) {
-                printf("Epoch %i: ", e);
-                accuracy = evaluate(nn, testing_data, verbose - 1);
-            }
-
             if (verbose == 1 && (e==0 || ((e+1) % PROGRESS_BAR_INTERVAL == 0))) {
                 accuracy = evaluate(nn, testing_data, 0);
 
@@ -65,6 +60,12 @@ void train(NeuralNetwork *nn,
                 
                 progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, progress_indicator);
             }
+
+            else { // (verbose > 1)
+                printf("Epoch %i: ", e);
+                accuracy = evaluate(nn, testing_data, verbose - 1);
+            }
+
 
             matrice_set(accuracies, e, 0, accuracy);
         }
@@ -91,7 +92,7 @@ void train(NeuralNetwork *nn,
 
     if (verbose > 0) {
         printf("Last epoch results: ");
-        float accuracy = evaluate(nn, testing_data, 1);
+        evaluate(nn, testing_data, 1);
         printf("\n");
     }
 }

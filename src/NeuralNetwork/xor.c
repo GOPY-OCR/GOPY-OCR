@@ -31,7 +31,7 @@ void xor_main(int verbose, int argc, char **argv){
         }
         NeuralNetwork *network = load_xor_network(verbose);
 
-        double output = test_xor_inputs(network, verbose, strtod(argv[1], NULL), strtod(argv[2], NULL));
+        double output = test_xor_inputs(network, strtod(argv[1], NULL), strtod(argv[2], NULL));
         printf("XOR Neural Network Output: %f\n", output);
 
     } else if (strcmp(argv[0], "plot") == 0) {
@@ -76,7 +76,7 @@ void xor_train(int verbose, int argc, char **argv) {
 }
 
 // Main mode 2
-double test_xor_inputs(NeuralNetwork *network, int verbose, double input1, double input2) {
+double test_xor_inputs(NeuralNetwork *network, double input1, double input2) {
     matrice *input = matrice_new(2, 1);
     matrice_set(input, 0, 0, input1);
     matrice_set(input, 1, 0, input2);
@@ -107,7 +107,7 @@ void save_network_plot(NeuralNetwork *network, int verbose) {
             double input1 = (double) i / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
             double input2 = (double) j / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
 
-            double output = test_xor_inputs(network, 0, input1, input2);
+            double output = test_xor_inputs(network, input1, input2);
             matrice_set(plot, i * PLOT_SIZE + j, 0, input1);
             matrice_set(plot, i * PLOT_SIZE + j, 1, input2);
             matrice_set(plot, i * PLOT_SIZE + j, 2, output);

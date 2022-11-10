@@ -1,10 +1,11 @@
 #pragma once
-#include "matrice.h"
 #include <stdlib.h>
 #include <string.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <dirent.h>
+#include "matrice.h"
+#include "sdl_utils.h"
 
 #define INPUT_SIZE 784 // 28x28 pixel images
 
