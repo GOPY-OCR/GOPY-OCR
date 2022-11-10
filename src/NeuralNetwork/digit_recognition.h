@@ -11,9 +11,10 @@ int digit_recognition_main(int argc, char **argv, int verbose);
 
 NeuralNetwork* create_OCR_Neural_Network();
 
-
+// these functions are a bin redundants, they almost
+// do the same thing. Some refactoring is needed
+int predict_surface(SDL_Surface *img, NeuralNetwork *nn);
 int predict_digit(char* filename, NeuralNetwork *nn);
-
 
 
 void predict_image(NeuralNetwork *nn, char *filename) ;

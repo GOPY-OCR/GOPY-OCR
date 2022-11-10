@@ -1,4 +1,5 @@
 #include "main.h"
+#include "number_drawing_box.h"
 
 const char *help = "usage: %s mode [options] [mode options]   \n\
 availables modes:                                             \n\
@@ -11,6 +12,12 @@ options:                                                      \n\
 ";
 
 int main(int argc, char **argv) {
+    
+    return main_gui_demo(argc, argv);
+}
+
+
+int main_1(int argc, char **argv) {
     if (argc < 2) {
         errx(EXIT_FAILURE, help, argv[0]);
     }

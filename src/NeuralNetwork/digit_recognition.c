@@ -1,7 +1,7 @@
 #include "digit_recognition.h"
 
 #define NUM_INPUTS 784
-#define NN_LAYERS (int[]){784, 10}
+#define NN_LAYERS (int[]){32, 10} // {784, 10} is the best so far
 
 // corresponding datasets are 10 times larger
 #define TRAINING_SAMPLES_PER_DIGIT 5000 // upto 5000
@@ -9,7 +9,7 @@
 
 #define EPOCHS 100
 #define LEARNING_RATE 0.5
-#define BATCH_SIZE 720
+#define BATCH_SIZE 7200
 
 #define ENABLE_MULTITHREADING 1
 
@@ -89,19 +89,26 @@ NeuralNetwork* create_OCR_Neural_Network() {
     return nn;
 }
 
-int predict_digit(char* filename, NeuralNetwork *nn) {
-    SDL_Surface *img = load_image(filename);
-
+int predict_surface(SDL_Surface *img, NeuralNetwork *nn){
     matrice *m = image_to_matrice(img);
 
     matrice *output = feedforward(nn, m);
-
+    
     int digit = max_output(output);
+    
+    matrice_free(m);
+    matrice_free(output);
+
+    return digit;
+}
+
+int predict_digit(char* filename, NeuralNetwork *nn) {
+    SDL_Surface *img = load_image(filename);
+
+    int digit = predict_surface(img, nn);
 
     // Free the image and data
     SDL_FreeSurface(img);
-    matrice_free(m);
-    matrice_free(output);
 
     return digit;
 }
