@@ -1,10 +1,12 @@
 #include "resize.h"
 
 void resize(SDL_Surface **base) {
+    int width = NEW_SIZE;
+    int height = (float) NEW_SIZE / (float) (*base)->w * (*base)->h;
     SDL_Surface *dest = SDL_CreateRGBSurface(
             (*base)->flags,
-            NEW_SIZE,
-            NEW_SIZE,
+            width,
+            height,
             (*base)->format->BitsPerPixel,
             (*base)->format->Rmask,
             (*base)->format->Gmask,
@@ -12,7 +14,7 @@ void resize(SDL_Surface **base) {
             (*base)->format->Amask
             );
 
-    SDL_Rect drect = { 0, 0, NEW_SIZE, NEW_SIZE };
+    SDL_Rect drect = { 0, 0, width, height };
 
     if (SDL_BlitScaled(*base, NULL, dest, &drect) != 0)
         errx(EXIT_FAILURE, "%s", SDL_GetError());

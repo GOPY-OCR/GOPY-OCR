@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 
 #define NEW_SIZE 500
+#define NN_SIZE 28
 
 void resize(SDL_Surface **base);
 
