@@ -15,7 +15,7 @@ void divide_images(SDL_Surface *numerator, SDL_Surface *denominator) {
         float n_tmp = num_pixels[i] & 0xFF;
         float d_tmp = den_pixels[i] & 0xFF;
         Uint8 res = n_tmp / d_tmp * 0xFF;
-        num_pixels[i] = res + (res << 8) + (res << 16) + (res << 24);
+        num_pixels[i] = res + (res << 8) + (res << 16);
     }
 
     SDL_UnlockSurface(numerator);

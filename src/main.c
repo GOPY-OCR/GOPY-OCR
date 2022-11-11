@@ -70,6 +70,9 @@ int main(int argc, char **argv) {
         SDL_Surface *image = load_image(argv[2]);
         surface_to_grayscale(image);
         save_image(image, final_name);
+
+        free(final_name);
+        SDL_FreeSurface(image);
     }
     
     else if (strcmp(argv[1], "--binarization") == 0 || strcmp(argv[1], "-b") == 0) {
@@ -85,6 +88,9 @@ int main(int argc, char **argv) {
         correct_brightness(image);
         binarize(image);
         save_image(image, final_name);
+
+        free(final_name);
+        SDL_FreeSurface(image);
     }
     
     else if (strcmp(argv[1], "--contrast-brightness") == 0 || strcmp(argv[1], "-cb") == 0) {
@@ -99,6 +105,9 @@ int main(int argc, char **argv) {
         surface_to_grayscale(image);
         correct_brightness(image);
         save_image(image, final_name);
+
+        free(final_name);
+        SDL_FreeSurface(image);
     }
     
     else if (strcmp(argv[1], "--rotate") == 0 || strcmp(argv[1], "-r") == 0) {
@@ -115,6 +124,9 @@ int main(int argc, char **argv) {
         SDL_Surface *image = load_image(argv[2]);
         image = SimpleRot(image, angle);
         save_image(image, final_name);
+
+        free(final_name);
+        SDL_FreeSurface(image);
     }
     
     else if (strcmp(argv[1], "--detect-grid") == 0 || strcmp(argv[1], "-d") == 0) {
@@ -131,6 +143,9 @@ int main(int argc, char **argv) {
         binarize(image);
         grid_detection(image, 1);
         save_image(image, final_name);
+
+        free(final_name);
+        SDL_FreeSurface(image);
     }
 
     else if (strcmp(argv[1], "--cut") == 0 || strcmp(argv[1], "-c") == 0) {
@@ -149,6 +164,9 @@ int main(int argc, char **argv) {
             
             char *final_name = format_final_name(argv[2], str);
             save_image(splitted[i], final_name);
+
+            free(final_name);
+            SDL_FreeSurface(splitted[i]);
         }
     }
     
@@ -177,7 +195,6 @@ int main(int argc, char **argv) {
         int args_offset = 1 + verbose;
 
         xor_main(verbose, argc - args_offset, argv + args_offset);
-
     }
     
     else
