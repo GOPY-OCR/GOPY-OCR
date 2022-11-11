@@ -9,6 +9,8 @@ void exit_help(int error) {
                  "                              and noise reduced in `IMG_contrast.png`\n"
                  "  -r,  --rotate IMG ANGLE     Save the rotated image with the given angle\n"
                  "                              in `IMG_ANGLE_rotated.png`\n"
+                 "  -ar,  --auto-rotate IMG     Save the rotated image\n"
+                 "                              in `IMG_ANGLE_auto_rotated.png`\n"
                  "  -b,  --binarization IMG     Save the binarized image in `IMG_bin.png`\n"
                  "  -d,  --detect-grid IMG      Save the detected grid in `IMG_detected_grid.png`\n"
                  "  -c,  --cut IMG              Save the images in `IMG_X.png`\n"
@@ -122,13 +124,28 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "rotated");
 
         SDL_Surface *image = load_image(argv[2]);
-        image = SimpleRot(image, angle);
+        image = manual_rot(image, angle);
         save_image(image, final_name);
 
         free(final_name);
         SDL_FreeSurface(image);
     }
     
+    else if (strcmp(argv[1], "--rotate") == 0 || strcmp(argv[1], "-ar") == 0) {
+        printf("Show automatic rotation...\n");
+
+        if (argc != 3)
+            exit_help(1);
+
+        char *final_name = format_final_name(argv[2], "auto_rotated");
+
+        SDL_Surface *image = load_image(argv[2]);
+        surface_to_grayscale(image);
+        correct_brightness(image);
+        binarize(image);
+        image = auto_rot(image);
+        save_image(image, final_name);
+    }
     else if (strcmp(argv[1], "--detect-grid") == 0 || strcmp(argv[1], "-d") == 0) {
         printf("Show grid detection...\n");
 

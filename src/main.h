@@ -16,7 +16,7 @@
 #include "Preprocess/brightness.h"
 
 // Rotation part
-#include "Preprocess/ManualRot.h"
+#include "Preprocess/rotation.h"
 
 // Detect grid part
 #include "Preprocess/hough_transform.h"

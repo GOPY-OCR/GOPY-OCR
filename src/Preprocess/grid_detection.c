@@ -21,7 +21,7 @@ int grid_rotation_detection(SDL_Surface *image){
 
     int rotation = detect_grid_rotation(image_lines);
 
-    return rotation;
+    return -rotation;
 }
 
 
