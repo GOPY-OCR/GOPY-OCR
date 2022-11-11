@@ -6,7 +6,7 @@
 
 SDL_Surface* crop_surface(SDL_Surface* grid, int x, int y, 
                           int width, int height);
-void split_sudoku(SDL_Surface* grid, SDL_Surface *splitted[81]);
+SDL_Surface **split_sudoku(SDL_Surface* grid);
 
 #endif
 
