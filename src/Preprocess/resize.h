@@ -9,6 +9,7 @@
 #define NN_SIZE 28
 
 void resize(SDL_Surface **base);
+void neural_network_resize(SDL_Surface *splitted[81]);
 
 #endif
 
