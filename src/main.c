@@ -151,6 +151,7 @@ int main(int argc, char **argv) {
         binarize(image);
         automatic_rot(&image);
         save_image(image, final_name);
+        SDL_FreeSurface(image);
     }
     else if (strcmp(argv[1], "--detect-grid") == 0 || strcmp(argv[1], "-d") == 0) {
         printf("Show grid detection...\n");
