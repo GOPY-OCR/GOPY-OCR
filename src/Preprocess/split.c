@@ -22,7 +22,7 @@ SDL_Surface* crop_surface(SDL_Surface* grid, int x, int y,
 
 SDL_Surface **split_sudoku(SDL_Surface* grid)
 {
-    SDL_Surface *splitted = calloc(81, sizeof(SDL_Surface *));
+    SDL_Surface **splitted = calloc(81, sizeof(SDL_Surface *));
     int h_step = grid->h / 9;
     int w_step = grid->w / 9;
 
@@ -30,4 +30,6 @@ SDL_Surface **split_sudoku(SDL_Surface* grid)
         for (int j = 0; j < 9;j++)
             splitted[i * 9 + j] = crop_surface(
                     grid, j * w_step, i * h_step, w_step, h_step);
+
+    return splitted;
 }
