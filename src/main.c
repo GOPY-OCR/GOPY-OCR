@@ -201,8 +201,7 @@ int main(int argc, char **argv) {
             exit_help(1);
 
         SDL_Surface *image = load_image(argv[2]);
-        SDL_Surface *splitted[81] = {NULL};
-        split_sudoku(image, splitted);
+        SDL_Surface **splitted = split_sudoku(image);
 
         for (size_t i = 0; i < 81; i++) {
             char str[3] = {0};
