@@ -2,7 +2,7 @@
 #define MAIN_H
 #include <stdio.h>
 #include <stdlib.h>
-#include "cli.h"
+#include "CLI/cli.h"
 
 int main(int argc, char *argv[]);
 
