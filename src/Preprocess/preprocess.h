@@ -6,7 +6,7 @@
 #include "resize.h"
 #include "grayscale.h"
 #include "brightness.h"
-#include "binarization.h"
+#include "binarize.h"
 // Include here the interpolation part
 #include "grid_detection.h"
 #include "rotation.h"

@@ -35,10 +35,10 @@ SDL_Surface **preprocess(const char *filename) {
     // 6.  Interpolation des images pas droites
     
     // 7.  Grid detection
-    Quad coords = grid_detection(image);
+    Quad coords = grid_detection(image, 0);
     
     // 8.  Automatic rotation
-    automatic_rotation(&image);
+    automatic_rot(&image);
     
     // 9.  Crop the image
     
