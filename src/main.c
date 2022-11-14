@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "rotated");
 
         SDL_Surface *image = load_image(argv[2]);
-        image = manual_rot(image, angle);
+        manual_rot(&image, angle);
         save_image(image, final_name);
 
         free(final_name);
@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
         surface_to_grayscale(image);
         correct_brightness(image);
         binarize(image);
-        image = auto_rot(image);
+        automatic_rot(&image);
         save_image(image, final_name);
     }
     else if (strcmp(argv[1], "--detect-grid") == 0 || strcmp(argv[1], "-d") == 0) {
