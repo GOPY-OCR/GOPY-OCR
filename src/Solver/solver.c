@@ -5,11 +5,11 @@
 int IsLineValid(int board[], size_t line){
     for (size_t column = 0; column < BOARDSIZE; column ++){
         if (board[line][column] != 0){
-            if (numbers[board[line][column] - 1] == 1){
+            if (numbers[board[i * BOARDSIZE + j] - 1] == 1){
                 return 0;
             }
             else{ 
-                numbers[board[line][column] - 1] = 1;
+                numbers[board[i * BOARDSIZE + j] - 1] = 1;
             }
         }
     }
@@ -21,11 +21,11 @@ int IsLineValid(int board[], size_t line){
 int IsColumnValid(int board[], size_t column){
     for (size_t line = 0; line < BOARDSIZE; line ++){
         if (board[line][column] != 0){
-            if (numbers[board[line][column] - 1] == 1){
+            if (numbers[board[i * BOARDSIZE + j] - 1] == 1){
                 return 0;
             }
             else{
-                numbers[board[line][column] - 1] = 1;
+                numbers[board[i * BOARDSIZE + j] - 1] = 1;
             }
         }         
     }
@@ -55,7 +55,7 @@ int IsSquareValid(int board[], int line, int column){
 
 //IsBoardValid checks if the board is valid
 int IsBoardValid(int board[]){
-    if (!IsColumnValid(board) || !IsLineValid(board))
+    if (!IsColumnValid(board, j) || !IsLineValid(board, i))
         return 0;
 
     for (size_t line = 0; line <= 6; line += 3){
@@ -70,21 +70,17 @@ int IsBoardValid(int board[]){
 
 //IsSolved checks if the board is solved
 int IsSolved(int board[]){
-    int solved = 1;
     if (IsBoardValid(board)){
         for (size_t i = 0; i < BOARDSIZE; i ++){
             for (size_t j = 0; j < BOARDSIZE; j ++){
                 if (board[i * BOARDSIZE + j] == '0'){
-                    solved = 0;
+                    return 0;
                 }
             }
         }
     }
-    else{
-        solved = 0;
-    }
-
-    return solved;
+    
+    return 1;
 }
 
 int zero(int list[BOARDSIZE]){
