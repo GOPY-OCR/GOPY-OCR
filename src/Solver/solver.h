@@ -10,13 +10,12 @@
 #define BOARDSIZE 9
 
 //PROTOTYPES
-int Contains(int list[], int x);
-int IsLineValid(int board[][BOARDSIZE]);
-int IsColumnValid(int board[][BOARDSIZE]);
-int IsSquareValid(int board[][BOARDSIZE], int line, int column);
-int IsBoardValid(int board[][BOARDSIZE]);
-int IsSolved(int board[][BOARDSIZE]);
-int Solve(int board[][BOARDSIZE]);
+int IsLineValid(int board[BOARDSIZE], size_t line);
+int IsColumnValid(int board[BOARDSIZE], size_t column);
+int IsSquareValid(int board[BOARDSIZE], int line, int column);
+int IsBoardValid(int board[BOARDSIZE]);
+int IsSolved(int board[BOARDSIZE]);
+int Solve(int board[BOARDSIZE]);
 
 
 #endif
