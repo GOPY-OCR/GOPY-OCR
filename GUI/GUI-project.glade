@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkWindow" id="MainWindow">
+    <property name="can-focus">False</property>
+    <property name="default-width">1350</property>
+    <property name="default-height">1000</property>
+    <child>
+      <object class="GtkFixed" id="FirstFixed">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkLabel" id="TitleScreen">
+            <property name="width-request">402</property>
+            <property name="height-request">100</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-top">2</property>
+            <property name="label" translatable="yes">SODOKO</property>
+            <attributes>
+              <attribute name="font-desc" value="Noto Sans Kannada UI Heavy 10"/>
+              <attribute name="style" value="oblique"/>
+              <attribute name="size" value="10240"/>
+              <attribute name="absolute-size" value="43008"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">105</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
