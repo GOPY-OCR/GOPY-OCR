@@ -34,11 +34,11 @@ void save_grid_file(const char *filename, const int grid[]) {
             if (j == 3 || j == 6)
                 fprintf(file, " ");
 
-            if (grid[i][j] == 0)
+            if (grid[i * 9 + j] == 0)
                 fprintf(file, ".");
 
             else
-                fprintf(file, "%i", grid[i][j]);
+                fprintf(file, "%i", grid[i * 9 + j]);
         }
         if (i == 2 || i == 5)
             fprintf(file, "\n");
@@ -69,4 +69,6 @@ int *load_grid_file(const char *filename) {
 
         i++;
     }
+
+    return grid;
 }
