@@ -51,7 +51,7 @@ jobs:
         # queries: security-extended,security-and-quality
 
     - name: setup libraries
-      run: sudo apt update && sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-2.0-0
+      run: sudo apt update && sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
       
     
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
