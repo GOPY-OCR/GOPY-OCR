@@ -39,6 +39,8 @@ int IsColumnValid(int board[], size_t column) {
 
 //IsSquareValid checks if the Square is valid
 int IsSquareValid(int board[], size_t line, size_t column) {
+    line = line / 3 * 3;
+    column = column / 3 * 3;
     int numbers[BOARDSIZE] = {0};
 
     for (size_t i = line; i < line + 3; i ++) {
