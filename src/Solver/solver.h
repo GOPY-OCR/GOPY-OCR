@@ -1,13 +1,13 @@
 #ifndef SOLVER_H
 #define SOLVER_H
-
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-//size of the board
-#define BOARDSIZE 9
+// Size of the board
+// Just in case to avoid conflicts with postprocess functions
+#ifndef
+    #define BOARDSIZE 9
+#endif
 
 //PROTOTYPES
 int IsLineValid(int board[], size_t line);
