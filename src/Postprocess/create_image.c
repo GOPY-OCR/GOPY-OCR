@@ -1,9 +1,5 @@
 #include "create_image.h"
 
-int is_initial_number(int x, int y, int *grid) {
-    return grid[x * 9 + y] == 0;
-}
-
 void draw_grid(SDL_Surface *res) {
     SDL_FillRect(res, NULL, GRID_COLOR);
     
@@ -22,10 +18,11 @@ void draw_grid(SDL_Surface *res) {
 }
 
 void add_number(SDL_Surface *res, int x, int y, int number, int *grid) {
-    TTF_Font *font = TTF_OpenFont(FONT, 24);
-    SDL_Color color = is_initial_number(x, y, grid) ? OLD_NUMBER_COLOR : NEW_NUMBER_COLOR;
+    SDL_Color color = grid[x * BOARDSIZE + y] == 0 ? OLD_NUMBER_COLOR : NEW_NUMBER_COLOR;
 
-    char msg[] = number == 0 ? " " : { number + 48, 0 };
+    TTF_Font *font = TTF_OpenFont(FONT, 24);
+    char msg[2] = {0};
+    msg[0] = number == 0 ? 0 : number + 48;
     SDL_Surface* letter = TTF_RenderText_Solid(font, msg, color);
 
     SDL_Rect msg_rect;
