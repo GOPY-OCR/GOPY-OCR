@@ -1,22 +1,5 @@
 #include "create_image.h"
 
-void draw_grid(SDL_Surface *res) {
-    SDL_FillRect(res, NULL, GRID_COLOR);
-    
-    SDL_Rect *fills = calloc(BOARDSIZE * BOARDSIZE, sizeof(SDL_Rect));
-
-    for(size_t i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
-        fills[i].x = (i % BOARDSIZE) * CELL_SIZE + 1;
-        fills[i].y = (i / BOARDSIZE) * CELL_SIZE + 1;
-        fills[i].w = CELL_SIZE - 2;
-        fills[i].h = CELL_SIZE - 2;
-    }
-
-    SDL_FillRects(res, fills, BOARDSIZE * BOARDSIZE, BACK_COLOR);
-
-    free(fills);
-}
-
 void add_number(SDL_Surface *res, int x, int y, int number, int *grid) {
     SDL_Color color = grid[x * BOARDSIZE + y] == 0 ? OLD_NUMBER_COLOR : NEW_NUMBER_COLOR;
 
@@ -34,10 +17,12 @@ void add_number(SDL_Surface *res, int x, int y, int number, int *grid) {
     TTF_CloseFont(font);
 
     SDL_Rect msg_rect;
-    msg_rect.x = x * CELL_SIZE;
+    msg_rect.x = x * CELL_SIZE + (CELL_SIZE - letter->w) / 2;
     msg_rect.y = y * CELL_SIZE;
     msg_rect.w = CELL_SIZE;
     msg_rect.h = CELL_SIZE;
+
+    save_image(letter, "lettre.png");
 
     SDL_BlitSurface(letter, NULL, res, &msg_rect);
 

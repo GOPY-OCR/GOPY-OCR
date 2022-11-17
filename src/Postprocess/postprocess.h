@@ -5,6 +5,8 @@
 #include "sdl_utils.h"
 #include "create_image.h"
 
+#define TEMPLATE "./assets/template/empty.png"
+
 #ifndef CELL_SIZE
     #define CELL_SIZE 100
 #endif

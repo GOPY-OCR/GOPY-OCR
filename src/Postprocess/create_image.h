@@ -18,7 +18,6 @@
     #define BOARDSIZE 9
 #endif
 
-void draw_grid(SDL_Surface *res);
 void add_number(SDL_Surface *res, int x, int y, int number, int *grid);
 
 #endif
