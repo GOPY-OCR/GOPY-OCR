@@ -5,7 +5,7 @@
 
 // Size of the board
 // Just in case to avoid conflicts with postprocess functions
-#ifndef
+#ifndef BOARDSIZE
     #define BOARDSIZE 9
 #endif
 
