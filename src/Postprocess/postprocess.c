@@ -2,8 +2,8 @@
 
 SDL_Surface *postprocess(int *grid, int *solved) {
     SDL_Surface *res = SDL_CreateSurfaceWithFormat(0,
-                                                   BOARDSIZE * 100,
-                                                   BOARDSIZE * 100,
+                                                   BOARDSIZE * CELL_SIZE,
+                                                   BOARDSIZE * CELL_SIZE,
                                                    32,                      // 32 bits per pixel
                                                    SDL_PIXELFORMAT_RGB888);
 
