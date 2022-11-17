@@ -1,10 +1,10 @@
 #include "create_image.h"
 
 int is_initial_number(int x, int y, int *grid) {
-    return init[x * 9 + y] == 0;
+    return grid[x * 9 + y] == 0;
 }
 
-void draw_grid(SDL_Surface *res, int nb_cases) {
+void draw_grid(SDL_Surface *res) {
     SDL_FillRect(res, NULL, GRID_COLOR);
     
     SDL_Rect *fills = calloc(BOARDSIZE * BOARDSIZE, sizeof(SDL_Rect));
@@ -17,9 +17,11 @@ void draw_grid(SDL_Surface *res, int nb_cases) {
     }
 
     SDL_FillRects(res, fills, BOARDSIZE * BOARDSIZE, BACK_COLOR);
+
+    free(fills);
 }
 
-void add_number(SDL_Surface *res, int x, int y, int number) {
+void add_number(SDL_Surface *res, int x, int y, int number, int *grid) {
     TTF_Font *font = TTF_OpenFont(FONT, 24);
     SDL_Color color = is_initial_number(x, y, grid) ? OLD_NUMBER_COLOR : NEW_NUMBER_COLOR;
 
