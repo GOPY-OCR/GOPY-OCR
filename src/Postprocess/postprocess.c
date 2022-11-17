@@ -1,7 +1,7 @@
 #include "postprocess.h"
 
 SDL_Surface *postprocess(int *grid, int *solved) {
-    SDL_Surface *res = SDL_CreateSurfaceWithFormat(0,
+    SDL_Surface *res = SDL_CreateRGBSurfaceWithFormat(0,
                                                    BOARDSIZE * CELL_SIZE,
                                                    BOARDSIZE * CELL_SIZE,
                                                    32,                      // 32 bits per pixel
@@ -11,8 +11,11 @@ SDL_Surface *postprocess(int *grid, int *solved) {
 
     for(size_t i = 0; i < BOARDSIZE * BOARDSIZE; i++)
         add_number(res,
-                   solved[i % BOARDSIZE],
-                   solved[i / BOARDSIZE],
+                   i % BOARDSIZE,
+                   i / BOARDSIZE,
+                   solved[i],
                    grid);
+
+    return res;
 }
 
