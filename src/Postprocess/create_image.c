@@ -20,10 +20,18 @@ void draw_grid(SDL_Surface *res) {
 void add_number(SDL_Surface *res, int x, int y, int number, int *grid) {
     SDL_Color color = grid[x * BOARDSIZE + y] == 0 ? OLD_NUMBER_COLOR : NEW_NUMBER_COLOR;
 
-    TTF_Font *font = TTF_OpenFont(FONT, 24);
+    if (TTF_Init() < 0)
+        errx(EXIT_FAILURE, "%s", SDL_GetError());
+
+    TTF_Font *font = TTF_OpenFont(FONT, CELL_SIZE / 4 * 3);
+    if (font == NULL)
+        errx(EXIT_FAILURE, "%s", SDL_GetError());
+
     char msg[2] = {0};
     msg[0] = number == 0 ? 0 : number + 48;
     SDL_Surface* letter = TTF_RenderText_Solid(font, msg, color);
+
+    TTF_CloseFont(font);
 
     SDL_Rect msg_rect;
     msg_rect.x = x * CELL_SIZE;
