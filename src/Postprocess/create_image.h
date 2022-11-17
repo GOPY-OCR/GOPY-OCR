@@ -6,8 +6,8 @@
 #include <SDL2/SDL_ttf.h>
 #define OLD_NUMBER_COLOR (SDL_Color){0, 0, 0, 255}
 #define NEW_NUMBER_COLOR (SDL_Color){0, 0, 255, 255}
-#define GRID_COLOR 0xFFFFFFFF
-#define BACK_COLOR 0
+#define BACK_COLOR 0xFFFFFFFF
+#define GRID_COLOR 0
 #define FONT "ArchivoNarrow-Regular.ttf"
 
 #ifndef CELL_SIZE

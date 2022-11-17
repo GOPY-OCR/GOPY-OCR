@@ -18,7 +18,6 @@ void draw_grid(SDL_Surface *res) {
 }
 
 void add_number(SDL_Surface *res, int x, int y, int number, int *grid) {
-    printf("Coucou");
     SDL_Color color = grid[x * BOARDSIZE + y] == 0 ? OLD_NUMBER_COLOR : NEW_NUMBER_COLOR;
 
     TTF_Font *font = TTF_OpenFont(FONT, 24);
