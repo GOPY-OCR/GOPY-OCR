@@ -8,9 +8,11 @@
 #define NEW_NUMBER_COLOR (SDL_Color){0, 0, 255, 255}
 #define GRID_COLOR 0xFFFFFFFF
 #define BACK_COLOR 0
-#define CELL_SIZE 100
 #define FONT "ArchivoNarrow-Regular.ttf"
 
+#ifndef CELL_SIZE
+    #define CELL_SIZE 100
+#endif
 #ifndef BOARDSIZE
     #define BOARDSIZE 9
 #endif
