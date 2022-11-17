@@ -22,8 +22,6 @@ void add_number(SDL_Surface *res, int x, int y, int number, int *grid) {
     msg_rect.w = CELL_SIZE;
     msg_rect.h = CELL_SIZE;
 
-    save_image(letter, "lettre.png");
-
     SDL_BlitSurface(letter, NULL, res, &msg_rect);
 
     SDL_FreeSurface(letter);
