@@ -16,7 +16,9 @@ void exit_help(int error) {
                  "  -c,  --cut IMG              Save the images in `IMG_X.png`\n"
                  "  -s,  --solve GRID           Save the result in `GRID.result`\n"
                  "  -n,  --neural-network       Show a proof of concept of the neural network\n"
-                 "                              Type `-n` to show help message about neural network\n";
+                 "                              Type `-n` to show help message about neural network\n"
+                 "  -p   --postprocess GRID \\  Generate an image of the solved grid\n"
+                 "              SOLVED OUTPUT\n";
     
     if (error != 0) {
         printf("The arguments are incorrect.\n");
@@ -56,6 +58,9 @@ char *format_final_name(char *name, char *add) {
 int main(int argc, char **argv) {
     if (argc < 2)
         exit_help(1);
+
+    if (SDL_Init(SDL_INIT_VIDEO))
+        errx(EXIT_FAILURE, "%s", SDL_GetError());
 
     if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
         exit_help(0);
@@ -212,6 +217,24 @@ int main(int argc, char **argv) {
         int args_offset = 1 + verbose;
 
         xor_main(verbose, argc - args_offset, argv + args_offset);
+    }
+
+    else if (strcmp(argv[1], "--postprocess") == 0 || strcmp(argv[1], "-p") == 0) {
+        printf("Generate solved image of the sudoku...\n");
+
+        if (argc != 5)
+            exit_help(1);
+
+        int *grid = load_grid_file(argv[2]);
+        int *solved = load_grid_file(argv[3]);
+
+        SDL_Surface *res = postprocess(grid, solved);
+
+        save_image(res, argv[4]);
+
+        SDL_FreeSurface(res);
+        free(grid);
+        free(solved);
     }
     
     else

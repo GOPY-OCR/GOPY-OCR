@@ -33,6 +33,10 @@
 // Neural Network part
 #include "NeuralNetwork/xor.h"
 
+// Postprocess
+#include "Postprocess/postprocess.h"
+#include "Solver/grid.h"
+
 #endif
 
 
