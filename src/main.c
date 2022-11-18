@@ -193,16 +193,16 @@ int main(int argc, char **argv) {
         if (argc != 3)
             exit_help(1);
 
-        int board[9][9] = {{0}};
         char *file = calloc(strlen(argv[2]) + 7, sizeof(char));
         strcat(file, argv[2]);
-        load_grid_file(file, board);
+        int *board = load_grid_file(file);
         
         Solve(board);
         strcat(file, ".result");
         save_grid_file(file, board);
 
         free(file);
+        free(board);
     }
     
     else if (strcmp(argv[1], "--neural-network") == 0 || strcmp(argv[1], "-n") == 0) {

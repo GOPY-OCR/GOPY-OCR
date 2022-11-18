@@ -13,15 +13,15 @@ int main(int argc, char **argv)
     }
 
     else{
-        int board[9][9] = {{0}};
         char *file = calloc(strlen(argv[1]) + 7, sizeof(char));
         strcat(file, argv[1]);
-        load_grid_file(file, board);
+        int *board = load_grid_file(file);
         
         Solve(board);
         strcat(file, ".result");
         save_grid_file(file, board);
 
+        free(board);
         free(file);
     }
 
