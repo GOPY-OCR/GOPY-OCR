@@ -86,8 +86,7 @@ Test(IsSquareValid, wrong_square) {
 Test(IsBoardValid, valid_not_solved_board) {
     int *board = load_grid_file("./SolverTests/valid_not_solved_board");
 
-    for (size_t i = 0; i < BOARDSIZE; i++)
-        cr_expect(IsBoardValid(board));
+    cr_expect(IsBoardValid(board));
 
     cr_assert(is_the_same(board, "./SolverTests/valid_not_solved_board"));
 
@@ -97,8 +96,7 @@ Test(IsBoardValid, valid_not_solved_board) {
 Test(IsBoardValid, valid_solved_board) {
     int *board = load_grid_file("./SolverTests/valid_solved_board");
 
-    for (size_t i = 0; i < BOARDSIZE; i++)
-        cr_expect(IsBoardValid(board));
+    cr_expect(IsBoardValid(board));
 
     cr_assert(is_the_same(board, "./SolverTests/valid_solved_board"));
 
@@ -108,8 +106,7 @@ Test(IsBoardValid, valid_solved_board) {
 Test(IsBoardValid, wrong_board) {
     int *board = load_grid_file("./SolverTests/wrong_board");
 
-    for (size_t i = 0; i < BOARDSIZE; i++)
-        cr_expect(!IsBoardValid(board));
+    cr_expect(!IsBoardValid(board));
 
     cr_assert(is_the_same(board, "./SolverTests/wrong_board"));
 
