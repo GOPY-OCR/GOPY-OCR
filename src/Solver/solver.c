@@ -86,9 +86,11 @@ int IsSolved(int board[]) {
                 }
             }
         }
+
+        return 1;
     }
     
-    return 1;
+    return 0;
 }
 
 
