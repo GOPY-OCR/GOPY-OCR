@@ -61,7 +61,7 @@ void train(NeuralNetwork *nn,
                 progress_bar(PROGRESS_BAR_WIDTH, e+1, epochs, progress_indicator);
             }
 
-            else { // (verbose > 1)
+            else if (verbose > 1){
                 printf("Epoch %i: ", e);
                 accuracy = evaluate(nn, testing_data, verbose - 1);
             }
