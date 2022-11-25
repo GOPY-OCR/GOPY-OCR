@@ -212,7 +212,7 @@ matrice *matrice_invert(matrice *m){
         pivot = matrice_get(inv, p, p);
         det *= pivot;
 
-        if(0&&doubleabs(pivot) < 1e-5){
+        if(doubleabs(pivot) < 1e-5){
             errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible");
         }
 
@@ -236,7 +236,7 @@ matrice *matrice_invert(matrice *m){
         *matrice_get_ref(inv, p, p) = 1 / pivot;
     }
 
-    if(0&&doubleabs(det) < 1e-5){
+    if(doubleabs(det) < 1e-5){
         errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible");
     }
 
