@@ -1,5 +1,6 @@
 #pragma once
 #include "str_utils.h"
+#include "maths.h"
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,9 +35,12 @@ matrice *matrice_random(int rows, int columns, double min, double max);
 matrice *matrice_zeros(int rows, int columns);
 
 int matrice_equals(matrice *m1, matrice *m2);
+int matrice_equals_epsilon(matrice *m1, matrice *m2, double epsilon);
 
 matrice *matrice_dot(matrice *m1, matrice *m2);
 matrice *matrice_transpose(matrice *m);
+matrice *matrice_invert(matrice *m);
+
 
 // element wise operations
 matrice *matrice_elementwise(matrice *m1, matrice *m2,
