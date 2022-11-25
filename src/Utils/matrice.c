@@ -213,7 +213,8 @@ matrice *matrice_invert(matrice *m){
         det *= pivot;
 
         if(doubleabs(pivot) < 1e-5){
-            errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible");
+            errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible\n%s",
+                    matrice_serialize(m, "m"));
         }
 
         for(i = 0; i < size; i++){
@@ -237,7 +238,8 @@ matrice *matrice_invert(matrice *m){
     }
 
     if(doubleabs(det) < 1e-5){
-        errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible");
+            errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible\n%s",
+                    matrice_serialize(m, "m"));
     }
 
     return inv;
