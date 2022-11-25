@@ -16,6 +16,7 @@ void setup(void) {
     m4 = matrice_from_string("1 2,"
                              "3 4,"
                              "5 6");
+
     big1 = matrice_from_string("9.123 12.73 8129 837 2871 1 2 3 4,"
                                "1 2 3 4 5 6 7 8 9,"
                                "9 8 7 6 5 4 3 2 1,"
@@ -39,6 +40,13 @@ void setup(void) {
 
     weird = matrice_from_string("1234567891011121314,"
                                 "0.00000000000000000000000000001");
+}
+
+void assert_matrices_equals(matrice *m1, matrice *m2) {
+    int eq = matrice_equals(m1, m2);
+    char *s1 = matrice_serialize(m1, "m1");
+    char *s2 = matrice_serialize(m2, "m2");
+    cr_assert(eq, "%sis not equal to\n%s", s1, s2);
 }
 
 Test(matrices, test_from_string) {
@@ -70,7 +78,7 @@ Test(matrices, test_add) {
             "10 12");
     matrice *m = matrice_add(m1, m2);
 
-    cr_assert(matrice_equals(m, expected), "Matrices are not equal");
+    assert_matrices_equals(m, expected);
 }
 
 Test(matrice, test_sub) {
@@ -80,7 +88,7 @@ Test(matrice, test_sub) {
             "-4 -4");
     matrice *m = matrice_sub(m1, m2);
 
-    cr_assert(matrice_equals(m, expected), "Matrices are not equal");
+    assert_matrices_equals(m, expected);
 }
 
 Test(matrice, test_mul) {
@@ -91,7 +99,7 @@ Test(matrice, test_mul) {
 
     matrice *m = matrice_mul(m1, m2);
 
-    cr_assert(matrice_equals(m, expected), "Matrices are not equal");
+    assert_matrices_equals(m, expected);
 }
 
 Test(matrices, test_dot) {
@@ -101,7 +109,7 @@ Test(matrices, test_dot) {
             "43 50");
     matrice *m = matrice_dot(m1, m2);
 
-    cr_assert(matrice_equals(m, expected), "Matrices are not equal");
+    assert_matrices_equals(m, expected);
 }
 
 Test(matrices, test_transpose) {
@@ -111,7 +119,7 @@ Test(matrices, test_transpose) {
             "2 4");
     matrice *m = matrice_transpose(m1);
 
-    cr_assert(matrice_equals(m, expected), "Matrices are not equal");
+    assert_matrices_equals(m, expected);
 }
 
 Test(matrices, test_random_generate) {
@@ -139,7 +147,7 @@ Test(matrices, test_scalar_multiply) {
             "6 8");
     matrice_multiply(m1, 2);
 
-    cr_assert(matrice_equals(m1, expected), "Matrices are not equal");
+    assert_matrices_equals(m1, expected);
 }
 
 double multiply_by_two(double x) { return x * 2; }
@@ -151,7 +159,7 @@ Test(matrices, test_map) {
             "6 8");
     matrice_map(m1, multiply_by_two);
 
-    cr_assert(matrice_equals(m1, expected), "Matrices are not equal");
+    assert_matrices_equals(m1, expected);
 }
 
 Test(matrices, test_add_inplace) {
@@ -170,12 +178,12 @@ Test(matrices, test_clone) {
 
     matrice *m = matrice_clone(m1);
 
-    cr_assert(matrice_equals(m, m1), "Matrices are not equal");
+    assert_matrices_equals(m, m1);
 
     // Free m1 and check if m is still the same
     matrice_free(m1);
     setup();
-    cr_assert(matrice_equals(m, m1), "Matrices are not equal");
+    assert_matrices_equals(m, m1);
 }
 
 Test(matrices, test_clone_harder) {
@@ -184,16 +192,16 @@ Test(matrices, test_clone_harder) {
     matrice *copy1 = matrice_clone(big1);
     matrice *copy2 = matrice_clone(big1);
 
-    cr_assert(matrice_equals(copy1, copy2), "Matrices are not equal");
+    assert_matrices_equals(copy1, copy2);
 
     // Free big1 and check if copy1 and copy2 are still the same
     matrice_free(big1);
-    cr_assert(matrice_equals(copy1, copy2), "Matrices are not equal");
+    assert_matrices_equals(copy1, copy2);
 
     matrice_free(matrice_clone(copy1));
     matrice_free(matrice_clone(copy2));
     // nothings should have changed
-    cr_assert(matrice_equals(copy1, copy2), "Matrices are not equal");
+    assert_matrices_equals(copy1, copy2);
 }
 
 Test(matrices, test_max) {
@@ -282,16 +290,14 @@ Test(matrices, test_deserialize) {
 
     matrice *m = matrice_deserialize(serialized_big1, NULL);
 
-    cr_assert(matrice_equals(m, big1), "Serialized big1 is not equal to big1");
+    assert_matrices_equals(m, big1);
 
-    m = matrice_deserialize(matrice_serialize(m1, "m1"), NULL);
-    cr_assert(matrice_equals(m, m1), "Serialized m1 is not equal to m1");
+    assert_matrices_equals(m1, matrice_deserialize(matrice_serialize(m1, NULL), NULL));
+    assert_matrices_equals(m2, matrice_deserialize(matrice_serialize(m2, NULL), NULL));
+    assert_matrices_equals(m3, matrice_deserialize(matrice_serialize(m3, NULL), NULL));
+    assert_matrices_equals(m4, matrice_deserialize(matrice_serialize(m4, NULL), NULL));
+    assert_matrices_equals(weird, matrice_deserialize(matrice_serialize(weird, "weird"), NULL));
 
-    m = matrice_deserialize(serialized_m1, NULL);
-    cr_assert(matrice_equals(m, m1), "Serialized m1 with no name is not equal to m1");
-
-    m = matrice_deserialize(matrice_serialize(weird, "weird"), NULL);
-    cr_assert(matrice_equals(m, weird), "Serialized matrice \"weird\" is not equal to matrice \"weird\"");
 
     char *ptr = NULL;
     m = matrice_deserialize(serialized_m1, &ptr);
@@ -307,12 +313,11 @@ Test(matrices, test_csv_read_write) {
 
     matrice_to_csv(big1, filename, message);
     matrice *m = matrice_read_csv(filename);
-    cr_assert(matrice_equals(m, big1), "Matrices are not equal");
+    assert_matrices_equals(m, big1);
 
     filename = "../_build/tests/TEMP_test_matrice2.csv";
 
     matrice_to_csv(big2, filename, message);
     m = matrice_read_csv(filename);
-    cr_assert(matrice_equals(m, big2), "Matrices are not equal");
+    assert_matrices_equals(m, big2);
 }
-
