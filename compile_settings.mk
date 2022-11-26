@@ -9,7 +9,7 @@ CFLAGS = -Wall -Wextra `pkg-config --cflags $(USED_LIBS)` $(OPTFLAGS) -D__NO_INL
 OPTFLAGS := -O3
 CPPFLAGS = -MMD $(addprefix -I, $(INCLUDE_DIRS))
 LDFLAGS :=
-LDLIBS := `pkg-config --libs $(USED_LIBS)` -lm -lpthread
+LDLIBS := `pkg-config --libs $(USED_LIBS)` -lm -export-dynamic -lpthread
 
 # Debug mode can be enabled by executing `make DEBUG=1 rule_name`
 DEBUG := 0
