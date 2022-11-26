@@ -1,77 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkWindow" id="ImageWhenLoadedWindow">
+  <object class="GtkWindow" id="main">
     <property name="can-focus">False</property>
-    <property name="default-width">1350</property>
-    <property name="default-height">1000</property>
     <child>
-      <object class="GtkFixed" id="ImageWinFix">
+      <object class="GtkStack" id="pages">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="transition-duration">100</property>
+        <property name="transition-type">slide-left-right</property>
         <child>
-          <object class="GtkImage" id="Image1">
-            <property name="width-request">800</property>
-            <property name="height-request">700</property>
+          <object class="GtkBox" id="page0">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="xpad">0</property>
-            <property name="ypad">0</property>
-            <property name="stock">gtk-missing-image</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="TitleScreen">
+                <property name="width-request">402</property>
+                <property name="height-request">100</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="margin-top">2</property>
+                <property name="label" translatable="yes">SODOKO</property>
+                <attributes>
+                  <attribute name="font-desc" value="Noto Sans Kannada UI Heavy 10"/>
+                  <attribute name="style" value="oblique"/>
+                  <attribute name="foreground" value="#000000000000"/>
+                  <attribute name="size" value="10240"/>
+                  <attribute name="absolute-size" value="43008"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="ButtonLoad">
+                <property name="label" translatable="yes">Load Grid</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Press this to load the unsolved grid.</property>
+                <property name="halign">center</property>
+                <property name="valign">start</property>
+                <property name="vexpand">True</property>
+                <signal name="clicked" handler="on_ButtonLoad_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
           </object>
           <packing>
-            <property name="x">675</property>
-            <property name="y">500</property>
+            <property name="name">page0</property>
+            <property name="title" translatable="yes">page0</property>
           </packing>
         </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkWindow" id="MainWindow">
-    <property name="can-focus">False</property>
-    <property name="default-width">1350</property>
-    <property name="default-height">1000</property>
-    <child>
-      <object class="GtkFixed" id="FirstFixed">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <child>
-          <object class="GtkLabel" id="TitleScreen">
-            <property name="width-request">402</property>
-            <property name="height-request">100</property>
+          <object class="GtkBox" id="page1">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="margin-top">2</property>
-            <property name="label" translatable="yes">SODOKO</property>
-            <attributes>
-              <attribute name="font-desc" value="Noto Sans Kannada UI Heavy 10"/>
-              <attribute name="style" value="oblique"/>
-              <attribute name="foreground" value="#000000000000"/>
-              <attribute name="size" value="10240"/>
-              <attribute name="absolute-size" value="43008"/>
-            </attributes>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="stock">gtk-missing-image</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkButtonBox" id="Button Bar">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkButton" id="Cancel1">
+                    <property name="label" translatable="yes">Cancel</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="halign">end</property>
+                    <property name="valign">end</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="Continue1">
+                    <property name="label" translatable="yes">Continue</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="halign">end</property>
+                    <property name="valign">end</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="pack-type">end</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="pack-type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="x">105</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="ButtonLoad">
-            <property name="label" translatable="yes">Load Grid</property>
-            <property name="width-request">100</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="tooltip-text" translatable="yes">Press this to load the unsolved grid.</property>
-            <signal name="clicked" handler="on_ButtonLoad_clicked" swapped="no"/>
-          </object>
-          <packing>
-            <property name="x">64</property>
-            <property name="y">239</property>
+            <property name="name">page1</property>
+            <property name="title" translatable="yes">page1</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
