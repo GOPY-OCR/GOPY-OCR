@@ -1,4 +1,4 @@
-//#include "Grayscale.h"
+//#include "anima.h"
 
 //GtkWidget *CancelButton1;
 //GtkWidget *ContinueButton1;

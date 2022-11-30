@@ -14,3 +14,5 @@ G_MODULE_EXPORT void on_CancelButton1_clicked(GtkButton *button, gpointer user_d
     clear_image();
     prev_page();
 }
+
+
