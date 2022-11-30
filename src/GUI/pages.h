@@ -3,5 +3,5 @@
 #include <gtk/gtkx.h>
 #include "page-0.h"
 #include "page-1.h"
-#include "Grayscale.h"
+#include "anima.h"
 void init_pages(GtkBuilder *builder);
