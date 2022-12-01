@@ -109,7 +109,6 @@ void save_network_plot(NeuralNetwork *network, int verbose) {
             double input2 = (double) j / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
 
             double output = test_xor_inputs(network, 0, input1, input2);
->>>>>>> 0d41bf3 (Make float be double again)
             matrice_set(plot, i * PLOT_SIZE + j, 0, input1);
             matrice_set(plot, i * PLOT_SIZE + j, 1, input2);
             matrice_set(plot, i * PLOT_SIZE + j, 2, output);
