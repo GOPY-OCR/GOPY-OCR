@@ -1,18 +1,23 @@
-#include "sdl_utils.h"
-#include "hough_transform.h"
-#include "flood_fill.h"
-#include "debug_utils.h"
 #include <SDL2/SDL.h>
+#include "resize.h"
+#include "brightness.h"
+#include "split.h"
 
 int main(int argc, char **argv) {
     SDL_Surface *image = load_image(argv[1]);
 
-    Quad grid = grid_detection(image, 1);
-
-    printf("Grid: %d %d %d %d\n", grid.p1.x, grid.p1.y, grid.p4.x, grid.p4.y);
+    resize(&image);
 
     save_image(image, "output.png");
 
+    SDL_Surface *splitted[81] = {NULL};
+    split_sudoku(image, splitted);
+    neural_network_resize(splitted);
+
+    save_image(splitted[0], "test.png");
+
+    for (size_t i = 0; i < 81; i++)
+        SDL_FreeSurface(splitted[i]);
     SDL_FreeSurface(image);
 
     return 0; 
