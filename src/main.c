@@ -123,8 +123,8 @@ int main(int argc, char **argv) {
         if (argc != 4)
             exit_help(1);
 
-        // Transform the angle in a float
-        float angle = strtod(argv[3], NULL);
+        // Transform the angle in a double
+        double angle = strtod(argv[3], NULL);
 
         char *final_name = format_final_name(argv[2], "rotated");
 

@@ -22,7 +22,7 @@
 //		  3 = per testing data summary every epoch
 void train(NeuralNetwork *nn, 
            int epochs, 
-           float learning_rate, 
+           double learning_rate, 
            int batch_size,
            dataset *training_data, 
            dataset *testing_data, 
@@ -30,13 +30,13 @@ void train(NeuralNetwork *nn,
            int save_accuracies,
            int multithread,
            int compute_training_accuracy,
-           float learning_rate_decay);
+           double learning_rate_decay);
 
 // Applies the backpropagation algorithm to a mini-batch.
 // A mini-batch is a subset of the training data.
 void update_mini_batch(NeuralNetwork *nn, 
                        dataset *data, 
-                       float learning_rate,
+                       double learning_rate,
                        int start, 
                        int end,
                        int multithread);
@@ -66,14 +66,14 @@ void backprop(NeuralNetwork *nn,
 // on the given data. 
 // Will print a summary if verbose is 1 or more.
 // Will print the output of each test if verbose is 2 or more.
-float evaluate(NeuralNetwork *nn, dataset *data, int verbose);
+double evaluate(NeuralNetwork *nn, dataset *data, int verbose);
 
 
 
 void apply_learning_rate_decay(int epoch, 
-                               float *learning_rate, 
+                               double *learning_rate, 
                                int verbose,
-                               float learning_rate_decay);
+                               double learning_rate_decay);
 
 // Returns the maximum output row index
 int max_output(matrice *output);

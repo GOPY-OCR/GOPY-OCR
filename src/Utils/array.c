@@ -7,7 +7,7 @@ array *array_new(int size){
     return a;
 }
 
-array *array_range(float start, float end, float step){
+array *array_range(double start, double end, double step){
     int size = (end - start) / step;
     array *a = array_new(size);
     for(int i = 0; i < size; i++){
@@ -28,15 +28,15 @@ void array_free(array *a){
     free(a);
 }
 
-float array_get(array *a, int i){
+double array_get(array *a, int i){
     return matrice_get(a->data, i, 0);
 }
 
-void array_set(array *a, int i, float value){
+void array_set(array *a, int i, double value){
     matrice_set(a->data, i, 0, value);
 }
 
-array *array_map(array *a, float (*f)(float)){
+array *array_map(array *a, double (*f)(double)){
     array *result = array_clone(a);
     matrice_map(result->data, f);
     return result;

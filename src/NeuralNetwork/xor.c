@@ -32,7 +32,7 @@ void xor_main(int verbose, int argc, char **argv){
         }
         NeuralNetwork *network = load_xor_network(verbose);
 
-        float output = test_xor_inputs(network, verbose, strtod(argv[1], NULL), strtod(argv[2], NULL));
+        double output = test_xor_inputs(network, verbose, strtod(argv[1], NULL), strtod(argv[2], NULL));
         printf("XOR Neural Network Output: %.15f\n", output);
 
     } else if (strcmp(argv[0], "plot") == 0) {
@@ -51,7 +51,7 @@ void xor_train(int verbose, int argc, char **argv) {
     NeuralNetwork *network = create_xor_network();
 
     int epochs = XOR_EPOCHS;
-    float learning_rate = XOR_LEARNING_RATE;
+    double learning_rate = XOR_LEARNING_RATE;
 
     if (argc > 0) {
         epochs = strtol(argv[0], NULL, 10);
@@ -77,14 +77,14 @@ void xor_train(int verbose, int argc, char **argv) {
 }
 
 // Main mode 2
-float test_xor_inputs(NeuralNetwork *network, int verbose, float input1, float input2) {
+double test_xor_inputs(NeuralNetwork *network, int verbose, double input1, double input2) {
     matrice *input = matrice_new(2, 1);
     matrice_set(input, 0, 0, input1);
     matrice_set(input, 1, 0, input2);
 
     matrice *output = feedforward(network, input);
 
-    float result = matrice_get(output, 0, 0);
+    double result = matrice_get(output, 0, 0);
 
     matrice_free(input);
     matrice_free(output);
@@ -105,14 +105,11 @@ void save_network_plot(NeuralNetwork *network, int verbose) {
 
     for (int i = 0; i < PLOT_SIZE; i++) {
         for (int j = 0; j < PLOT_SIZE; j++) {
-            float input1 = (float) i / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
-            float input2 = (float) j / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
+            double input1 = (double) i / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
+            double input2 = (double) j / PLOT_SIZE / PLOT_SCALE - 0.5 / PLOT_SCALE + 0.5;
 
-<<<<<<< HEAD
-            double output = test_xor_inputs(network, input1, input2);
-=======
-            float output = test_xor_inputs(network, 0, input1, input2);
->>>>>>> 94863cf (grep -r double -l | xargs sed -i 's/double/float/g')
+            double output = test_xor_inputs(network, 0, input1, input2);
+>>>>>>> 0d41bf3 (Make float be double again)
             matrice_set(plot, i * PLOT_SIZE + j, 0, input1);
             matrice_set(plot, i * PLOT_SIZE + j, 1, input2);
             matrice_set(plot, i * PLOT_SIZE + j, 2, output);
@@ -132,7 +129,7 @@ void train_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
 
 #define MIN_ACCURACY 0.9999
 int test_xor_network(NeuralNetwork *network, int verbose, dataset *data) {
-    float accuracy = evaluate(network, data, verbose);
+    double accuracy = evaluate(network, data, verbose);
 
     return accuracy >= MIN_ACCURACY;
 }

@@ -72,23 +72,23 @@ Point *find_intersections(Line *lines, int nb_lines, int *nb_intersections) {
 
 Point line_intersection(Line line1, Line line2){
     // formula found on https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line
-    float x1 = line1.p1.x;
-    float y1 = line1.p1.y;
-    float x2 = line1.p2.x;
-    float y2 = line1.p2.y;
-    float x3 = line2.p1.x;
-    float y3 = line2.p1.y;
-    float x4 = line2.p2.x;
-    float y4 = line2.p2.y;
+    double x1 = line1.p1.x;
+    double y1 = line1.p1.y;
+    double x2 = line1.p2.x;
+    double y2 = line1.p2.y;
+    double x3 = line2.p1.x;
+    double y3 = line2.p1.y;
+    double x4 = line2.p2.x;
+    double y4 = line2.p2.y;
 
-    float denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    double denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
 
     if (denom == 0){
         return (Point){-1, -1};
     }
 
-    float x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
-    float y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
+    double x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
+    double y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
 
     if (x <= 0 || y <= 0){
         return (Point){-1, -1};
@@ -139,18 +139,18 @@ Line *hough_lines_to_lines(Point *lines,
         int nb_lines,
         array *thetas,
         array *rhos,
-        float d){
+        double d){
     Line *lines_out = malloc(sizeof(Line) * nb_lines);
 
     for (int i = 0; i < nb_lines; i++){
-        float theta = array_get(thetas, lines[i].y);
-        float rho = array_get(rhos, lines[i].x);
+        double theta = array_get(thetas, lines[i].y);
+        double rho = array_get(rhos, lines[i].x);
 
         // convert coordinates from hough space to cartesian space
-        float a = cos_degree(theta);
-        float b = sin_degree(theta);
-        float x0 = a * rho;
-        float y0 = b * rho;
+        double a = cos_degree(theta);
+        double b = sin_degree(theta);
+        double x0 = a * rho;
+        double y0 = b * rho;
 
         Point p1 = (Point){(int) (x0 + d * (-b)), (int) (y0 + d * a)};
         Point p2 = (Point){(int) (x0 - d * (-b)), (int) (y0 - d * a)};

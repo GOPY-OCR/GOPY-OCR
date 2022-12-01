@@ -1,14 +1,14 @@
 #pragma once
 #include <math.h>
 
-float sigmoid(float x);
-float sigmoid_prime(float x);
-float floatabs(float x);
+double sigmoid(double x);
+double sigmoid_prime(double x);
+double doubleabs(double x);
 
-float degree_to_radian(float degree);
+double degree_to_radian(double degree);
 
-float cos_degree(float degree);
-float sin_degree(float degree);
+double cos_degree(double degree);
+double sin_degree(double degree);
 
 
 int intabs(int x);

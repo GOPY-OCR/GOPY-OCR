@@ -6,7 +6,7 @@ def main():
     path = argv[1]
     df = pd.read_csv(path, names=['test accuracy', 'train accuracy'], sep=";", skiprows=2)
 
-    df['test accuracy'] = df['test accuracy'].astype(float)
+    df['test accuracy'] = df['test accuracy'].astype(double)
 
     print(df)
 

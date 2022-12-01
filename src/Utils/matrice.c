@@ -10,7 +10,7 @@ matrice *matrice_new(int rows, int columns) {
     matrice *m = malloc(sizeof(matrice));
     m->rows = rows;
     m->columns = columns;
-    m->data = malloc(sizeof(float) * rows * columns);
+    m->data = malloc(sizeof(double) * rows * columns);
 
     if (m->data == NULL)
         errx(EXIT_FAILURE,
@@ -30,7 +30,7 @@ void matrice_print(matrice *m) {
 
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
-            int lenght = strlen(float_to_string(matrice_get(m, i, j)));
+            int lenght = strlen(double_to_string(matrice_get(m, i, j)));
             if (lenght > max_length)
                 max_length = lenght;
         }
@@ -38,7 +38,7 @@ void matrice_print(matrice *m) {
 
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
-            printf("%*s ", max_length, float_to_string(matrice_get(m, i, j)));
+            printf("%*s ", max_length, double_to_string(matrice_get(m, i, j)));
         }
         printf("\n");
     }
@@ -62,7 +62,7 @@ matrice *matrice_from_string(char *str) {
 
     if ((line = strsep(&strcopy, ","))) {
         int columns = 0;
-        float first_line[MAX_PARSING_COLUMNS];
+        double first_line[MAX_PARSING_COLUMNS];
         char *number;
 
         while ((number = strsep(&line, " "))) {
@@ -119,7 +119,7 @@ matrice *matrice_from_string(char *str) {
     }
 }
 
-float *matrice_get_ref(matrice *m, int row, int column) {
+double *matrice_get_ref(matrice *m, int row, int column) {
     // the following out of bounds check is commented out
     // because this function is by far the most called
     //if (row >= m->rows || column >= m->columns)
@@ -128,25 +128,25 @@ float *matrice_get_ref(matrice *m, int row, int column) {
     return m->data + (row * m->columns + column);
 }
 
-float matrice_get(matrice *m, int row, int column) {
+double matrice_get(matrice *m, int row, int column) {
     return *matrice_get_ref(m, row, column);
 }
 
-void matrice_set(matrice *m, int row, int column, float value) {
+void matrice_set(matrice *m, int row, int column, double value) {
     *matrice_get_ref(m, row, column) = value;
 }
 
-float random_float(float min, float max) {
-    float range = (max - min);
-    float div = RAND_MAX / range;
+double random_double(double min, double max) {
+    double range = (max - min);
+    double div = RAND_MAX / range;
     return min + (rand() / div);
 }
 
-matrice *matrice_random(int rows, int columns, float min, float max) {
+matrice *matrice_random(int rows, int columns, double min, double max) {
     matrice *m = matrice_new(rows, columns);
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-            matrice_set(m, i, j, random_float(min, max));
+            matrice_set(m, i, j, random_double(min, max));
         }
     }
     return m;
@@ -179,7 +179,7 @@ int matrice_equals(matrice *m1, matrice *m2) {
 void matrice_dot_sthreaded(matrice *m1, matrice *m2, matrice *r){
     for (int i = 0; i < m1->rows; i++) {
         for (int j = 0; j < m2->columns; j++) {
-            float *sum = matrice_get_ref(r, i, j);
+            double *sum = matrice_get_ref(r, i, j);
             *sum = 0;
             for (int k = 0; k < m1->columns; k++) {
                 *sum += matrice_get(m1, i, k) * matrice_get(m2, k, j);
@@ -205,7 +205,7 @@ matrice *matrice_dot(matrice *m1, matrice *m2) {
 }
 
 matrice *matrice_elementwise_inner(matrice *m1, matrice *m2,
-                                   float (*f)(float, float),
+                                   double (*f)(double, double),
                                    const char *function_name) {
 
     if (m1->rows != m2->rows || m1->columns != m2->columns) {
@@ -226,21 +226,21 @@ matrice *matrice_elementwise_inner(matrice *m1, matrice *m2,
 }
 
 matrice *matrice_elementwise(matrice *m1, matrice *m2,
-                             float (*f)(float, float)) {
+                             double (*f)(double, double)) {
     return matrice_elementwise_inner(m1, m2, f, "matrice_elementwise");
 }
 
-float add(float a, float b) { return a + b; }
+double add(double a, double b) { return a + b; }
 matrice *matrice_add(matrice *m1, matrice *m2) {
     return matrice_elementwise_inner(m1, m2, &add, "matrice_add");
 }
 
-float sub(float a, float b) { return a - b; }
+double sub(double a, double b) { return a - b; }
 matrice *matrice_sub(matrice *m1, matrice *m2) {
     return matrice_elementwise_inner(m1, m2, &sub, "matrice_sub");
 }
 
-float mul(float a, float b) { return a * b; }
+double mul(double a, double b) { return a * b; }
 matrice *matrice_mul(matrice *m1, matrice *m2) {
     return matrice_elementwise_inner(m1, m2, &mul, "matrice_mul");
 }
@@ -255,10 +255,10 @@ matrice *matrice_transpose(matrice *m) {
     return m_t;
 }
 
-matrice *matrice_map(matrice *m, float (*f)(float)) {
+matrice *matrice_map(matrice *m, double (*f)(double)) {
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
-            float *field = matrice_get_ref(m, i, j);
+            double *field = matrice_get_ref(m, i, j);
             *field = f(*field);
         }
     }
@@ -274,7 +274,7 @@ void matrice_add_inplace(matrice *dest, matrice *source){
 
     for (int i = 0; i < dest->rows; i++) {
         for (int j = 0; j < dest->columns; j++) {
-            float *dest_field = matrice_get_ref(dest, i, j);
+            double *dest_field = matrice_get_ref(dest, i, j);
             *dest_field += matrice_get(source, i, j);
         }
     }
@@ -289,13 +289,13 @@ void matrice_sub_inplace(matrice *dest, matrice *source){
 
     for (int i = 0; i < dest->rows; i++) {
         for (int j = 0; j < dest->columns; j++) {
-            float *dest_field = matrice_get_ref(dest, i, j);
+            double *dest_field = matrice_get_ref(dest, i, j);
             *dest_field -= matrice_get(source, i, j);
         }
     }
 }
 
-matrice *matrice_multiply(matrice *m, float scalar) {
+matrice *matrice_multiply(matrice *m, double scalar) {
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
             matrice_set(m, i, j, matrice_get(m, i, j) * scalar);
@@ -315,19 +315,19 @@ matrice *matrice_clone(matrice *m) {
     return m_clone;
 }
 
-float *matrice_max(matrice *m, int *row, int *column) {
+double *matrice_max(matrice *m, int *row, int *column) {
     if (row == NULL)
         row = malloc(sizeof(int));
 
     if (column == NULL)
         column = malloc(sizeof(int));
 
-    float *max = matrice_get_ref(m, 0, 0);
+    double *max = matrice_get_ref(m, 0, 0);
     *row = 0;
     *column = 0;
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
-            float *value = matrice_get_ref(m, i, j);
+            double *value = matrice_get_ref(m, i, j);
             if (*value > *max) {
                 max = value;
                 *row = i;
@@ -339,8 +339,8 @@ float *matrice_max(matrice *m, int *row, int *column) {
     return max;
 }
 
-float matrice_sum(matrice *m) {
-    float sum = 0;
+double matrice_sum(matrice *m) {
+    double sum = 0;
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
             sum += matrice_get(m, i, j);
@@ -349,17 +349,17 @@ float matrice_sum(matrice *m) {
     return sum;
 }
 
-float matrice_mean(matrice *m) {
+double matrice_mean(matrice *m) {
     return matrice_sum(m) / (m->rows * m->columns);
 }
 
 // std = standard deviation = écart type = sqrt(variance)
-float matrice_std(matrice *m){
-    float mean = matrice_mean(m);
-    float sum = 0;
+double matrice_std(matrice *m){
+    double mean = matrice_mean(m);
+    double sum = 0;
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
-            float value = matrice_get(m, i, j);
+            double value = matrice_get(m, i, j);
             sum += (value - mean) * (value - mean);
         }
     }
@@ -394,7 +394,7 @@ char *matrice_serialize(matrice *m, char *name){
                 output = realloc(output, sizeof(char) * size);
             }
 
-            char *val = serialize_float(matrice_get(m, i, j));
+            char *val = serialize_double(matrice_get(m, i, j));
             size_t le = strlen(val);
             memcpy(output + index, val, le);
             index += le;
@@ -434,7 +434,7 @@ matrice *matrice_deserialize(char *str, char **endptr){
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-            float val = strtof(p, &p);
+            double val = strtof(p, &p);
             matrice_set(m, i, j, val);
             p++;
         }

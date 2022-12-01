@@ -25,7 +25,7 @@
 
 void train(NeuralNetwork *nn, 
            int epochs, 
-           float learning_rate, 
+           double learning_rate, 
            int batch_size,
            dataset *training_data, 
            dataset *testing_data,
@@ -33,7 +33,7 @@ void train(NeuralNetwork *nn,
            int save_accuracies,
            int multithread,
            int compute_training_accuracy,
-           float learning_rate_decay) {
+           double learning_rate_decay) {
 
     int testing_nb = testing_data != NULL ? testing_data->size : 0;
     int training_nb = training_data->size;
@@ -47,7 +47,7 @@ void train(NeuralNetwork *nn,
                 "Epochs: %d\n",
                 training_nb, 
                 testing_nb, 
-                float_to_string(learning_rate),
+                double_to_string(learning_rate),
                 batch_size, 
                 epochs);
 
@@ -56,7 +56,7 @@ void train(NeuralNetwork *nn,
         if(save_accuracies) printf("[save accuracies] ");
         if(learning_rate_decay != 0) 
             printf("[learning_rate_decay (factor: %s)]", 
-                    float_to_string(learning_rate_decay));
+                    double_to_string(learning_rate_decay));
         printf("\n");
 
         printf("Network shape: {");
@@ -71,7 +71,7 @@ void train(NeuralNetwork *nn,
 
 
     matrice *accuracies = matrice_new(epochs, 1 + compute_training_accuracy);
-    float accuracy = -1;
+    double accuracy = -1;
     
     dataset *training_samples = NULL;
     if(compute_training_accuracy){
@@ -94,7 +94,7 @@ void train(NeuralNetwork *nn,
         shuffle_dataset(training_data);
 
 
-        float mini_batch_learning_rate = learning_rate / batch_size;
+        double mini_batch_learning_rate = learning_rate / batch_size;
 
         for (int i = 0; i <= training_nb - batch_size; i += batch_size) {
             update_mini_batch(nn, 
@@ -164,7 +164,7 @@ void train(NeuralNetwork *nn,
 }
 
 void update_mini_batch(NeuralNetwork *nn, 
-        dataset *data, float learning_rate,
+        dataset *data, double learning_rate,
         int start, int end,
         int multithread) {
     matrice **nabla_b = malloc(nn->nb_layers * sizeof(matrice *));
@@ -211,10 +211,10 @@ void update_mini_batch(NeuralNetwork *nn,
     // update NeuralNetwork weights
     for (int i = 0; i < nn->nb_layers; i++) {
         matrice_sub_inplace(nn->layers[i]->weights, 
-                matrice_multiply(nabla_w[i], (float)learning_rate));
+                matrice_multiply(nabla_w[i], (double)learning_rate));
 
         matrice_sub_inplace(nn->layers[i]->biases,
-                matrice_multiply(nabla_b[i], (float)learning_rate));
+                matrice_multiply(nabla_b[i], (double)learning_rate));
 
         matrice_free(nabla_b[i]);
         matrice_free(nabla_w[i]);
@@ -309,7 +309,7 @@ void backprop(NeuralNetwork *nn,
     free(activations);
 }
 
-float evaluate(NeuralNetwork *nn, 
+double evaluate(NeuralNetwork *nn, 
         dataset *data, 
         int verbose) {
     int correct = 0;
@@ -324,8 +324,8 @@ float evaluate(NeuralNetwork *nn,
 
         // compute accuracy
         matrice *error = matrice_sub(outputs[i] , data->targets[i]); // error = output - target
-        matrice_map(error, floatabs);
-        float acc = 1 - matrice_sum(error) / target_size; // accuracy = 1 - mean(abs(error))
+        matrice_map(error, doubleabs);
+        double acc = 1 - matrice_sum(error) / target_size; // accuracy = 1 - mean(abs(error))
 
         matrice_set(accuracy_matrice, 0, i, acc);
 
@@ -341,7 +341,7 @@ float evaluate(NeuralNetwork *nn,
         matrice_free(error);
     }
 
-    float accuracy = matrice_sum(accuracy_matrice) / (float) total;
+    double accuracy = matrice_sum(accuracy_matrice) / (double) total;
 
     if (verbose > 0) {
         printf("%i / %i correct (%.2f%%)\n", 
@@ -361,9 +361,9 @@ float evaluate(NeuralNetwork *nn,
 }
 
 void apply_learning_rate_decay(int epoch, 
-                               float *learning_rate, 
+                               double *learning_rate, 
                                int verbose,
-                               float decay_rate) {
+                               double decay_rate) {
 
     if (*learning_rate < 0.000001 || *learning_rate > 10000000){
         // this is to prevent the learning rate from exploding or vanishing

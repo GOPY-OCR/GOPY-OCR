@@ -1,26 +1,26 @@
 #include "maths.h"
 
-float sigmoid(float x) { 
+double sigmoid(double x) { 
     return 1 / (1 + exp(-x)); 
 }
 
-float sigmoid_prime(float x) {
-    float s = sigmoid(x);
+double sigmoid_prime(double x) {
+    double s = sigmoid(x);
     return s * (1 - s);
 }
 
-float floatabs(float x) { 
+double doubleabs(double x) { 
     return x < 0 ? -x : x; 
 }
 
-float degree_to_radian(float degree){
+double degree_to_radian(double degree){
     return degree * M_PI / 180;
 }
 
-float cos_degree(float degree){
+double cos_degree(double degree){
     return cos(degree_to_radian(degree));
 }
-float sin_degree(float degree){
+double sin_degree(double degree){
     return sin(degree_to_radian(degree));
 }
 

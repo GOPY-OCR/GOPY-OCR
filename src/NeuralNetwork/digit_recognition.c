@@ -37,7 +37,7 @@ int digit_recognition_main(int argc, char **argv, int verbose){
     if (argc > 3){
         epochs = atoi(argv[3]);
     }
-    float learning_rate = LEARNING_RATE;
+    double learning_rate = LEARNING_RATE;
     if (argc > 4){
         learning_rate = atof(argv[4]);
     }

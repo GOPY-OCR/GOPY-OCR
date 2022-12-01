@@ -5,11 +5,11 @@
 #include <stdlib.h>
 #include <err.h>
 
-char *float_to_string(float d);
+char *double_to_string(double d);
 
 void write_to_file(char *filename, char *data);
 
 char *read_from_file(char *filename);
 
 
-char *serialize_float(float f);
+char *serialize_double(double f);

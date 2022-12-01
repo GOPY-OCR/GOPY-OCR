@@ -1,6 +1,6 @@
 #include "str_utils.h"
 
-#define DOUBLE_PRECISION 13
+#define DOUBLE_PRECISION 14
 
 void remove_trailing_zeros(char *str) {
     char *p = str;
@@ -16,9 +16,9 @@ void remove_trailing_zeros(char *str) {
     }
 }
 
-#define MAX_FLOAT_STR_LEN 100
-char *float_to_string(float f) {
-    char *str = malloc(MAX_FLOAT_STR_LEN);
+#define MAX_DOUBLE_STR_LEN 100
+char *double_to_string(double f) {
+    char *str = malloc(MAX_DOUBLE_STR_LEN);
 
     sprintf(str, "%.*f", DOUBLE_PRECISION, f);
 
@@ -27,8 +27,8 @@ char *float_to_string(float f) {
     return str;
 }
 
-char *serialize_float(float f){
-    char *str = malloc(MAX_FLOAT_STR_LEN);
+char *serialize_double(double f){
+    char *str = malloc(MAX_DOUBLE_STR_LEN);
     
     sprintf(str, "%.*g", DOUBLE_PRECISION, f);
 
