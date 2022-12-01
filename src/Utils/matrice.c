@@ -165,7 +165,26 @@ int matrice_equals(matrice *m1, matrice *m2) {
     return 1;
 }
 
+int matrice_equals_epsilon(matrice *m1, matrice *m2, double epsilon) {
+    if (m1->rows != m2->rows || m1->columns != m2->columns)
+        return 0;
+
+    for (int i = 0; i < m1->rows; i++) {
+        for (int j = 0; j < m1->columns; j++) {
+            if (fabs(matrice_get(m1, i, j) - matrice_get(m2, i, j)) > epsilon)
+                return 0;
+        }
+    }
+
+    return 1;
+}
+
 matrice *matrice_dot(matrice *m1, matrice *m2) {
+    if (m1->columns != m2->rows)
+        errx(EXIT_FAILURE, "matrice_dot: incompatible matrice sizes (m1: %d x %d, "
+                           "m2: %d x %d)",
+             m1->rows, m1->columns, m2->rows, m2->columns);
+
     matrice *m = matrice_new(m1->rows, m2->columns);
     for (int i = 0; i < m1->rows; i++) {
         for (int j = 0; j < m2->columns; j++) {
@@ -177,6 +196,53 @@ matrice *matrice_dot(matrice *m1, matrice *m2) {
         }
     }
     return m;
+}
+
+// source: www.researchgate.net/publication/220337322_An_Efficient_and_Simple_Algorithm_for_Matrix_Inversion
+matrice *matrice_invert(matrice *m){
+    if (m->rows != m->columns)
+        errx(EXIT_FAILURE, "matrice_invert: matrice is not square (m is %ix%i)",
+                m->rows, m->columns);
+
+    double pivot, det = 1.0;
+    int i, p, j;
+    int size = m->rows;
+    matrice *inv = matrice_clone(m);
+    for(p = 0; p < size; p++){
+        pivot = matrice_get(inv, p, p);
+        det *= pivot;
+
+        if(doubleabs(pivot) < 1e-5){
+            errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible\n%s",
+                    matrice_serialize(m, "m"));
+        }
+
+        for(i = 0; i < size; i++){
+            *matrice_get_ref(inv, i, p) /= -pivot;
+        }
+
+        for(i = 0; i < size; i++){
+            if(i != p)
+                for(j = 0; j < size; j++)
+                    if(j != p){
+                        float tmp = matrice_get(inv, p, j) * matrice_get(inv, i, p);
+                        *matrice_get_ref(inv, i, j) += tmp;
+                    }
+        }
+
+        for(j = 0; j < size; j++){
+            *matrice_get_ref(inv, p, j) /= pivot;
+        }
+
+        *matrice_get_ref(inv, p, p) = 1 / pivot;
+    }
+
+    if(doubleabs(det) < 1e-5){
+            errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible\n%s",
+                    matrice_serialize(m, "m"));
+    }
+
+    return inv;
 }
 
 matrice *matrice_elementwise_inner(matrice *m1, matrice *m2,
