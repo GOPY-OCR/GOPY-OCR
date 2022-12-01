@@ -142,7 +142,7 @@ Test(matrices, test_scalar_multiply) {
     cr_assert(matrice_equals(m1, expected), "Matrices are not equal");
 }
 
-float multiply_by_two(float x) { return x * 2; }
+double multiply_by_two(double x) { return x * 2; }
 
 Test(matrices, test_map) {
     setup();
@@ -202,7 +202,7 @@ Test(matrices, test_max) {
     int i;
     int j;
 
-    float *max = matrice_max(m1, &i, &j);
+    double *max = matrice_max(m1, &i, &j);
 
     cr_assert(i == 1 && j == 1, "Max is not in the right place");
     cr_assert(*max == 4, "Max is not equal to 4");
@@ -233,7 +233,7 @@ Test(matrices, test_max_no_index) {
     // value, so we should be able to pass NULL
     // as the index parameters
 
-    float *max = matrice_max(m1, NULL, NULL);
+    double *max = matrice_max(m1, NULL, NULL);
 
     cr_assert(*max == 4, "Max is not equal to 4");
 }
@@ -241,7 +241,7 @@ Test(matrices, test_max_no_index) {
 Test(matrices, test_sum) {
     setup();
 
-    float sum = matrice_sum(m1);
+    double sum = matrice_sum(m1);
 
     cr_assert(sum == 10, "Sum is not equal to 10");
 }
@@ -249,7 +249,7 @@ Test(matrices, test_sum) {
 Test(matrices, test_mean){
     setup();
 
-    float mean = matrice_mean(m1);
+    double mean = matrice_mean(m1);
 
     cr_assert(mean == 2.5, "Mean is not equal to 2.5");
 }
@@ -257,7 +257,7 @@ Test(matrices, test_mean){
 Test(matrices, test_std){
     setup();
 
-    float std = matrice_std(m1);
+    double std = matrice_std(m1);
 
     cr_assert(std - 1.11803 < 0.00001, "Std is not equal to 1.118033988749895");
 }
