@@ -23,6 +23,9 @@
 #include "Preprocess/flood_fill.h"
 #include "Preprocess/debug_utils.h"
 
+// Perspective correction part
+#include "Preprocess/perspective_correction.h"
+
 // Cut part
 #include "Preprocess/split.h"
 

@@ -3,21 +3,22 @@
 
 void exit_help(int error) {
     char msg[] = "Usage: demonstrate OPTION [FILE]\n"
-                 "  -h,  --help                 Show this help\n"
-                 "  -g,  --grayscale IMG        Save the graysaled image in `IMG_grayscaled.png`\n"
-                 "  -cb, --contrast-brightness  Save the image with corrected contrast, brightness\n"
-                 "                              and noise reduced in `IMG_contrast.png`\n"
-                 "  -r,  --rotate IMG ANGLE     Save the rotated image with the given angle\n"
-                 "                              in `IMG_ANGLE_rotated.png`\n"
-                 "  -ar,  --auto-rotate IMG     Save the rotated image\n"
-                 "                              in `IMG_ANGLE_auto_rotated.png`\n"
-                 "  -b,  --binarization IMG     Save the binarized image in `IMG_bin.png`\n"
-                 "  -d,  --detect-grid IMG      Save the detected grid in `IMG_detected_grid.png`\n"
-                 "  -c,  --cut IMG              Save the images in `IMG_X.png`\n"
-                 "  -s,  --solve GRID           Save the result in `GRID.result`\n"
-                 "  -n,  --neural-network       Show a proof of concept of the neural network\n"
-                 "                              Type `-n` to show help message about neural network\n"
-                 "  -p   --postprocess GRID \\  Generate an image of the solved grid\n"
+                 "  -h,  --help                    Show this help\n"
+                 "  -g,  --grayscale IMG           Save the graysaled image in `IMG_grayscaled.png`\n"
+                 "  -cb, --contrast-brightness     Save the image with corrected contrast, brightness\n"
+                 "                                 and noise reduced in `IMG_contrast.png`\n"
+                 "  -r,  --rotate IMG ANGLE        Save the rotated image with the given angle\n"
+                 "                                 in `IMG_ANGLE_rotated.png`\n"
+                 "  -ar,  --auto-rotate IMG        Save the rotated image\n"
+                 "                                 in `IMG_ANGLE_auto_rotated.png`\n"
+                 "  -b,  --binarization IMG        Save the binarized image in `IMG_bin.png`\n"
+                 "  -d,  --detect-grid IMG         Save the detected grid in `IMG_detected_grid.png`\n"
+                 "  -pc, --perspective-correct IMG Save the perspective correction of IMG\n"
+                 "  -c,  --cut IMG                 Save the images in `IMG_X.png`\n"
+                 "  -s,  --solve GRID              Save the result in `GRID.result`\n"
+                 "  -n,  --neural-network          Show a proof of concept of the neural network\n"
+                 "                                 Type `-n` to show help message about neural network\n"
+                 "  -p   --postprocess GRID \\     Generate an image of the solved grid\n"
                  "              SOLVED OUTPUT\n";
     
     if (error != 0) {
@@ -168,6 +169,28 @@ int main(int argc, char **argv) {
 
         free(final_name);
         SDL_FreeSurface(image);
+    }
+
+    else if (strcmp(argv[1], "--perspective-correct") == 0 || strcmp(argv[1], "-pc") == 0) {
+        printf("Show perspective correction...\n");
+
+        if (argc != 3)
+            exit_help(1);
+
+        char *final_name = format_final_name(argv[2], "perspective");
+
+        SDL_Surface *image = load_image(argv[2]);
+        resize(&image);
+        surface_to_grayscale(image);
+        correct_brightness(image);
+        binarize(image);
+        Quad grid = grid_detection(image, 0);
+        SDL_Surface *corrected = perspective_correction(image, &grid);
+        save_image(corrected, final_name);
+
+        free(final_name);
+        SDL_FreeSurface(image);
+        SDL_FreeSurface(corrected);
     }
 
     else if (strcmp(argv[1], "--cut") == 0 || strcmp(argv[1], "-c") == 0) {
