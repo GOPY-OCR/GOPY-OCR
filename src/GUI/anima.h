@@ -1,6 +1,6 @@
-//#include <gtk.h>
+#include <gtk.h>
 
-//void page_2_init(GtkBuilder *builder);
+void anima_init(GtkBuilder *builder);
+G_MODULE_EXPORT void on_PreviousButton_clicked(GtkButton *button, gpointer user_data);
+G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data);
 
-
-//G_MODULE_EXPORT void on_CancelButton1_clicked(GtkButton *button, gpointer user_data);

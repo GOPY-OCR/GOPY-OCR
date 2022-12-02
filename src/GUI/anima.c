@@ -1,17 +1,25 @@
-//#include "anima.h"
+#include "anima.h"
 
-//GtkWidget *CancelButton1;
-//GtkWidget *ContinueButton1;
 
-//void page_2_init(GtkBuilder *builder){
-   //CancelButton1 = GTK_WIDGET(gtk_builder_get_object(builder, "Cancel1"));
-  // ContinueButton1 = GTK_WIDGET(gtk_builder_get_object(builder, "Continue1"));
+GtkWidget *PreviousButton;
+GtkWidget *SaveButton;
 
-   // g_signal_connect(CancelButton1, "clicked", G_CALLBACK(on_CancelButton1_clicked), NULL);
 
-//}
+void anima_init(GtkBuilder *builder)
+{
+    PreviousButton = GTK_WIDGET(gtk_builder_get_object(builder, "Previous"));
+    SaveButton = GTK_WIDGET(gtk_builder_get_object(builder, "Save"));
 
-//G_MODULE_EXPORT void on_CancelButton1_clicked(GtkButton *button, gpointer user_data){
-//    clear_image();
-//    prev_page();
-//}
+    g_signal_connect(PreviousButton, "clicked", G_CALLBACK(on_PreviousButton_clicked), NULL);
+    g_signal_connect(SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), NULL);
+}
+
+
+G_MODULE_EXPORT void on_PreviousButton_clicked(GtkButton *button, gpointer user_data)
+{
+    clear_image();
+    prev_page();
+}
+
+
+G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data);
