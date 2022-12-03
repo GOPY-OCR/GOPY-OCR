@@ -187,12 +187,11 @@ int main(int argc, char **argv) {
         correct_brightness(image);
         binarize(image);
         Quad grid = grid_detection(image, 0);
-        SDL_Surface *corrected = perspective_correction(image, &grid);
-        save_image(corrected, final_name);
+        perspective_correction(&image, &grid);
+        save_image(image, final_name);
 
         free(final_name);
         SDL_FreeSurface(image);
-        SDL_FreeSurface(corrected);
     }
 
     else if (strcmp(argv[1], "--cut") == 0 || strcmp(argv[1], "-c") == 0) {

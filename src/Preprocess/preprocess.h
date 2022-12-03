@@ -7,10 +7,10 @@
 #include "grayscale.h"
 #include "brightness.h"
 #include "binarize.h"
-// Include here the interpolation part
+#include "perspective_correction.h"
 #include "grid_detection.h"
 #include "rotation.h"
-// Include here the cropping
+#include "resize.h"
 #include "split.h"
 
 SDL_Surface **preprocess(const char *filename);
