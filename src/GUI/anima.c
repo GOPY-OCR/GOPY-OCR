@@ -1,4 +1,5 @@
 #include "anima.h"
+#include <gtk/gtk.h>
 
 
 GtkWidget *PreviousButton;
