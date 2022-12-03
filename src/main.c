@@ -4,6 +4,7 @@
 void exit_help(int error) {
     char msg[] = "Usage: demonstrate OPTION [FILE]\n"
                  "  -h,    --help                    Show this help\n"
+                 "  -re,   --resize                  Resize the image to a 500x500 image to speed up the preprocess\n"
                  "  -g,    --grayscale IMG           Save the graysaled image in `IMG_grayscaled.png`\n"
                  "  -cb,   --contrast-brightness IMG Save the image with corrected contrast, brightness\n"
                  "                                   and noise reduced in `IMG_contrast.png`\n"
@@ -66,6 +67,22 @@ int main(int argc, char **argv) {
 
     if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
         exit_help(0);
+    }
+
+    else if (strcmp(argv[1], "--resize") == 0 || strcmp(argv[1], "-re") == 0) {
+        printf("Show resizing...\n");
+
+        if (argc != 3)
+            exit_help(1);
+
+        char *final_name = format_final_name(argv[2], "resized");
+
+        SDL_Surface *image = load_image(argv[2]);
+        resize(&image);
+        save_image(image, final_name);
+
+        free(final_name);
+        SDL_FreeSurface(image);
     }
     
     else if (strcmp(argv[1], "--grayscale") == 0 || strcmp(argv[1], "-g") == 0) {
