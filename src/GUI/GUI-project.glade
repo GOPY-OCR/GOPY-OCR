@@ -166,9 +166,6 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
-            </child>
-            <child>
               <object class="GtkButtonBox" id="ButtonBar">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -207,10 +204,13 @@
             </child>
           </object>
           <packing>
-            <property name="name">page2</property>
-            <property name="title" translatable="yes">page2</property>
+            <property name="name">Anima</property>
+            <property name="title" translatable="yes">Anima</property>
             <property name="position">2</property>
           </packing>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
     </child>
