@@ -3,22 +3,23 @@
 
 void exit_help(int error) {
     char msg[] = "Usage: demonstrate OPTION [FILE]\n"
-                 "  -h,  --help                    Show this help\n"
-                 "  -g,  --grayscale IMG           Save the graysaled image in `IMG_grayscaled.png`\n"
-                 "  -cb, --contrast-brightness IMG Save the image with corrected contrast, brightness\n"
-                 "                                 and noise reduced in `IMG_contrast.png`\n"
-                 "  -r,  --rotate IMG ANGLE        Save the rotated image with the given angle\n"
-                 "                                 in `IMG_ANGLE_rotated.png`\n"
-                 "  -ar,  --auto-rotate IMG        Save the rotated image\n"
-                 "                                 in `IMG_ANGLE_auto_rotated.png`\n"
-                 "  -b,  --binarization IMG        Save the binarized image in `IMG_bin.png`\n"
-                 "  -d,  --detect-grid IMG         Save the detected grid in `IMG_detected_grid.png`\n"
-                 "  -pc, --perspective-correct IMG Save the perspective correction of IMG\n"
-                 "  -c,  --cut IMG                 Save the images in `IMG_X.png`\n"
-                 "  -s,  --solve GRID              Save the result in `GRID.result`\n"
-                 "  -n,  --neural-network          Show a proof of concept of the neural network\n"
-                 "                                 Type `-n` to show help message about neural network\n"
-                 "  -p   --postprocess GRID \\     Generate an image of the solved grid\n"
+                 "  -h,    --help                    Show this help\n"
+                 "  -g,    --grayscale IMG           Save the graysaled image in `IMG_grayscaled.png`\n"
+                 "  -cb,   --contrast-brightness IMG Save the image with corrected contrast, brightness\n"
+                 "                                   and noise reduced in `IMG_contrast.png`\n"
+                 "  -b,    --binarization IMG        Save the binarized image in `IMG_bin.png`\n"
+                 "  -r,    --rotate IMG ANGLE        Save the rotated image with the given angle\n"
+                 "                                   in `IMG_ANGLE_rotated.png`\n"
+                 "  -ar,   --auto-rotate IMG         Save the rotated image\n"
+                 "                                   in `IMG_ANGLE_auto_rotated.png`\n"
+                 "  -d,    --detect-grid IMG         Save the detected grid in `IMG_detected_grid.png`\n"
+                 "  -pc,   --perspective-correct IMG Save the perspective correction of IMG\n"
+                 "  -c,    --cut IMG                 Save the images in `IMG_X.png`\n"
+                 "  -s,    --solve GRID              Save the result in `GRID.result`\n"
+                 "  -N,    --neural-network          Show a proof of concept of the neural network\n"
+                 "                                   Type `-N` to show help message about neural network\n"
+                 "  -Pre,  --preprocess IMG          Execute the whole preprocess\n"
+                 "  -Post, --postprocess GRID \\     Generate an image of the solved grid\n"
                  "              SOLVED OUTPUT\n";
     
     if (error != 0) {
@@ -233,7 +234,7 @@ int main(int argc, char **argv) {
         free(board);
     }
     
-    else if (strcmp(argv[1], "--neural-network") == 0 || strcmp(argv[1], "-n") == 0) {
+    else if (strcmp(argv[1], "--neural-network") == 0 || strcmp(argv[1], "-N") == 0) {
         printf("Show neural network...\n");
 
         int verbose = argc > 2 && strcmp(argv[2], "-v") == 0 ? 2 : 1;
@@ -242,7 +243,20 @@ int main(int argc, char **argv) {
         xor_main(verbose, argc - args_offset, argv + args_offset);
     }
 
-    else if (strcmp(argv[1], "--postprocess") == 0 || strcmp(argv[1], "-p") == 0) {
+    else if (strcmp(argv[1], "--preprocess") == 0 || strcmp(argv[1], "-Pre") == 0) {
+        printf("Execute the whole preprocess...\n");
+
+        if (argc != 3)
+            exit_help(1);
+
+        SDL_Surface **grid = preprocess(argv[2]);
+        for (size_t i = 0; i < 81; i++)
+            free(grid[i]);
+
+        free(grid);
+    }
+
+    else if (strcmp(argv[1], "--postprocess") == 0 || strcmp(argv[1], "-Post") == 0) {
         printf("Generate solved image of the sudoku...\n");
 
         if (argc != 5)
