@@ -94,25 +94,8 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "grayscaled");
 
         SDL_Surface *image = load_image(argv[2]);
+        resize(&image);
         surface_to_grayscale(image);
-        save_image(image, final_name);
-
-        free(final_name);
-        SDL_FreeSurface(image);
-    }
-    
-    else if (strcmp(argv[1], "--binarization") == 0 || strcmp(argv[1], "-b") == 0) {
-        printf("Show binarization...\n");
-
-        if (argc != 3)
-            exit_help(1);
-
-        char *final_name = format_final_name(argv[2], "bin");
-
-        SDL_Surface *image = load_image(argv[2]);
-        surface_to_grayscale(image);
-        correct_brightness(image);
-        binarize(image);
         save_image(image, final_name);
 
         free(final_name);
@@ -128,8 +111,48 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "contrast");
 
         SDL_Surface *image = load_image(argv[2]);
+        resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
+        save_image(image, final_name);
+
+        free(final_name);
+        SDL_FreeSurface(image);
+    }
+    
+    else if (strcmp(argv[1], "--binarization") == 0 || strcmp(argv[1], "-b") == 0) {
+        printf("Show binarization...\n");
+
+        if (argc != 3)
+            exit_help(1);
+
+        char *final_name = format_final_name(argv[2], "bin");
+
+        SDL_Surface *image = load_image(argv[2]);
+        resize(&image);
+        surface_to_grayscale(image);
+        correct_brightness(image);
+        binarize(image);
+        save_image(image, final_name);
+
+        free(final_name);
+        SDL_FreeSurface(image);
+    }
+
+    else if (strcmp(argv[1], "--detect-grid") == 0 || strcmp(argv[1], "-d") == 0) {
+        printf("Show grid detection...\n");
+
+        if (argc != 3)
+            exit_help(1);
+
+        char *final_name = format_final_name(argv[2], "detected_grid");
+
+        SDL_Surface *image = load_image(argv[2]);
+        resize(&image);
+        surface_to_grayscale(image);
+        correct_brightness(image);
+        binarize(image);
+        grid_detection(image, 1);
         save_image(image, final_name);
 
         free(final_name);
@@ -155,7 +178,7 @@ int main(int argc, char **argv) {
         SDL_FreeSurface(image);
     }
     
-    else if (strcmp(argv[1], "--rotate") == 0 || strcmp(argv[1], "-ar") == 0) {
+    else if (strcmp(argv[1], "--auto-rotate") == 0 || strcmp(argv[1], "-ar") == 0) {
         printf("Show automatic rotation...\n");
 
         if (argc != 3)
@@ -164,29 +187,12 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "auto_rotated");
 
         SDL_Surface *image = load_image(argv[2]);
+        resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
         binarize(image);
         automatic_rot(&image);
         save_image(image, final_name);
-        SDL_FreeSurface(image);
-    }
-    else if (strcmp(argv[1], "--detect-grid") == 0 || strcmp(argv[1], "-d") == 0) {
-        printf("Show grid detection...\n");
-
-        if (argc != 3)
-            exit_help(1);
-
-        char *final_name = format_final_name(argv[2], "detected_grid");
-
-        SDL_Surface *image = load_image(argv[2]);
-        surface_to_grayscale(image);
-        correct_brightness(image);
-        binarize(image);
-        grid_detection(image, 1);
-        save_image(image, final_name);
-
-        free(final_name);
         SDL_FreeSurface(image);
     }
 
@@ -203,6 +209,7 @@ int main(int argc, char **argv) {
         surface_to_grayscale(image);
         correct_brightness(image);
         binarize(image);
+        automatic_rot(&image);
         Quad grid = grid_detection(image, 0);
         perspective_correction(&image, &grid);
         save_image(image, final_name);
@@ -218,6 +225,13 @@ int main(int argc, char **argv) {
             exit_help(1);
 
         SDL_Surface *image = load_image(argv[2]);
+        resize(&image);
+        surface_to_grayscale(image);
+        correct_brightness(image);
+        binarize(image);
+        automatic_rot(&image);
+        Quad grid = grid_detection(image, 0);
+        perspective_correction(&image, &grid);
         SDL_Surface **splitted = split_sudoku(image);
 
         for (size_t i = 0; i < 81; i++) {
@@ -230,6 +244,8 @@ int main(int argc, char **argv) {
             free(final_name);
             SDL_FreeSurface(splitted[i]);
         }
+
+        SDL_FreeSurface(image);
     }
     
     else if (strcmp(argv[1], "--solve") == 0 || strcmp(argv[1], "-s") == 0) {
@@ -266,6 +282,12 @@ int main(int argc, char **argv) {
             exit_help(1);
 
         SDL_Surface **grid = preprocess(argv[2]);
+        char *final_name_1 = format_final_name(argv[2], "up_left");
+        save_image(grid[3], final_name_1);
+        free(final_name_1);
+        char *final_name_2 = format_final_name(argv[2], "down_right");
+        save_image(grid[80], final_name_2);
+        free(final_name_2);
         for (size_t i = 0; i < 81; i++)
             free(grid[i]);
 
