@@ -1,13 +1,15 @@
 #include "morphology.h"
-
+#define SIZE_SIDE_FILTER 20
 const int FILTER[] = {
-    0, 0, 1, 1, 1, 0, 0,
-    0, 1, 1, 1, 1, 1, 0,
-    1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1,
-    0, 1, 1, 1, 1, 1, 0,
-    0, 0, 1, 1, 1, 0, 0
+    0, 0, 0, 1, 1, 1, 0, 0, 0,
+    0, 0, 1, 1, 1, 1, 1, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 1, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1,
+    0, 1, 1, 1, 1, 1, 1, 1, 0,
+    0, 0, 1, 1, 1, 1, 1, 0, 0,
+    0, 0, 0, 1, 1, 1, 0, 0, 0
 };
 
 
@@ -20,8 +22,8 @@ Uint32 max_color_pixels(SDL_Surface *surface, int x, int y) {
     y -= SIZE_SIDE_FILTER / 2;
 
     for (size_t i = 0; i < SIZE_SIDE_FILTER * SIZE_SIDE_FILTER; i++) {
-        if (FILTER[i] == 0)
-            continue;
+        //if (FILTER[i] == 0)
+        //    continue;
 
         Uint32 *cur = getpixel(surface, x + i % SIZE_SIDE_FILTER, 
                                             y + i / SIZE_SIDE_FILTER);
@@ -41,8 +43,8 @@ Uint32 min_color_pixels(SDL_Surface *surface, int x, int y) {
     y -= SIZE_SIDE_FILTER / 2;
 
     for (size_t i = 0; i < SIZE_SIDE_FILTER * SIZE_SIDE_FILTER; i++) {
-        if (FILTER[i] == 0)
-            continue;
+        //if (FILTER[i] == 0)
+        //    continue;
 
         Uint32 *cur = getpixel(surface, x + i % SIZE_SIDE_FILTER, 
                                             y + i / SIZE_SIDE_FILTER);
