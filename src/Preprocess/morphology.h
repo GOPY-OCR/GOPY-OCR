@@ -5,7 +5,6 @@
 #include "sdl_utils.h"
 #include "pixel_utils.h"
 
-#define SIZE_SIDE_FILTER 7
 extern const int FILTER[];
 
 
