@@ -8,12 +8,11 @@
  * 3.  Grayscale
  * 4.  Noise reduction + contrasts correction
  * 5.  Binarization
- * 6.  Interpolation des images pas droites
+ * 6.  Automatic rotation
  * 7.  Grid detection
- * 8.  Automatic rotation
- * 9.  Crop the image
- * 10. Split the image in 81 small images
- * 11. Resize the image to 28x28 for the neural network
+ * 8.  Perspective correction of the image
+ * 9.  Split the image in 81 small images
+ * 10. Resize the image to 28x28 for the neural network
  */
 SDL_Surface **preprocess(const char *filename) {
     // 1.  Load the image as a SDL_Surface
@@ -21,7 +20,6 @@ SDL_Surface **preprocess(const char *filename) {
 
     // 2.  Resize the image to speed up the next functions
     resize(&image);
-
 
     // 3.  Grayscale
     surface_to_grayscale(image);
@@ -31,21 +29,20 @@ SDL_Surface **preprocess(const char *filename) {
 
     // 5.  Binarization
     binarize(image);
-    
-    // 6.  Interpolation des images pas droites
-    
-    // 7.  Grid detection
-    Quad coords = grid_detection(image, 0);
-    
-    // 8.  Automatic rotation
+
+    // 6.  Automatic rotation
     automatic_rot(&image);
-    
-    // 9.  Crop the image
-    
-    // 10. Split the image in 81 small images
+
+    // 7.  Grid detection
+    Quad coords = grid_detection(image, 1);
+
+    // 8.  Perspective correction of the image
+    perspective_correction(&image, &coords);
+
+    // 9.  Split the image in 81 small images
     SDL_Surface **splitted = split_sudoku(image);
-    
-    // 11. Resize the image to 28x28 for the neural network
+
+    // 10. Resize the image to 28x28 for the neural network
     neural_network_resize(splitted);
 
     return splitted;

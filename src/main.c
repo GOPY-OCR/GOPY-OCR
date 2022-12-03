@@ -283,7 +283,7 @@ int main(int argc, char **argv) {
 
         SDL_Surface **grid = preprocess(argv[2]);
         char *final_name_1 = format_final_name(argv[2], "up_left");
-        save_image(grid[3], final_name_1);
+        save_image(grid[0], final_name_1);
         free(final_name_1);
         char *final_name_2 = format_final_name(argv[2], "down_right");
         save_image(grid[80], final_name_2);
@@ -291,7 +291,7 @@ int main(int argc, char **argv) {
         for (size_t i = 0; i < 81; i++)
             free(grid[i]);
 
-        free(grid);
+        SDL_FreeSurface(grid);
     }
 
     else if (strcmp(argv[1], "--postprocess") == 0 || strcmp(argv[1], "-Post") == 0) {
