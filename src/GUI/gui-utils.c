@@ -1,38 +1,36 @@
-#include "main.h"
+#include "gui-utils.h"
 
-#define PAGES_NB 2
-
-GtkStack* Pages;
-int current_page = 0;
 char page_name[] = "page?";
 
-void init_gui_utils(GtkBuilder *builder)
+void init_gui_utils(Glob_GUI *glob)
 {
-    Pages = GTK_STACK(gtk_builder_get_object(builder,"pages"));
+    glob->Pages = GTK_STACK(gtk_builder_get_object(glob->builder,"pages"));
+    glob->current_page = 0;
+    glob->page_nb = 2;
 }
 
-void switch_page(int page)
+void switch_page(Glob_GUI *glob, int page)
 {
-    current_page = page;
+    glob->current_page = page;
     int replace_i = sizeof(page_name) - 2;
     page_name[replace_i] = '0' + page;
-    gtk_stack_set_visible_child_name(Pages, page_name);
+    gtk_stack_set_visible_child_name(glob->Pages, page_name);
 }
 
-void next_page()
+void next_page(Glob_GUI *glob)
 {
-    if (current_page < PAGES_NB - 1)
+    if (glob->current_page < glob->page_nb - 1)
     {
-        current_page++;
-        switch_page(current_page);
+        glob->current_page++;
+        switch_page(glob, glob->current_page);
     }
 }
 
-void prev_page()
+void prev_page(Glob_GUI *glob)
 {
-    if (current_page > 0)
+    if (glob->current_page > 0)
     {
-        current_page--;
-        switch_page(current_page);
+        glob->current_page--;
+        switch_page(glob, glob->current_page);
     }
 }

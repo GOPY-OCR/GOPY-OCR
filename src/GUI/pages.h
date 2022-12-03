@@ -5,6 +5,7 @@
 #include "page-1.h"
 #include "anima.h"
 #include "save.h"
+#include "glob_struct.h"
 
 
-void init_pages(GtkBuilder *builder);
+void init_pages(Glob_GUI *glob);

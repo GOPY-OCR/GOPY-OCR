@@ -5,9 +5,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include <gtk/gtkx.h>
 #include <math.h>
 #include <ctype.h>
 #include "sdl_utils.h"
 #include "gui-utils.h"
 #include "pages.h"
+#include "glob_struct.h"
