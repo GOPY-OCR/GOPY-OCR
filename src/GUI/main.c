@@ -2,35 +2,26 @@
 
 #define WINDOW_TITLE "GOPY - A Fully Automated Sudoku Solver"
 
-//Main Menu
-GtkWidget* window;
-GtkWidget* Image;
-
-//fin des déclarations
-
-GtkBuilder* builder;
 
 int main(int argc, char* argv[])
 {
-	gtk_init(&argc, &argv);
-	builder = gtk_builder_new_from_file("GUI-project.glade");
-	window = GTK_WIDGET(gtk_builder_get_object(builder,"main"));
-	g_signal_connect(window,"destroy",G_CALLBACK(gtk_main_quit),NULL);
-	
-	gtk_builder_connect_signals(builder,NULL);
+    Glob_GUI *glob = malloc(sizeof(Glob_GUI));
+    gtk_init(&argc, &argv);
+    glob->builder = gtk_builder_new_from_file("GUI-project.glade");
+    glob->main = GTK_WIDGET(gtk_builder_get_object(glob->builder,"main"));
+    g_signal_connect(glob->main,"destroy",G_CALLBACK(gtk_main_quit),NULL);
 
-        // Set the title
-        gtk_window_set_title(GTK_WINDOW(window), WINDOW_TITLE);
+    gtk_builder_connect_signals(glob->builder,NULL);
 
-        Image = GTK_WIDGET(gtk_builder_get_object(builder,"Image"));
+    // Set the title
+    gtk_window_set_title(GTK_WINDOW(glob->main), WINDOW_TITLE);
 
-        init_gui_utils(builder);
-        init_pages(builder);
+    glob->Image = GTK_IMAGE(gtk_builder_get_object(glob->builder,"Image"));
 
-	gtk_widget_show(window);
-	gtk_main();
-	return EXIT_SUCCESS;
+    init_gui_utils(glob);
+    init_pages(glob);
+
+    gtk_widget_show(GTK_WIDGET(glob->main));
+    gtk_main();
+    return EXIT_SUCCESS;
 }
-
-
-
