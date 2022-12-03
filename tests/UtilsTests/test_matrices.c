@@ -1,6 +1,6 @@
 #include "matrice.h"
 
-matrice *m1, *m2, *m3, *m4, *big1, *big2, *weird;
+matrice *m1, *m2, *m3, *m4, *m5, *big1, *big2, *weird;
 char *serialized_big1, *serialized_m1;
 
 void setup(void) {
@@ -16,6 +16,9 @@ void setup(void) {
     m4 = matrice_from_string("1 2,"
                              "3 4,"
                              "5 6");
+    m5 = matrice_from_string("1 2 3,"
+                             "4 5 6,"
+                             "7 2 9");
 
     big1 = matrice_from_string("9.123 12.73 8129 837 2871 1 2 3 4,"
                                "1 2 3 4 5 6 7 8 9,"
@@ -47,6 +50,14 @@ void assert_matrices_equals(matrice *m1, matrice *m2) {
     char *s1 = matrice_serialize(m1, "m1");
     char *s2 = matrice_serialize(m2, "m2");
     cr_assert(eq, "%sis not equal to\n%s", s1, s2);
+}
+
+#define MATRICE_EPSILON 0.000002
+void assert_matrices_almost_equals(matrice *m1, matrice *m2) {
+    int eq = matrice_equals_epsilon(m1, m2, MATRICE_EPSILON);
+    char *s1 = matrice_serialize(m1, "m1");
+    char *s2 = matrice_serialize(m2, "m2");
+    cr_assert(eq, "%sis not almost equal to\n%s(epsilon = %f)", s1, s2, MATRICE_EPSILON);
 }
 
 Test(matrices, test_from_string) {
@@ -320,4 +331,38 @@ Test(matrices, test_csv_read_write) {
     matrice_to_csv(big2, filename, message);
     m = matrice_read_csv(filename);
     assert_matrices_equals(m, big2);
+}
+
+Test(matrices, test_matrice_invert){
+    setup();
+
+    matrice *m = matrice_from_string("4 7,"
+                                     "2 6");
+    matrice *expected = matrice_from_string("0.6 -0.7,"
+                                            "-0.2 0.4");
+    matrice *result = matrice_invert(m);
+    assert_matrices_almost_equals(result, expected);
+
+
+    matrice *m1inv = matrice_from_string("-2 1,"
+                                         "1.5 -0.5");
+    result = matrice_invert(m1);
+    assert_matrices_almost_equals(result, m1inv);
+
+    matrice *m5inv = matrice_from_string("-0.91666667 0.33333333 0.083333333,"
+                                         "-0.16666667 0.33333333 -0.16666667,"
+                                         "0.750000000 -0.33333333 0.083333333");
+    result = matrice_invert(m5);
+    assert_matrices_almost_equals(result, m5inv);
+
+    
+
+    result = matrice_invert(matrice_invert(m));
+    assert_matrices_almost_equals(result, m);
+
+    result = matrice_invert(matrice_invert(m1));
+    assert_matrices_almost_equals(result, m1);
+
+    result = matrice_invert(matrice_invert(m5));
+    assert_matrices_almost_equals(result, m5);
 }
