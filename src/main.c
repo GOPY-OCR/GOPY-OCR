@@ -5,7 +5,7 @@ void exit_help(int error) {
     char msg[] = "Usage: demonstrate OPTION [FILE]\n"
                  "  -h,  --help                    Show this help\n"
                  "  -g,  --grayscale IMG           Save the graysaled image in `IMG_grayscaled.png`\n"
-                 "  -cb, --contrast-brightness     Save the image with corrected contrast, brightness\n"
+                 "  -cb, --contrast-brightness IMG Save the image with corrected contrast, brightness\n"
                  "                                 and noise reduced in `IMG_contrast.png`\n"
                  "  -r,  --rotate IMG ANGLE        Save the rotated image with the given angle\n"
                  "                                 in `IMG_ANGLE_rotated.png`\n"
