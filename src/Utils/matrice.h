@@ -1,16 +1,15 @@
 #pragma once
 #include "str_utils.h"
+#include "matrice_multithread.h"
+#include "matrice_type.h"
+#include "str_utils.h"
 #include "maths.h"
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <maths.h>
 
-typedef struct matrice {
-    int rows;
-    int columns;
-    double *data;
-} matrice;
 
 matrice *matrice_new(int rows, int columns);
 void matrice_free(matrice *m);
@@ -20,7 +19,7 @@ void matrice_print(matrice *m);
 matrice *matrice_from_string(char *str);
 
 char *matrice_serialize(matrice *m, char *name);
-matrice *matrice_deserialize(char *str);
+matrice *matrice_deserialize(char *str, char **endptr);
 
 void matrice_to_csv(matrice *m, char *filename, char *name);
 matrice *matrice_read_csv(char *filename);
@@ -53,6 +52,12 @@ matrice *matrice_mul(matrice *m1, matrice *m2);
 matrice *matrice_map(matrice *m, double (*f)(double));
 matrice *matrice_multiply(matrice *m, double scalar);
 
+void matrice_add_inplace(matrice *dest, matrice *source);
+void matrice_sub_inplace(matrice *dest, matrice *source);
+
 double *matrice_max(matrice *m, int *row, int *column);
 
 double matrice_sum(matrice *m);
+double matrice_mean(matrice *m);
+// std = standard deviation = écart type = sqrt(variance)
+double matrice_std(matrice *m);

@@ -1,10 +1,12 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "maths.h"
 #include "matrice.h"
 #include "str_utils.h"
 #include "sdl_utils.h"
+#include "cost_functions.h"
 
 typedef struct Layer {
     matrice *weights;
@@ -14,6 +16,7 @@ typedef struct Layer {
 typedef struct NeuralNetwork {
     int nb_layers;
     Layer **layers;
+    CostFunction cost_function;
 } NeuralNetwork;
 
 Layer *create_layer(int nb_neurons, int nb_inputs);
@@ -34,6 +37,8 @@ void free_neural_network(NeuralNetwork *nn);
 
 
 void save_neural_network(NeuralNetwork *nn, char *filename);
+// Loads a neural network from a file
+// Returns NULL if the file doesn't exist
 NeuralNetwork *load_neural_network(char *filename);
 
 

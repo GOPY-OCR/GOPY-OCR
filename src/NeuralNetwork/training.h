@@ -1,10 +1,13 @@
 #pragma once
 #include "maths.h"
 #include "matrice.h"
+#include "matrice_multithread.h"
 #include "neural_network.h"
 #include "sdl_utils.h"
 #include "dataset.h"
 #include "progress_bar.h"
+#include "str_utils.h"
+#include <pthread.h>
 
 // trains the neural network with the given training data
 // by calling the update_mini_batch function repeatedly
@@ -19,21 +22,36 @@
 //		  3 = per testing data summary every epoch
 void train(NeuralNetwork *nn, 
            int epochs, 
-           float learning_rate, 
+           double learning_rate, 
            int batch_size,
            dataset *training_data, 
            dataset *testing_data, 
            int verbose,
-           int save_accuracies);
+           int save_accuracies,
+           int multithread,
+           int compute_training_accuracy,
+           double learning_rate_decay);
 
 // Applies the backpropagation algorithm to a mini-batch.
 // A mini-batch is a subset of the training data.
 void update_mini_batch(NeuralNetwork *nn, 
                        dataset *data, 
-                       float learning_rate,
+                       double learning_rate,
                        int start, 
-                       int end);
+                       int end,
+                       int multithread);
 
+
+struct backprop_thread_args {
+    NeuralNetwork *nn;
+    dataset *data;
+    int start;
+    int end;
+    matrice **nabla_b;
+    matrice **nabla_w;
+};
+
+void *backprog_thread(void *arg);
 // Returns nabla_b, nabla_w representing the
 // gradient for the cost function.  nabla_b and
 // nabla_w are arrays of matrices, similar
@@ -48,7 +66,17 @@ void backprop(NeuralNetwork *nn,
 // on the given data. 
 // Will print a summary if verbose is 1 or more.
 // Will print the output of each test if verbose is 2 or more.
-float evaluate(NeuralNetwork *nn, dataset *data, int verbose);
+double evaluate(NeuralNetwork *nn, dataset *data, int verbose);
+
+
+
+void apply_learning_rate_decay(int epoch, 
+                               double *learning_rate, 
+                               int verbose,
+                               double learning_rate_decay);
 
 // Returns the maximum output row index
 int max_output(matrice *output);
+
+
+int is_correct(matrice *output, matrice *target);

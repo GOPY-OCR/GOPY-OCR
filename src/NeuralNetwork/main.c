@@ -29,15 +29,37 @@ int main(int argc, char **argv) {
 
 
     if (strcmp(argv[1], "-t") == 0 || strcmp(argv[1], "--train") == 0) {
-        // TODO: train 
+        digit_recognition_main(argc, argv, verbosity);
+
     } else if (strcmp(argv[1], "-p") == 0 ||
                strcmp(argv[1], "--predict") == 0) {
         if (argc < 3) {
             errx(EXIT_FAILURE, "error: file not specified");
         }
-        // TODO: predict
-        
 
+        char save_filename[] = "_build/ocr_save.nn";
+        NeuralNetwork *nn = load_neural_network(save_filename);
+
+
+        int argi = 2 + (verbosity > 0);
+
+        int le = strlen(argv[argi]);
+        int is_dir = argv[argi][le - 1] == '/';
+
+        if (strcmp(argv[argi], "all") == 0) {
+            argi++;
+            predict_all_images(nn, 
+                               argc - argi, 
+                               argv + argi,
+                               verbosity);
+
+        } else if (is_dir) {
+            predict_all_images_in_dir(nn, argv[argi]);
+        } else {
+            predict_image(nn, argv[argi]);
+        }
+
+        
     } else if (strcmp(argv[1], "-h") == 0 ||
                strcmp(argv[1], "--help") == 0) {
 
@@ -53,3 +75,4 @@ int main(int argc, char **argv) {
 
     return EXIT_SUCCESS;
 }
+
