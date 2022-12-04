@@ -1,5 +1,11 @@
 #include "matrice.h"
 
+#define USE_MULTITHREADING 0
+// after doing some quick hand benchmarking,
+// it seems that multithreading is not worth it
+// under ~100 x 100 matrices
+#define MULTITHREADING_THRESHOLD 10000
+
 matrice *matrice_new(int rows, int columns) {
     matrice *m = malloc(sizeof(matrice));
     m->rows = rows;
@@ -114,6 +120,11 @@ matrice *matrice_from_string(char *str) {
 }
 
 double *matrice_get_ref(matrice *m, int row, int column) {
+    // the following out of bounds check is commented out
+    // because this function is by far the most called
+    //if (row >= m->rows || column >= m->columns)
+    //    errx(EXIT_FAILURE, "matrice_get_ref: index out of bounds");
+
     return m->data + (row * m->columns + column);
 }
 
@@ -165,23 +176,99 @@ int matrice_equals(matrice *m1, matrice *m2) {
     return 1;
 }
 
-matrice *matrice_dot(matrice *m1, matrice *m2) {
-    matrice *m = matrice_new(m1->rows, m2->columns);
+int matrice_equals_epsilon(matrice *m1, matrice *m2, double epsilon) {
+    if (m1->rows != m2->rows || m1->columns != m2->columns)
+        return 0;
+
     for (int i = 0; i < m1->rows; i++) {
-        for (int j = 0; j < m2->columns; j++) {
-            double sum = 0;
-            for (int k = 0; k < m1->columns; k++) {
-                sum += matrice_get(m1, i, k) * matrice_get(m2, k, j);
-            }
-            matrice_set(m, i, j, sum);
+        for (int j = 0; j < m1->columns; j++) {
+            if (fabs(matrice_get(m1, i, j) - matrice_get(m2, i, j)) > epsilon)
+                return 0;
         }
     }
-    return m;
+
+    return 1;
+}
+
+void matrice_dot_sthreaded(matrice *m1, matrice *m2, matrice *r){
+    for (int i = 0; i < m1->rows; i++) {
+        for (int j = 0; j < m2->columns; j++) {
+            double *sum = matrice_get_ref(r, i, j);
+            *sum = 0;
+            for (int k = 0; k < m1->columns; k++) {
+                *sum += matrice_get(m1, i, k) * matrice_get(m2, k, j);
+            }
+        }
+    }
+}
+
+matrice *matrice_dot(matrice *m1, matrice *m2) {
+    if (m1->columns != m2->rows)
+        errx(EXIT_FAILURE, "matrice_dot: incompatible matrice sizes, "
+                            "m1 is %d x %d, m2 is %d x %d",
+                            m1->rows, m1->columns, m2->rows, m2->columns);
+
+    matrice *r = matrice_new(m1->rows, m2->columns);
+
+    if (USE_MULTITHREADING && m1->rows * m2->columns > MULTITHREADING_THRESHOLD)
+        matrice_dot_mthreaded(m1, m2, r);
+    else
+        matrice_dot_sthreaded(m1, m2, r);
+
+    return r;
+}
+
+// source: www.researchgate.net/publication/220337322_An_Efficient_and_Simple_Algorithm_for_Matrix_Inversion
+matrice *matrice_invert(matrice *m){
+    if (m->rows != m->columns)
+        errx(EXIT_FAILURE, "matrice_invert: matrice is not square (m is %ix%i)",
+                m->rows, m->columns);
+
+    double pivot, det = 1.0;
+    int i, p, j;
+    int size = m->rows;
+    matrice *inv = matrice_clone(m);
+    for(p = 0; p < size; p++){
+        pivot = matrice_get(inv, p, p);
+        det *= pivot;
+
+        if(doubleabs(pivot) < 1e-5){
+            errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible\n%s",
+                    matrice_serialize(m, "m"));
+        }
+
+        for(i = 0; i < size; i++){
+            *matrice_get_ref(inv, i, p) /= -pivot;
+        }
+
+        for(i = 0; i < size; i++){
+            if(i != p)
+                for(j = 0; j < size; j++)
+                    if(j != p){
+                        float tmp = matrice_get(inv, p, j) * matrice_get(inv, i, p);
+                        *matrice_get_ref(inv, i, j) += tmp;
+                    }
+        }
+
+        for(j = 0; j < size; j++){
+            *matrice_get_ref(inv, p, j) /= pivot;
+        }
+
+        *matrice_get_ref(inv, p, p) = 1 / pivot;
+    }
+
+    if(doubleabs(det) < 1e-5){
+            errx(EXIT_FAILURE, "matrice_invert: matrice is not invertible\n%s",
+                    matrice_serialize(m, "m"));
+    }
+
+    return inv;
 }
 
 matrice *matrice_elementwise_inner(matrice *m1, matrice *m2,
                                    double (*f)(double, double),
                                    const char *function_name) {
+
     if (m1->rows != m2->rows || m1->columns != m2->columns) {
         errx(EXIT_FAILURE,
              "%s: matrice dimensions do not match, "
@@ -232,10 +319,41 @@ matrice *matrice_transpose(matrice *m) {
 matrice *matrice_map(matrice *m, double (*f)(double)) {
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
-            matrice_set(m, i, j, f(matrice_get(m, i, j)));
+            double *field = matrice_get_ref(m, i, j);
+            *field = f(*field);
         }
     }
     return m;
+}
+
+void matrice_add_inplace(matrice *dest, matrice *source){
+    if (dest->rows != source->rows || dest->columns != source->columns)
+        errx(EXIT_FAILURE, "matrice_add_inplace: incompatible matrice sizes, "
+                            "dest is %d x %d, source is %d x %d",
+                            dest->rows, dest->columns,
+                            source->rows, source->columns);
+
+    for (int i = 0; i < dest->rows; i++) {
+        for (int j = 0; j < dest->columns; j++) {
+            double *dest_field = matrice_get_ref(dest, i, j);
+            *dest_field += matrice_get(source, i, j);
+        }
+    }
+}
+
+void matrice_sub_inplace(matrice *dest, matrice *source){
+    if (dest->rows != source->rows || dest->columns != source->columns)
+        errx(EXIT_FAILURE, "matrice_add_inplace: incompatible matrice sizes, "
+                            "dest is %d x %d, source is %d x %d",
+                            dest->rows, dest->columns,
+                            source->rows, source->columns);
+
+    for (int i = 0; i < dest->rows; i++) {
+        for (int j = 0; j < dest->columns; j++) {
+            double *dest_field = matrice_get_ref(dest, i, j);
+            *dest_field -= matrice_get(source, i, j);
+        }
+    }
 }
 
 matrice *matrice_multiply(matrice *m, double scalar) {
@@ -272,7 +390,7 @@ double *matrice_max(matrice *m, int *row, int *column) {
         for (int j = 0; j < m->columns; j++) {
             double *value = matrice_get_ref(m, i, j);
             if (*value > *max) {
-                *max = *value;
+                max = value;
                 *row = i;
                 *column = j;
             }
@@ -291,6 +409,24 @@ double matrice_sum(matrice *m) {
     }
     return sum;
 }
+
+double matrice_mean(matrice *m) {
+    return matrice_sum(m) / (m->rows * m->columns);
+}
+
+// std = standard deviation = écart type = sqrt(variance)
+double matrice_std(matrice *m){
+    double mean = matrice_mean(m);
+    double sum = 0;
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->columns; j++) {
+            double value = matrice_get(m, i, j);
+            sum += (value - mean) * (value - mean);
+        }
+    }
+    return sqrt(sum / (m->rows * m->columns));
+}
+
 
 #define SEPARATOR ';'
 #define LINE_SEPARATOR '\n'
@@ -318,10 +454,12 @@ char *matrice_serialize(matrice *m, char *name){
                 size *= 2;
                 output = realloc(output, sizeof(char) * size);
             }
-            char *val = double_to_string(matrice_get(m, i, j));
-            for (size_t k = 0; k < strlen(val); k++) {
-                output[index++] = val[k];
-            }
+
+            char *val = serialize_double(matrice_get(m, i, j));
+            size_t le = strlen(val);
+            memcpy(output + index, val, le);
+            index += le;
+
             output[index++] = SEPARATOR;
             free(val);
         }
@@ -332,10 +470,10 @@ char *matrice_serialize(matrice *m, char *name){
     output = realloc(output, sizeof(char) * (index + 1));
 
     return output;
-
 }
 
-matrice *matrice_deserialize(char *str){
+
+matrice *matrice_deserialize(char *str, char **endptr){
     // skip name if present
     char *p = str;
     if (*p == '#') {
@@ -357,16 +495,14 @@ matrice *matrice_deserialize(char *str){
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-            double val;
-            sscanf(p, "%lf", &val);
+            double val = strtof(p, &p);
             matrice_set(m, i, j, val);
-            while (*p != SEPARATOR && *p != LINE_SEPARATOR) {
-                p++;
-            }
-            if (*p == SEPARATOR || *p == LINE_SEPARATOR) {
-                p++;
-            }
+            p++;
         }
+    }
+
+    if (endptr != NULL) {
+        *endptr = p;
     }
 
     return m;
@@ -381,7 +517,7 @@ void matrice_to_csv(matrice *m, char *filename, char *name) {
 
 matrice *matrice_read_csv(char *filename) {
     char *str = read_from_file(filename);
-    matrice *m = matrice_deserialize(str);
+    matrice *m = matrice_deserialize(str, NULL);
     free(str);
     return m;
 }

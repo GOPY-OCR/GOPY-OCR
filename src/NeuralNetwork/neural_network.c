@@ -4,6 +4,11 @@ Layer *create_layer(int nb_neurons, int nb_inputs) {
     Layer *layer = malloc(sizeof(Layer));
     layer->weights = matrice_random(nb_neurons, nb_inputs, -1, 1);
     layer->biases = matrice_random(nb_neurons, 1, -1, 1);
+
+    // improved weights initialization:
+    // http://neuralnetworksanddeeplearning.com/chap3.html#weight_initialization
+    matrice_multiply(layer->weights, 1 / sqrt(nb_inputs));
+
     return layer;
 }
 
@@ -26,6 +31,9 @@ NeuralNetwork *create_neural_network(int nb_layers, int nb_inputs,
             create_layer(nb_neurons[i], nb_neurons[i - 1]);
     }
 
+    // initialize default cost function
+    neural_network->cost_function = mse_cost;
+
     return neural_network;
 }
 
@@ -44,6 +52,7 @@ void save_neural_network(NeuralNetwork *nn, char *filename) {
     }
 
     fprintf(f, "%i\n", nn->nb_layers);
+    fprintf(f, "%i\n", nn->cost_function.id);
 
     for (int i = 0; i < nn->nb_layers; i++){
         char *serialized_weights = matrice_serialize(nn->layers[i]->weights, NULL);
@@ -63,26 +72,33 @@ NeuralNetwork *load_neural_network(char *filename) {
     char *content = read_from_file(filename);
 
     int nb_layers;
-    sscanf(content, "%i", &nb_layers);
+    int cost_function_id;
+    sscanf(content, "%i\n%i\n", &nb_layers, &cost_function_id);
 
     NeuralNetwork *nn = malloc(sizeof(NeuralNetwork));
-    nn->nb_layers = nb_layers;
-    nn->layers = malloc(sizeof(Layer *) * nb_layers);
 
-    char *ptr = content;
+    Layer **layers = malloc(sizeof(Layer *) * nb_layers);
+
+    char *ptr;
+    char *end = content;
     for (int i = 0; i < nb_layers; i++) {
+        // find next {} block
+	ptr = strstr(end, "{") + 2;
+
         // Deserialize weights
-	ptr = strstr(ptr, "{") + 2;
-	char *end = strstr(ptr, "}") - 1;
-	nn->layers[i] = malloc(sizeof(Layer));
-	nn->layers[i]->weights = matrice_deserialize(ptr);
+	layers[i] = malloc(sizeof(Layer));
+	layers[i]->weights = matrice_deserialize(ptr, &end);
 
         // Deserialize biases
-        ptr = strstr(end + 2, "{") + 2;
-	end = strstr(ptr, "}") - 1;
-	nn->layers[i]->biases = matrice_deserialize(ptr);
-	ptr = end + 2;
+        ptr = strstr(end, "{") + 2;
+	layers[i]->biases = matrice_deserialize(ptr, &end);
     }
+
+    nn->nb_layers = nb_layers;
+    nn->cost_function = COST_FUNCTIONS[cost_function_id];
+    nn->layers = layers;
+
+    free(content);
     
     return nn;
 }

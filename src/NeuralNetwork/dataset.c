@@ -18,6 +18,25 @@ void free_dataset(dataset *data) {
     free(data);
 }
 
+// these values where computed accross the whole dataset previously
+// and are used to normalize the inputs
+#define IMAGE_MEAN 100.602216505102035171148600056767
+#define IMAGE_STD 236.326521859361037058988586068153
+matrice *image_to_matrice(SDL_Surface *image) {
+    matrice *m = matrice_new(image->w * image->h, 1);
+
+    for (int i = 0; i < image->w; i++) {
+        for (int j = 0; j < image->h; j++) {
+            Uint8 r, g, b;
+            SDL_GetRGB(*getpixel(image, i, j), image->format, &r, &g, &b);
+            double value = (r + g + b);
+            value = (value - IMAGE_MEAN) / IMAGE_STD; // normalization based on precomputed values
+            matrice_set(m, i * image->h + j, 0, value);
+        }
+    }
+
+    return m;
+}
 
 dataset *load_dataset(const char *path, int size) {
     dataset *data = create_dataset(size * 10);
@@ -32,14 +51,20 @@ dataset *load_dataset(const char *path, int size) {
         folder[pathle] = i + '0';
         folder[pathle + 1] = '\0';
 
-        char **images_paths = list_files(folder, size);
+        char **images_paths = list_files(folder, size, 1);
 
         for (int j = 0; j < size; j++) {
             SDL_Surface *image = load_image(images_paths[j]);
 
-            // !TODO: convert image to input vector
-            // !TODO: set target vector
+            data->inputs[i * size + j] = image_to_matrice(image);
+            data->targets[i * size + j] = matrice_zeros(10, 1);
+            matrice_set(data->targets[i * size + j], i, 0, 1);
+
             SDL_FreeSurface(image);
+        }
+
+        for (int j = 0; j < size; j++) {
+            free(images_paths[j]);
         }
 
         free(folder);
@@ -77,28 +102,14 @@ dataset *copy_dataset(dataset *data, int deepcopy) {
     return copy;
 }
 
-
-char **list_files(const char *path, int n) {
-    DIR *dir;
-    struct dirent *ent;
-    char **files = malloc(n * sizeof(char *));
-    int i = 0;
-
-    if ((dir = opendir(path)) != NULL) {
-        while ((ent = readdir(dir)) != NULL && i < n) {
-            if (ent->d_type == DT_REG) {
-                files[i] = malloc(strlen(ent->d_name) + 1);
-                strcpy(files[i], ent->d_name);
-                i++;
-            }
-        }
-        closedir(dir);
-    } else {
-        perror("Could not open directory");
-    }
-
-    free(files);
-    free(dir);
-
-    return files;
+dataset *dataset_slice(dataset *data, int start, int end) {
+    // even more shallow copy than copy_dataset with deepcopy = 0
+    // this is so that we don't have to worry about freeing
+    // the output of this function
+    dataset *copy = malloc(sizeof(dataset)); 
+    copy->inputs = data->inputs + start;
+    copy->targets = data->targets + start;
+    copy->size = end - start;
+    return copy;
 }
+

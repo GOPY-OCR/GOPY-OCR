@@ -2,6 +2,18 @@ _build/
 sodoko
 .DS_Store
 main
+# the followings prevent files in src from being tracked
+#NeuralNetwork
+#Preprocess
+#Solver
+
+# the followings are dupplicates of files
+src/NeuralNetwork/data/testing/
+src/NeuralNetwork/data/training/
+src/NeuralNetwork/env/
+
+
+.DS_Store
 
 # Files for lsp server
 compile_commands.json

@@ -20,7 +20,7 @@ typedef struct{
 typedef struct{
     Point p1;
     Point p2;
-    float angle;
+    double angle;
 } TiltedRect;
 
 typedef struct{

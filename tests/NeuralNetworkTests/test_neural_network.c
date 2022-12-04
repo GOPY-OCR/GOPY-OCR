@@ -1,10 +1,12 @@
 #include <criterion/parameterized.h>
 #include "neural_network.h"
+#include "cost_functions.h"
 
 struct neural_network_create_params {
     int nb_layers;
     int input_size;
     int *nb_neurons;
+    CostFunction cost_function;
 };
 
 ParameterizedTestParameters(neuralnetworks, test_save_load_neural_network) {
@@ -15,14 +17,14 @@ ParameterizedTestParameters(neuralnetworks, test_save_load_neural_network) {
     int input_size = 1;
     int *nb_neurons = cr_malloc(sizeof(int) * nb_layers);
     nb_neurons[0] = 1;
-    params[0] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons };
+    params[0] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons, mse_cost };
 
     nb_layers = 2;
     input_size = 10;
     nb_neurons = cr_malloc(sizeof(int) * nb_layers);
     nb_neurons[0] = 2;
     nb_neurons[1] = 2;
-    params[1] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons };
+    params[1] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons, cross_entropy_cost };
 
     nb_layers = 5;
     input_size = 100;
@@ -32,25 +34,27 @@ ParameterizedTestParameters(neuralnetworks, test_save_load_neural_network) {
     nb_neurons[2] = 27;
     nb_neurons[3] = 8;
     nb_neurons[4] = 1;
-    params[2] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons };
+    params[2] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons, mse_cost };
 
     nb_layers = 3;
-    input_size = 40; // 784 for perfomance test: takes ~20s and produces a 8.7Mo file
+    input_size = 40;
     nb_neurons = cr_malloc(sizeof(int) * nb_layers);
     nb_neurons[0] = input_size;
     nb_neurons[1] = input_size / 2;
     nb_neurons[2] = 10;
-    params[3] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons };
+    params[3] = (struct neural_network_create_params) { nb_layers, input_size, nb_neurons, cross_entropy_cost };
 
     return cr_make_param_array(struct neural_network_create_params, params, nb_params);
 }
 
-#define EPSILON 0.000001
+#define EPSILON 0.0000001
 ParameterizedTest(struct neural_network_create_params *params, neuralnetworks, test_save_load_neural_network){
     NeuralNetwork *nn = create_neural_network(params->nb_layers, params->input_size, params->nb_neurons);
+
+    nn->cost_function = params->cost_function;
     
     char *filename = malloc(200);
-    sprintf(filename, "../_build/tests/TEMP_test_neural_network_%i.nn", nn->nb_layers);
+    sprintf(filename, "../_build/tests/NeuralNetworkTests/TEMP_test_neural_network_%i.nn", nn->nb_layers);
 
     save_neural_network(nn, filename);
     NeuralNetwork *nn2 = load_neural_network(filename);
@@ -64,13 +68,20 @@ ParameterizedTest(struct neural_network_create_params *params, neuralnetworks, t
         matrice *weights_diff = matrice_sub(nn->layers[i]->weights, nn2->layers[i]->weights);
         matrice_map(weights_diff, doubleabs);
         double mean_diff = matrice_sum(weights_diff) / (weights_diff->rows * weights_diff->columns);
-        cr_assert(mean_diff < EPSILON, "matrices are not equal");
+        cr_assert(mean_diff < EPSILON, "loaded neural network weights are not the same as saved neural network weights\n"
+                                       "mean difference: %.20f (should be less than %.20f)\n", mean_diff, EPSILON);
 
         matrice *biases_diff = matrice_sub(nn->layers[i]->biases, nn2->layers[i]->biases);
         matrice_map(biases_diff, doubleabs);
         mean_diff = matrice_sum(biases_diff) / (biases_diff->rows * biases_diff->columns);
-        cr_assert(mean_diff < EPSILON, "matrices are not equal");
+        cr_assert(mean_diff < EPSILON, "loaded neural network biases are not the same as saved neural network biases\n"
+                                       "mean difference: %.20f (should be less than %.20f)\n", mean_diff, EPSILON);
     }
+
+    cr_assert(nn->cost_function.id == nn2->cost_function.id,
+              "loaded neural network cost function is not the same as saved neural network cost function\n"
+              "loaded cost function id: %i, saved cost function id: %i\n", nn2->cost_function.id, nn->cost_function.id);
+
     free_neural_network(nn);
 }
 
@@ -111,7 +122,6 @@ Test(neuralnetworks, test_create_neural_network_easy) {
         cr_assert(max_bias <= 1, "max bias is greater than 1");
         cr_assert(min_bias >= -1, "min bias is less than -1");
     }
-
 }
 
 Test(neuralnetowks, test_create_neural_network_hard) {

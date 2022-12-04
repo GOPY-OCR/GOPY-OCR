@@ -137,7 +137,7 @@ Rect *filter_grid_rects(Rect *rects, int rects_count, int searched_rects_count){
     for (int i = 0; i < rects_count; i++)
     {
         Rect rect = sorted_rects[i];
-        float ratio = (float)(rect.p2.x - rect.p1.x) / (float)(rect.p2.y - rect.p1.y);
+        double ratio = (double)(rect.p2.x - rect.p1.x) / (double)(rect.p2.y - rect.p1.y);
         if (ratio < MAX_SQUARE_RATIO && ratio > 1 / MAX_SQUARE_RATIO)
         {
             squares[squares_count] = rect;
