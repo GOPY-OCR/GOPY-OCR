@@ -7,6 +7,7 @@ void page_1_init(Glob_GUI *glob)
     glob->page_1_Image = GTK_IMAGE(gtk_builder_get_object(glob->builder, "image1"));
 
     g_signal_connect(glob->page_1_CancelButton, "clicked", G_CALLBACK(on_CancelButton1_clicked), glob);
+    g_signal_connect(glob->page_1_ContinueButton, "clicked",G_CALLBACK(on_Continue1_clicked),glob);
 }
 
 G_MODULE_EXPORT void on_CancelButton1_clicked(GtkButton *button, gpointer user_data)
@@ -15,4 +16,16 @@ G_MODULE_EXPORT void on_CancelButton1_clicked(GtkButton *button, gpointer user_d
     prev_page((Glob_GUI *)user_data);
 }
 
+G_MODULE_EXPORT void on_Continue1_clicked(GtkButton *button, gpointer user_data)
+{
+   Glob_GUI *glob = (Glob_GUI *)user_data;
+   if (glob == NULL)
+   {
+	   g_print("aled");
+   }
 
+   else
+   {
+	   next_page(glob);
+   }
+}

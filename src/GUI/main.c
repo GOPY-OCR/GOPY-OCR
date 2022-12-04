@@ -12,6 +12,11 @@ int main(int argc, char* argv[])
     g_signal_connect(glob->main,"destroy",G_CALLBACK(gtk_main_quit),NULL);
 
     gtk_builder_connect_signals(glob->builder,NULL);
+    GtkCssProvider * css = gtk_css_provider_new();
+
+    gtk_css_provider_load_from_data(css, "* { background-image:none; background-color:#0d4848;}",-1,NULL);
+    GtkStyleContext * context = gtk_widget_get_style_context(glob->main);
+    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
 
     // Set the title
     gtk_window_set_title(GTK_WINDOW(glob->main), WINDOW_TITLE);
