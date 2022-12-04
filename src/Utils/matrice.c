@@ -526,11 +526,9 @@ matrice *matrice_from_surface(SDL_Surface *surface){
     matrice *m = matrice_new(surface->h, surface->w);
     for (int i = 0; i < surface->h; i++) {
         for (int j = 0; j < surface->w; j++) {
-            Uint32 pixel = get_pixel(surface, j, i);
-            Uint8 r, g, b;
-            SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-            double val = (r + g + b) / 3.0;
+            int val = getpixelgray(surface, j, i);
             matrice_set(m, i, j, val);
         }
     }
+    return m;
 }
