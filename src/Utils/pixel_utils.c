@@ -28,3 +28,12 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel){
     Uint32 *target_pixel = getpixel(surface, x, y);
     *target_pixel = pixel;
 }
+
+int getpixelgray(SDL_Surface *surface, int x, int y){
+    Uint32 *pixel = getpixel(surface, x, y);
+    if(pixel == NULL){
+        return 0;
+    }
+
+    return (int) ((Uint8) *pixel);
+}
