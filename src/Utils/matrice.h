@@ -1,9 +1,11 @@
 #pragma once
-#include "str_utils.h"
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <SDL/SDL.h>
+#include "str_utils.h"
+#include "pixel_utils.h"
 
 typedef struct matrice {
     int rows;
@@ -52,3 +54,6 @@ matrice *matrice_multiply(matrice *m, double scalar);
 double *matrice_max(matrice *m, int *row, int *column);
 
 double matrice_sum(matrice *m);
+
+// misc operations
+matrice *matrice_from_surface(SDL_Surface *surface);
