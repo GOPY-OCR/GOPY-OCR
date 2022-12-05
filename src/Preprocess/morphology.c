@@ -1,5 +1,5 @@
 #include "morphology.h"
-#define SIZE_SIDE_FILTER 20
+#define SIZE_SIDE_FILTER 17
 
 
 Uint32 max_color_pixels(SDL_Surface *surface, int x, int y) {
