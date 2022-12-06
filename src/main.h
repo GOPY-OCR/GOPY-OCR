@@ -31,6 +31,7 @@
 
 // Preprocess
 #include "Preprocess/preprocess.h"
+#include "Preprocess/params.h"
 
 // Solver part
 #include "Solver/grid.h"

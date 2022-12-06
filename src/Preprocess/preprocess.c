@@ -18,6 +18,8 @@ SDL_Surface **preprocess(const char *filename) {
     // 1.  Load the image as a SDL_Surface
     SDL_Surface *image = load_image(filename);
 
+    Params params = get_params(filename);
+
     // 2.  Resize the image to speed up the next functions
     resize(&image);
 
@@ -34,7 +36,7 @@ SDL_Surface **preprocess(const char *filename) {
     automatic_rot(&image);
 
     // 7.  Grid detection
-    Quad coords = grid_detection(image, 1);
+    Quad coords = grid_detection(image, 1, params);
 
     // 8.  Perspective correction of the image
     perspective_correction(&image, &coords);

@@ -11,13 +11,14 @@
 
 int main(int argc, char **argv) {
     SDL_Surface *image = load_image(argv[1]);
+    Params params = get_params(argv[1]);
 
     resize(&image);
 
     surface_to_grayscale(image);
     correct_brightness(image);
     binarize(image);
-    Quad grid = grid_detection(image, 0);
+    Quad grid = grid_detection(image, 0, params);
     save_image(image, "output.png");
 
 

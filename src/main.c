@@ -148,12 +148,13 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "detected_grid");
 
         SDL_Surface *image = load_image(argv[2]);
+        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
         binarize(image);
         automatic_rot(&image);
-        grid_detection(image, 1);
+        grid_detection(image, 1, p);
         save_image(image, final_name);
 
         free(final_name);
@@ -206,12 +207,13 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "perspective");
 
         SDL_Surface *image = load_image(argv[2]);
+        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
         binarize(image);
         automatic_rot(&image);
-        Quad grid = grid_detection(image, 0);
+        Quad grid = grid_detection(image, 0, p);
         perspective_correction(&image, &grid);
         save_image(image, final_name);
 
@@ -226,12 +228,13 @@ int main(int argc, char **argv) {
             exit_help(1);
 
         SDL_Surface *image = load_image(argv[2]);
+        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
         binarize(image);
         automatic_rot(&image);
-        Quad grid = grid_detection(image, 0);
+        Quad grid = grid_detection(image, 0, p);
         perspective_correction(&image, &grid);
         SDL_Surface **splitted = split_sudoku(image);
 
@@ -292,7 +295,8 @@ int main(int argc, char **argv) {
         for (size_t i = 0; i < 81; i++)
             free(grid[i]);
 
-        SDL_FreeSurface(grid);
+        SDL_FreeSurface(*grid);
+        free(grid);
     }
 
     else if (strcmp(argv[1], "--postprocess") == 0 || strcmp(argv[1], "-Post") == 0) {
