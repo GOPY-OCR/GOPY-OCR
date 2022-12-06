@@ -152,6 +152,7 @@ int main(int argc, char **argv) {
         surface_to_grayscale(image);
         correct_brightness(image);
         binarize(image);
+        automatic_rot(&image);
         grid_detection(image, 1);
         save_image(image, final_name);
 
