@@ -6,4 +6,3 @@
 
 void manual_rot(SDL_Surface **image, double angle);
 void automatic_rot(SDL_Surface **image);
-

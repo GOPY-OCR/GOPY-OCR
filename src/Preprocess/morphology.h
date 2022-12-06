@@ -5,10 +5,6 @@
 #include "sdl_utils.h"
 #include "pixel_utils.h"
 
-#define SIZE_SIDE_FILTER 7
-extern const int FILTER[];
-
-
 Uint32 max_color_pixels(SDL_Surface *surface, int x, int y);
 Uint32 min_color_pixel(SDL_Surface *surface, int x, int y);
 SDL_Surface *dilation(SDL_Surface *base);

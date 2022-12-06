@@ -3,9 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
-#define THRESHOLD 125
 
-void binarize(SDL_Surface *base);
+void binarize(SDL_Surface *base, int threshold);
 
 #endif
 

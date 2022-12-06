@@ -1,7 +1,7 @@
 #include "grid_detection.h"
 
-Quad grid_detection(SDL_Surface *image, int draw_grid){
-    SDL_Surface *extracted_grid = extract_grid(image);
+Quad grid_detection(SDL_Surface *image, int draw_grid, Params params) {
+    SDL_Surface *extracted_grid = extract_grid(image, params.ff_c);
 
     Quad grid_quad = find_white_coners(extracted_grid);
 
@@ -15,7 +15,7 @@ Quad grid_detection(SDL_Surface *image, int draw_grid){
 }
 
 int grid_rotation_detection(SDL_Surface *image){
-    SDL_Surface *extracted_grid = extract_grid(image);
+    SDL_Surface *extracted_grid = extract_grid(image, 2);
 
     Line *image_lines = find_image_lines(extracted_grid, 10, 0);
 
@@ -62,7 +62,7 @@ Quad find_white_coners(SDL_Surface *extracted_grid){
 }
 
 
-SDL_Surface *extract_grid(SDL_Surface *image){
+SDL_Surface *extract_grid(SDL_Surface *image, int flood_fill_connectivity){
     int areas_capacity = 100;
     int *areas = malloc(sizeof(int) * areas_capacity);
     Point *areas_origin = malloc(sizeof(Point) * areas_capacity);
@@ -87,7 +87,7 @@ SDL_Surface *extract_grid(SDL_Surface *image){
             }
 
             areas_origin[nb_areas] = (Point) {x, y};
-            areas[nb_areas] = flood_fill(copy, areas_origin[nb_areas], black, 0, NULL);
+            areas[nb_areas] = flood_fill(copy, areas_origin[nb_areas], black, 0, NULL, flood_fill_connectivity);
             nb_areas++;
         }
     }
@@ -105,7 +105,7 @@ SDL_Surface *extract_grid(SDL_Surface *image){
 
     // where we found the largest white connected area,
     // we copy it to a new surface
-    flood_fill(image, areas_origin[max_area_index], black, 1, extracted_grid);
+    flood_fill(image, areas_origin[max_area_index], black, 1, extracted_grid, flood_fill_connectivity);
 
     free(areas);
     free(areas_origin);

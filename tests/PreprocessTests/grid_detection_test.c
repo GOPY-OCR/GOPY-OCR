@@ -1,6 +1,7 @@
 #include "grid_detection.h"
 #include "sdl_utils.h"
 #include "point.h"
+#include "params.h"
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -20,7 +21,7 @@ char *cr_strdup(const char *str){
 }
 
 ParameterizedTestParameters(grid_detection, test_grid_detection) {
-    const size_t nb_samples = 2;
+    const size_t nb_samples = 1;
     struct grid_detection_params *params = cr_malloc(sizeof(struct grid_detection_params) * nb_samples);
 
     params[0] = (struct grid_detection_params) {
@@ -31,13 +32,13 @@ ParameterizedTestParameters(grid_detection, test_grid_detection) {
         .y2lower = 504, .y2upper = 536,
     };
 
-    params[1] = (struct grid_detection_params) {
-        .input_file = cr_strdup("images/binary/2.png"),
-        .x1lower = 46, .x1upper = 66,
-        .y1lower = 55, .y1upper = 75,
-        .x2lower = 379, .x2upper = 399,
-        .y2lower = 380, .y2upper = 400,
-    };
+    //params[1] = (struct grid_detection_params) {
+    //    .input_file = cr_strdup("images/binary/2.png"),
+    //    .x1lower = 46, .x1upper = 66,
+    //    .y1lower = 55, .y1upper = 75,
+    //    .x2lower = 379, .x2upper = 399,
+    //    .y2lower = 380, .y2upper = 400,
+    //};
     
 
     return cr_make_param_array(struct grid_detection_params, params, nb_samples);
@@ -46,7 +47,7 @@ ParameterizedTestParameters(grid_detection, test_grid_detection) {
 ParameterizedTest(struct grid_detection_params *params, grid_detection, test_grid_detection) {
     SDL_Surface *image = load_image(params->input_file);
 
-    Quad predicted_rect = grid_detection(image, 0);
+    Quad predicted_rect = grid_detection(image, 0, get_params(params->input_file));
 
     cr_assert(
             predicted_rect.p1.x >= params->x1lower &&
