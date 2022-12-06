@@ -129,10 +129,11 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "bin");
 
         SDL_Surface *image = load_image(argv[2]);
+        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image);
+        binarize(image, p.b_th);
         save_image(image, final_name);
 
         free(final_name);
@@ -152,7 +153,7 @@ int main(int argc, char **argv) {
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image);
+        binarize(image, p.b_th);
         automatic_rot(&image);
         grid_detection(image, 1, p);
         save_image(image, final_name);
@@ -189,10 +190,11 @@ int main(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "auto_rotated");
 
         SDL_Surface *image = load_image(argv[2]);
+        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image);
+        binarize(image, p.b_th);
         automatic_rot(&image);
         save_image(image, final_name);
         SDL_FreeSurface(image);
@@ -211,7 +213,7 @@ int main(int argc, char **argv) {
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image);
+        binarize(image, p.b_th);
         automatic_rot(&image);
         Quad grid = grid_detection(image, 0, p);
         perspective_correction(&image, &grid);
@@ -232,7 +234,7 @@ int main(int argc, char **argv) {
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image);
+        binarize(image, p.b_th);
         automatic_rot(&image);
         Quad grid = grid_detection(image, 0, p);
         perspective_correction(&image, &grid);
