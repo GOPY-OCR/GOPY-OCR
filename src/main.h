@@ -39,6 +39,8 @@
 
 // Neural Network part
 #include "NeuralNetwork/xor.h"
+#include "NeuralNetwork/neural_network.h"
+#include "NeuralNetwork/digit_recognition.h"
 
 // Postprocess
 #include "Postprocess/postprocess.h"

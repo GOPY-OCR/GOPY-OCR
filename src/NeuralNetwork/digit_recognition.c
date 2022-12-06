@@ -92,6 +92,23 @@ NeuralNetwork* create_OCR_Neural_Network() {
 int predict_digit(char* filename, NeuralNetwork *nn) {
     SDL_Surface *img = load_image(filename);
 
+    int digit = predict_surface(img, nn);
+
+    // Free the image and data
+    SDL_FreeSurface(img);
+
+    return digit;
+}
+
+int predict_surface(SDL_Surface *img, NeuralNetwork *nn) {
+    if (img->w != 28 || img->h != 28) {
+        // resize the image
+        SDL_Surface *resized = SDL_CreateRGBSurface(0, 28, 28, 32, 0, 0, 0, 0);
+        SDL_BlitScaled(img, NULL, resized, NULL);
+        SDL_FreeSurface(img);
+        img = resized;
+    }
+
     matrice *m = image_to_matrice(img);
 
     matrice *output = feedforward(nn, m);
@@ -99,7 +116,6 @@ int predict_digit(char* filename, NeuralNetwork *nn) {
     int digit = max_output(output);
 
     // Free the image and data
-    SDL_FreeSurface(img);
     matrice_free(m);
     matrice_free(output);
 

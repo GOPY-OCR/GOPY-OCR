@@ -15,29 +15,29 @@ int main(int argc, char **argv) {
 
     resize(&image);
 
-    surface_to_grayscale(image);
-    correct_brightness(image);
-    binarize(image);
-    Quad grid = grid_detection(image, 0, params);
-    save_image(image, "output.png");
+    //surface_to_grayscale(image);
+    //correct_brightness(image);
+    //binarize(image);
+    //Quad grid = grid_detection(image, 0, params, 1);
+    //save_image(image, "output.png");
 
 
 
-    printf("Correcting perspective...\n");
+    //printf("Correcting perspective...\n");
 
-    SDL_Surface *corrected = perspective_correction(image, &grid);
+    //SDL_Surface *corrected = perspective_correction(image, &grid);
 
-    printf("Saving images...\n");
+    //printf("Saving images...\n");
 
-    save_image(corrected, "corrected.png");
+    //save_image(corrected, "corrected.png");
 
-    SDL_Surface *splitted[81] = {NULL};
-    split_sudoku(image, splitted);
-    neural_network_resize(splitted);
+    //SDL_Surface *splitted[81] = {NULL};
+    //split_sudoku(image, splitted);
+    //neural_network_resize(splitted);
 
-    for (size_t i = 0; i < 81; i++)
-        SDL_FreeSurface(splitted[i]);
-    SDL_FreeSurface(image);
+    //for (size_t i = 0; i < 81; i++)
+    //    SDL_FreeSurface(splitted[i]);
+    //SDL_FreeSurface(image);
 
     return 0; 
 }
