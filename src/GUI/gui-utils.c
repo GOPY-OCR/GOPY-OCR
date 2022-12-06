@@ -10,7 +10,7 @@ void init_gui_utils(Glob_GUI *glob)
 }
 
 void switch_page(Glob_GUI *glob, int page)
-{
+{       //switch name if either anima or pageI
 	glob->current_page = page;
 	int replace_i = sizeof(page_name) - 2;
 	if (page == 2)
@@ -28,7 +28,14 @@ void switch_page(Glob_GUI *glob, int page)
 	}
 	else 
 	{
+		page_name[0] = 'p';
+		page_name[1] = 'a';
+		page_name[2] = 'g';
+		page_name[3] = 'e';
+		//page_name = temp;
 		page_name[replace_i] = '0' + page;
+
+		
 	}
 	g_print(page_name);
 	gtk_stack_set_visible_child_name(glob->Pages, page_name);
