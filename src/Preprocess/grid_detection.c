@@ -1,5 +1,7 @@
 #include "grid_detection.h"
 
+#define FLOOD_FILL_CONNECTIVITY 6
+
 Quad grid_detection(SDL_Surface *image, int draw_grid){
     SDL_Surface *extracted_grid = extract_grid(image);
 
@@ -87,7 +89,7 @@ SDL_Surface *extract_grid(SDL_Surface *image){
             }
 
             areas_origin[nb_areas] = (Point) {x, y};
-            areas[nb_areas] = flood_fill(copy, areas_origin[nb_areas], black, 0, NULL);
+            areas[nb_areas] = flood_fill(copy, areas_origin[nb_areas], black, 0, NULL, FLOOD_FILL_CONNECTIVITY);
             nb_areas++;
         }
     }
@@ -105,7 +107,7 @@ SDL_Surface *extract_grid(SDL_Surface *image){
 
     // where we found the largest white connected area,
     // we copy it to a new surface
-    flood_fill(image, areas_origin[max_area_index], black, 1, extracted_grid);
+    flood_fill(image, areas_origin[max_area_index], black, 1, extracted_grid, FLOOD_FILL_CONNECTIVITY);
 
     free(areas);
     free(areas_origin);

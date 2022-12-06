@@ -1,7 +1,7 @@
 #include "flood_fill.h"
 
 #define INITIAL_FILL_CAPACITY 1000
-int flood_fill(SDL_Surface *image, Point point, Uint32 color, int cancel_fill, SDL_Surface *dest) {
+int flood_fill(SDL_Surface *image, Point point, Uint32 color, int cancel_fill, SDL_Surface *dest, int connectivity) {
     queue *q = queue_create();  // queue of points
     int filled = 0;             // number of pixels filled
 
@@ -25,36 +25,38 @@ int flood_fill(SDL_Surface *image, Point point, Uint32 color, int cancel_fill, S
     
     while(!queue_is_empty(q)) {
         Point *p = queue_dequeue(q);
+
         int inbounds = p->x >= 0 && p->x < image->w && p->y >= 0 && p->y < image->h;
+
         if (inbounds && is_pixel_white(image, p->x, p->y) != is_color_white) {
             Uint32 *pixel = getpixel(image, p->x, p->y);
             if (filled == fill_capacity) {
                 fill_capacity *= 2;
                 filled_pixels = realloc(filled_pixels, sizeof(Uint32 *) * fill_capacity);
             }
+
             if (dest != NULL) {
                 putpixel(dest, p->x, p->y, *pixel);
             }
 
             filled_pixels[filled] = pixel;
+            
+            // we set the pixel to the color we want to fill with
+            // this acts as the Visited Vector in algo
             *pixel = color;
+            
             filled++;
 
-            Point *p1 = malloc(sizeof(Point));
-            *p1 = (Point){p->x + 1, p->y};
-            queue_enqueue(q, p1);
-
-            Point *p2 = malloc(sizeof(Point));
-            *p2 = (Point){p->x - 1, p->y};
-            queue_enqueue(q, p2);
-
-            Point *p3 = malloc(sizeof(Point));
-            *p3 = (Point){p->x, p->y + 1};
-            queue_enqueue(q, p3);
-
-            Point *p4 = malloc(sizeof(Point));
-            *p4 = (Point){p->x, p->y - 1};
-            queue_enqueue(q, p4);
+            for (int x = -connectivity; x <= connectivity; x++) {
+                for (int y = -connectivity; y <= connectivity; y++) {
+                    if (x == 0 && y == 0) {
+                        continue;
+                    }
+                    Point *adj = malloc(sizeof(Point));
+                    *adj = (Point){p->x + x, p->y + y};
+                    queue_enqueue(q, adj);
+                }
+            }
         }
         free(p);
     }

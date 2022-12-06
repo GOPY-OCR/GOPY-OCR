@@ -16,4 +16,4 @@
 //
 //  THIS IS WIP:
 //  TODO: implement grid detection using flood fill
-int flood_fill(SDL_Surface *image, Point point, Uint32 color, int cancel_fill, SDL_Surface *dest);
+int flood_fill(SDL_Surface *image, Point point, Uint32 color, int cancel_fill, SDL_Surface *dest, int connectivity);
