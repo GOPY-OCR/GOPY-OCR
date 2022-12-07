@@ -47,7 +47,7 @@ ParameterizedTestParameters(grid_detection, test_grid_detection) {
 ParameterizedTest(struct grid_detection_params *params, grid_detection, test_grid_detection) {
     SDL_Surface *image = load_image(params->input_file);
 
-    Quad predicted_rect = grid_detection(image, 0, get_params(params->input_file));
+    Quad predicted_rect = grid_detection(image, 0, get_params(params->input_file), 0);
 
     cr_assert(
             predicted_rect.p1.x >= params->x1lower &&
