@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOPY OCR</title>
+</head>
+
+<body>
+
+    <section class="baniere" id="baniere">
+        <div class="logo">
+            <img src="./images/sodoko_logo.png" alt="">
+        </div>
+        </div>
+
+        <div class="baniere-text">
+
+
+    </section>
+
+
+    <div class="sidebar">
+        <nav>
+            <ul>
+                <li><a href="#baniere">Accueil</a></li>
+                <li><a href="#about">À propos</a>
+                    <ul>
+                        <li><a href="#our_team">Notre équipe</a></li>
+                        <li><a href="#our_project">Notre projet</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#download">Téléchargement</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="btn-menu">
+        <i class="fa-solid fa-bars"></i>
+        <i class="fa-solid fa-xmark"></i>
+    </div>
+
+    <script>
+        document.querySelector('.fa-xmark').style.display = "none"
+
+        const menuBtn = document.querySelector(".btn-menu")
+        const Sidebar = document.querySelector(".sidebar")
+
+        menuBtn.onclick = function() {
+
+            if (Sidebar.style.right == "-250px") {
+                Sidebar.style.right = "0"
+                document.querySelector('.fa-xmark').style.display = ""
+                document.querySelector('.fa-bars').style.display = "none"
+
+            } else {
+                Sidebar.style.right = "-250px"
+                document.querySelector('.fa-xmark').style.display = "none"
+                document.querySelector('.fa-bars').style.display = ""
+            }
+        }
+    </script>
+
+
+
+    <section class="our_team" id="our_team">
+        <h2>Notre équipe</h2>
+
+        <div class="card card-greg">
+            <div class="border">
+                <h2>Grégoire LEFAURE</h2>
+                <div class="icons">
+                    <a href=""><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-oscar">
+            <div class="border">
+                <h2>Oscar LE DAUPHIN</h2>
+                <div class="icons">
+                    <a href=""><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-yness">
+            <div class="border">
+                <h2>Yness KHOUADER</h2>
+                <div class="icons">
+                    <a href=""><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-pierre">
+            <div class="border">
+                <h2>Pierre WAGNIART</h2>
+                <div class="icons">
+                    <a href=""><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="pres pres-greg">
+            <p>Hello hello! Moi c’est Grégoire Lefaure, et je suis le chef de projet (même si ce statut est surtout utile pour l’école, et je n’ai pas de supériorité hiérarchique par rapport à mes co-équipiers). J’aime surtout faire du développement backend
+                plus que du frontend. C’est pourquoi je m’occupe en partie, avec Oscar, de l’architecture du projet et des Makefile, dont nous allons parler plus tard dans ce rapport. J’ai d’ailleurs déjà un peu d’expérience par rapport à l’architecture
+                d’un projet, puisque j’ai déjà géré celle de mon projet de S2. Voilà, je crois que le principal est dit me concernant.</p>
+        </div>
+
+        <div class="pres pres-oscar">
+            <p>
+                Bonjour, moi c’est Oscar Le Dauphin, le O de l’équipe GOPY. M’interéssant beaucoup à l’intelligence artificielle en général, je tenais donc vraiment à m’occuper d’implementer la partie réseau de neuronnes sur ce projet. J’ai hâte de voir le résultat que
+                l’on obtiendra et j’ai hâte de pouvoir jouer avec tous les paramètres du réseau de neuronnes pour mieux les comprendre.</p>
+        </div>
+
+        <div class="pres pres-yness">
+            <p>Hey, je m’appelle Yness Khouader et je suis fière d’être membre de cette belle équipe! J’aime beaucoup le design. L’année dernière lors du projet S2 je me suis occupée de la création de la map en 3D. En ce qui concerne ce projet, je m’occupe
+                de la résolution du sudoku ainsi que de l’interface graphique, accompagnée par Pierre. Curieuse et portant un certain intérêt pour l’intelligence artificielle, j’aimerais également me pencher sur le développement du réseau de neurones
+                dont s’occupe à merveille Oscar.
+            </p>
+        </div>
+
+        <div class="pres pres-pierre">
+            <p>Bien le bonjour, je suis Pierre Wagniart et je suis l’un des 4 membres de cette équipe ! Tout comme ma collègue juste au dessus, j’aime beaucoup le design, ce qui m’a permis, au projet de S2, de me charger de tout l’aspect graphique du projet
+                (shaders, materials, modèles, direction artistique, etc...). Je me chargerai/me suis chargé de la rotation, d’une partie du traitement de l’image et de l’UI avec Yness. Je pourrais donc me concentrer plus sur l’aspect code et j’ai hâte
+                de faire ce projet que je n’aurais jamais fait seul!</p>
+        </div>
+    </section>
+
+
+
+    <section class="our_project" id="our_project">
+        <h2>Notre projet</h2>
+
+
+        <div class="presProjet">
+            <p>Nous avons choisi, comme la première page le suggère, d’appeler notre équipe « GOPY », ce nom venant de la mise bout à bout des initiales de nos prénoms respectifs (Grégoire, Oscar, Pierre et Yness). <br>Nous avons aussi choisi d’appeler notre
+                projet « Sodoko ». Il n’y a pas vraiment de raisons à ce nom, si ce n’est que le nom de « Suduku » nous paraissait un peu vulgraire mais que nous aimions bien la répétition d’une même voyelle dans le mot « sudoku ».</p>
+
+        </div>
+    </section>
+
+
+    <section class="download" id="download">
+        <div class="download-text">
+            <h1>Téléchargez le rapport ici !</h1>
+        </div>
+        <div class="download-btn">
+            <a href="rapport_1.pdf"> <span></span><b>Rapport</b></a>
+        </div>
+
+        <p>Made with 🤍 and 🥛</p>
+
+    </section>
+
+</body>
+
+</html>

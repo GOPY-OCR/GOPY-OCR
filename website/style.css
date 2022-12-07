@@ -1,0 +1,374 @@
+@import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100;200;400&family=Caveat&family=Creepster&family=Darker+Grotesque:wght@300&family=Edu+VIC+WA+NT+Beginner&family=Fasthand&family=Gochi+Hand&family=Indie+Flower&family=Just+Another+Hand&family=Kaushan+Script&family=Khand:wght@300&family=Ma+Shan+Zheng&family=Permanent+Marker&family=Reenie+Beanie&family=Rubik+Wet+Paint&family=Shrikhand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@1,200&family=Fredoka+One&display=swap');
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Barlow', sans-serif;
+}
+
+.baniere {
+    background-color: #000000;
+    height: 110vh;
+    width: 100%;
+}
+
+.logo img {
+    height: 60.2%;
+    width: 55%;
+    position: relative;
+    margin-left: 22%;
+    margin-top: 3%;
+    background-image: url(sodoko_copy.png);
+    background-size: 100%;
+    float: left;
+}
+
+.baniere-text {
+    text-align: center;
+    color: rgb(255, 255, 255);
+    top: 2px;
+    left: 2px;
+}
+
+.baniere-text h1 {
+    font-size: 20px;
+    font-family: 'Fredoka One', cursive;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: -250px;
+    z-index: 2;
+}
+
+nav ul li {
+    list-style: none;
+    margin: 20px 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: rgb(2, 64, 122);
+    font-size: 25px;
+    font-family: 'Barlow', sans-serif;
+    font-style: italic;
+}
+
+.btn-menu {
+    width: 50px;
+    height: 50px;
+    background: black;
+    align-items: center;
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    border-radius: 10px;
+    z-index: 3;
+    color: rgb(2, 64, 122);
+    font-size: 1.6rem;
+    text-align: center;
+    justify-content: center;
+    line-height: 50px;
+    transition: 0.6s ease-in;
+    cursor: pointer;
+}
+
+.download-text {
+    text-align: center;
+    color: rgb(2, 64, 122);
+    padding-top: 250px;
+}
+
+.download-text h1 {
+    font-size: 50px;
+    font-family: 'Barlow', sans-serif;
+    font-style: italic;
+}
+
+.download {
+    background: #000000;
+    height: 110vh;
+}
+
+.download p {
+    font-size: 30px;
+    color: white;
+    text-align: center;
+    font-family: 'Barlow', sans-serif;
+    margin-top: 200px;
+    font-style: italic;
+}
+
+.download-btn {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.download-btn a {
+    width: 150px;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0 30px;
+    padding: 12px 0;
+    color: rgb(2, 64, 122);
+    border: 2px solid white;
+    position: relative;
+    z-index: 1;
+    transition: color 0.6s ease-in;
+    font-size: 30px;
+    font-family: 'Barlow', sans-serif;
+    border-radius: 10px;
+}
+
+.download-btn a span {
+    width: 0;
+    height: 100%;
+    background: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: color 0.6s ease-in;
+    border-radius: 10px;
+}
+
+.download-btn a:hover span {
+    width: 100%;
+}
+
+.our_team {
+    background: black;
+    height: 210vh;
+}
+
+.our_team h2 {
+    font-size: 100px;
+    color: rgb(2, 64, 122);
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+}
+
+.our_team p {
+    font-size: 40px;
+    color: white;
+    text-align: center;
+    font-family: 'Barlow', sans-serif;
+    font-style: italic;
+}
+
+.card {
+    height: 300px;
+    width: 200px;
+    border-radius: 10px;
+    transition: all 0.8s;
+    overflow: hidden;
+    background: black;
+    box-shadow: 0 70px 63px -60px #000000;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    display: inline-block;
+    margin-left: 95px;
+    margin-top: 100px;
+}
+
+.border {
+    height: 369px;
+    width: 290px;
+    border-radius: 10px;
+    transition: all 1s;
+    position: relative;
+}
+
+.border:hover {
+    border: 1px solid black
+}
+
+.card-greg {
+    background: url(./images/GREGOIRE.png) center center no-repeat;
+    background-size: 300px;
+}
+
+.card-greg:hover {
+    background: url(./images/GREGOIRE.png) left center no-repeat;
+    background-size: 350px;
+    filter: grayscale(1);
+}
+
+.card-oscar {
+    background: url(./images/OSCAR.png) center center no-repeat;
+    background-size: 300px;
+}
+
+.card-oscar:hover {
+    background: url(./images/OSCAR.png) left center no-repeat;
+    background-size: 350px;
+    filter: grayscale(1);
+}
+
+.card-yness {
+    background: url(./images/YNESS.png) center center no-repeat;
+    background-size: 300px;
+}
+
+.card-yness:hover {
+    background: url(./images/YNESS.png) left center no-repeat;
+    background-size: 350px;
+    filter: grayscale(1);
+}
+
+.card-pierre {
+    background: url(./images/PIERRE.png) center center no-repeat;
+    background-size: 300px;
+}
+
+.card-pierre:hover {
+    background: url(./images/PIERRE.png) left center no-repeat;
+    background-size: 300px;
+    filter: grayscale(1);
+}
+
+.card h2 {
+    color: rgb(2, 64, 122);
+    margin-top: 30px;
+    margin-right: 70px;
+    opacity: 0;
+    transition: all 1s;
+    font-family: 'Barlow', sans-serif;
+    font-style: italic;
+    font-size: 30px;
+}
+
+.card p {
+    color: white;
+    font-family: 'Barlow', sans-serif;
+    font-size: 20px;
+}
+
+.fab {
+    opacity: 0;
+    transition: all 1s;
+}
+
+.icons {
+    position: absolute;
+    height: 130px;
+    top: 150px;
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+a {
+    color: rgb(2, 64, 122);
+}
+
+.card:hover h2 {
+    opacity: 1;
+}
+
+.card:hover .fab {
+    opacity: 1;
+}
+
+.pres {
+    height: 700px;
+    width: 200px;
+    border-radius: 10px;
+    transition: all 0.8s;
+    overflow: hidden;
+    background: black;
+    box-shadow: 0 70px 63px -60px #000000;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    display: inline-block;
+    margin-left: 95px;
+    margin-top: 30px;
+}
+
+.presProjet {
+    height: 250px;
+    width: 850px;
+    border-radius: 10px;
+    transition: all 0.8s;
+    overflow: hidden;
+    background: black;
+    box-shadow: 0 70px 63px -60px #000000;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    display: inline-block;
+    margin-left: 250px;
+    margin-top: 50px;
+}
+
+.presProjet p {
+    color: white;
+    font-size: 20px;
+    font-family: 'Barlow', sans-serif;
+    border-radius: 10px;
+    transition: all 0.8s;
+    margin-top: 50px
+}
+
+.pres p {
+    color: white;
+    font-size: 20px;
+    font-family: 'Barlow', sans-serif;
+}
+
+.our_project {
+    background: black;
+    height: 50vh;
+}
+
+.our_project h2 {
+    font-size: 100px;
+    color: rgb(2, 64, 122);
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+}
+
+.main {
+    max-width: 1300px;
+    background: black;
+    padding: 16px;
+    display: list-item;
+}
+
+.content {
+    width: 1050px;
+    margin-left: 95px;
+    background: black;
+}
+
+.content p {
+    color: white;
+    font-size: 20px;
+    font-family: 'Barlow', sans-serif;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.content h3 {
+    color: rgb(2, 64, 122);
+    font-size: 50px;
+    font-style: italic;
+    margin-top: 40px;
+    font-family: 'Barlow', sans-serif;
+    text-align: center;
+}
+
+.clearfix:after {
+    content: "";
+    display: block;
+    clear: both;
+}
