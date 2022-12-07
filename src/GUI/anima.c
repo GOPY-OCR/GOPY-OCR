@@ -150,17 +150,19 @@ G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_dat
     gtk_image_set_from_sdl_surface(Image, image_sdl);
     
     // 9.  Split the image in 81 small images
-    //SDL_Surface **splitted = split_sudoku(image_sdl);
+    SDL_Surface **splitted = split_sudoku(image_sdl);
     
     // 10. Resize the image to 28x28 for the neural network
-    //neural_network_resize(splitted);
+    neural_network_resize(splitted);
     
     // 12. Neural network
-
+    int *grid = neural_network(splitted);
 
     // 13. Solve the grid
-    //int *solved = Solve(grid);
+    int *solved = Solve(grid);
 
     // 14. Postprocess
-    //SDL_Surface  = postprocess(*grid, *solved);
+    SDL_Surface *final_result = postprocess(*grid, *solved);
+
+    save_image(final_result, "/tmp/sodoko_result.png");
 }

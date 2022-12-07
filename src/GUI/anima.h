@@ -2,6 +2,7 @@
 #include <gtk/gtk.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <string.h>
 #include "../Preprocess/preprocess.h"
 #include "sdl_utils.h"
 #include "glob_struct.h"
