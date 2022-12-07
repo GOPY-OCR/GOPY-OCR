@@ -106,11 +106,13 @@ void update_image(GtkImage *image, SDL_Surface *new_surface) {
 
 G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_data)
 {
-    g_printf("\nlol\n");
+    g_print("\nlol\n");
     // Convert the user pointer into the filename
     Glob_GUI *glob = user_data;
     GtkImage *Image = glob->page_1_Image;
     gchar *path = glob->original_image_path;
+
+    Params p = get_params(path);
 
     // 1.  Load the image as a SDL_Surface
     SDL_Surface *SDL_image = load_image(path);
@@ -128,7 +130,7 @@ G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_dat
     gtk_image_set_from_sdl_surface(Image, SDL_image);
 
     // 5.  Binarization
-    binarize(SDL_image);
+    binarize(SDL_image, p.b_th);
     gtk_image_set_from_sdl_surface(Image, SDL_image);
 
     // 6.  Interpolation des images pas droites
@@ -136,11 +138,13 @@ G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_dat
     gtk_image_set_from_sdl_surface(Image, SDL_image);
 
     // 7.  Grid detection
-    Quad coords = grid_detection(SDL_image, 0);
-    SDL_Surface *copy;
+    Quad coords = grid_detection(SDL_image, 0, p);
+    SDL_Surface *copy = new_blank_surface(SDL_image);
     SDL_BlitSurface(SDL_image, NULL, copy, NULL);
-    grid_detection(copy, 1);
+    grid_detection(copy, 1, p);
     gtk_image_set_from_sdl_surface(Image, copy);
+
+    SDL_FreeSurface(copy);
 
     // 8.  Perspective correction of the image
     perspective_correction(&SDL_image, &coords);
