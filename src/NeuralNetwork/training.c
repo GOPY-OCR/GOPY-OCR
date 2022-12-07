@@ -38,6 +38,10 @@ void train(NeuralNetwork *nn,
     int testing_nb = testing_data != NULL ? testing_data->size : 0;
     int training_nb = training_data->size;
 
+    if (batch_size > training_nb) {
+        batch_size = training_nb;
+    }
+
     if(verbose > 0){
         printf( "----- TRAINING SUMMARY -----\n"
                 "Training on %d samples\n"
@@ -84,10 +88,6 @@ void train(NeuralNetwork *nn,
     // to make a copy of it to avoid modifying the order each epoch
     if(testing_data == training_data) {
         testing_data = copy_dataset(testing_data, 0); // 0 = shallow copy, no need to copy the data, only the order
-    }
-
-    if (batch_size > training_nb) {
-        batch_size = training_nb;
     }
 
     for (int e = 0; e < epochs; e++) {

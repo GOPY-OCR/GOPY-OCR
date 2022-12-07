@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
             errx(EXIT_FAILURE, "error: file not specified");
         }
 
-        char save_filename[] = "_build/ocr_save.nn";
+        char save_filename[] = NN_SAVE_FILENAME;
         NeuralNetwork *nn = load_neural_network(save_filename);
 
 

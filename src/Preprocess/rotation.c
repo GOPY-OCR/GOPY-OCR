@@ -49,6 +49,6 @@ void manual_rot(SDL_Surface **image, double angle)
 }
 
 void automatic_rot(SDL_Surface **image) {
-    double angle = grid_rotation_detection(*image);
+    int angle = grid_rotation_detection(*image);
     manual_rot(image, angle);
 }

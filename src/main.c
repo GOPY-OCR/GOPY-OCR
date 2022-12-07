@@ -240,6 +240,7 @@ int main(int argc, char **argv) {
         Quad grid = grid_detection(image, 0, p, 1);
         perspective_correction(&image, &grid);
         SDL_Surface **splitted = split_sudoku(image);
+        neural_network_resize(splitted);
 
         for (size_t i = 0; i < 81; i++) {
             char str[3] = {0};
@@ -275,7 +276,7 @@ int main(int argc, char **argv) {
         SDL_Surface **splitted = split_sudoku(image);
         int *sudoku = malloc(81 * sizeof(int));
 
-        NeuralNetwork *nn = load_neural_network("neural_network.nn");
+        NeuralNetwork *nn = load_neural_network(NN_SAVE_FILENAME);
 
         for (size_t i = 0; i < 81; i++) {
             sudoku[i] = predict_surface(splitted[i], nn);

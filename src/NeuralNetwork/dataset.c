@@ -44,6 +44,7 @@ dataset *load_dataset(const char *path, int size) {
     data->targets = malloc(size * 10 * sizeof(matrice *));
 
     int pathle = strlen(path);
+    int idx = 0;
     for (int i = 0; i < 10; i++) {
         char *folder = malloc(pathle + 2);
         strcpy(folder, path);
@@ -53,17 +54,20 @@ dataset *load_dataset(const char *path, int size) {
 
         char **images_paths = list_files(folder, size, 1);
 
-        for (int j = 0; j < size; j++) {
+        for (int j = 0; j < size && images_paths[j] != NULL; j++) {
             SDL_Surface *image = load_image(images_paths[j]);
 
-            data->inputs[i * size + j] = image_to_matrice(image);
-            data->targets[i * size + j] = matrice_zeros(10, 1);
-            matrice_set(data->targets[i * size + j], i, 0, 1);
+            data->inputs[idx] = image_to_matrice(image);
+            data->targets[idx] = matrice_zeros(10, 1);
+            matrice_set(data->targets[idx], i, 0, 1);
+            idx++;
 
             SDL_FreeSurface(image);
         }
 
-        for (int j = 0; j < size; j++) {
+        data->size = idx;
+
+        for (int j = 0; j < size && images_paths[j] != NULL; j++) {
             free(images_paths[j]);
         }
 
