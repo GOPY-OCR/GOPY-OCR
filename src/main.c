@@ -274,24 +274,24 @@ int main(int argc, char **argv) {
         perspective_correction(&image, &grid);
 
         SDL_Surface **splitted = split_sudoku(image);
-        int *sudoku = malloc(81 * sizeof(int));
 
-        NeuralNetwork *nn = load_neural_network(NN_SAVE_FILENAME);
-
-        for (size_t i = 0; i < 81; i++) {
-            sudoku[i] = predict_surface(splitted[i], nn);
-            //SDL_FreeSurface(splitted[i]);
-        }
+        int *res = neural_network(splitted);
 
         printf("Sudoku:\n");
-        print_grid(sudoku);
+        print_grid(res);
 
         char *file = malloc(strlen(argv[2]) + 5);
         strcpy(file, argv[2]);
         strtok(file, ".");
         strcat(file, ".sudoku");
         printf("\nSaving to %s...\n", file);
-        save_grid_file(file, sudoku);
+        save_grid_file(file, res);
+
+        free(res);
+        free(file);
+
+        for (size_t i = 0; i < 81; i++)
+            SDL_FreeSurface(splitted[i]);
 
         SDL_FreeSurface(image);
     }
