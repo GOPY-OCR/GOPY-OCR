@@ -3,7 +3,7 @@
 # Which compiler use
 CC := gcc
 
-USED_LIBS = sdl2 SDL2_image SDL_gfx gtk+-3.0 SDL2_ttf
+USED_LIBS = sdl2 SDL2_image gtk+-3.0 SDL2_ttf
 # Flags (with = and not := so flags can be added after)
 CFLAGS = -Wall -Wextra `pkg-config --cflags $(USED_LIBS)` $(OPTFLAGS) -D__NO_INLINE__
 OPTFLAGS := -O3
