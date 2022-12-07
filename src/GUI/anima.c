@@ -43,6 +43,7 @@ GtkWidget *gtk_image_new_from_sdl_surface (SDL_Surface *surface)
 
     return image;
 }
+
 void anima_init(Glob_GUI *glob)
 {
     glob->anima_PreviousButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "PreviousButton"));
