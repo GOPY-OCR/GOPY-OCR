@@ -1,6 +1,6 @@
 #include "anima.h"
 
-GtkWidget *gtk_image_new_from_sdl_surface (SDL_Surface *surface)
+void gtk_image_set_from_sdl_surface(GtkImage *image, SDL_Surface *surface)
 {
     Uint32 src_format;
     Uint32 dst_format;
@@ -9,8 +9,6 @@ GtkWidget *gtk_image_new_from_sdl_surface (SDL_Surface *surface)
     gboolean has_alpha;
     int rowstride;
     guchar *pixels;
-
-    GtkWidget *image;
 
     // select format                                                            
     src_format = surface->format->format;
@@ -23,32 +21,31 @@ GtkWidget *gtk_image_new_from_sdl_surface (SDL_Surface *surface)
     }
 
     // create pixbuf                                                            
-    pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, has_alpha, 8,
+    pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, has_alpha, 8,
                              surface->w, surface->h);
-    rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-    pixels = gdk_pixbuf_get_pixels (pixbuf);
+    rowstride = gdk_pixbuf_get_rowstride(pixbuf);
+    pixels = gdk_pixbuf_get_pixels(pixbuf);
 
     // copy pixels                                                              
     SDL_LockSurface(surface);
-    SDL_ConvertPixels (surface->w, surface->h, src_format,
+    SDL_ConvertPixels(surface->w, surface->h, src_format,
                surface->pixels, surface->pitch,
                dst_format, pixels, rowstride);
     SDL_UnlockSurface(surface);
 
     // create GtkImage from pixbuf                                              
-    image = gtk_image_new_from_pixbuf (pixbuf);
+    gtk_image_set_from_pixbuf(image, pixbuf);
 
     // release our reference to the pixbuf                                      
-    g_object_unref (pixbuf);
-
-    return image;
+    g_object_unref(pixbuf);
 }
 
 void anima_init(Glob_GUI *glob)
 {
     glob->anima_PreviousButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "PreviousButton"));
     glob->anima_SaveButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "SaveButton"));
-    glob->page_1_Image = GTK_IMAGE(gtk_builder_geet_object(glob->builder, "ImageStepPreprocess"));
+    glob->page_1_Image = GTK_IMAGE(gtk_builder_get_object(glob->builder, "ImageStepPreprocess"));
+    glob->anima_StartButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "StartButton"));
 
     //CSS Button color changer 
     GtkCssProvider* css = gtk_css_provider_new();
@@ -64,7 +61,7 @@ void anima_init(Glob_GUI *glob)
 	// connections des signaux
     g_signal_connect(glob->anima_PreviousButton, "clicked", G_CALLBACK(on_PreviousButton_clicked), glob);
     g_signal_connect(glob->anima_SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), glob);
-    g_signal_connect(glob->anima_StartButton, "clicked", G_CALLBACK(on_SaveButton_clicked), glob);
+    g_signal_connect(glob->anima_StartButton, "clicked", G_CALLBACK(on_StartButton_clicked), glob);
 }
 
 
@@ -109,60 +106,58 @@ void update_image(GtkImage *image, SDL_Surface *new_surface) {
 
 G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_data)
 {
+    g_printf("\nlol\n");
     // Convert the user pointer into the filename
     Glob_GUI *glob = user_data;
+    GtkImage *Image = glob->page_1_Image;
     gchar *path = glob->original_image_path;
 
     // 1.  Load the image as a SDL_Surface
     SDL_Surface *SDL_image = load_image(path);
-    gtk_image_clear(Image);
     
-    // 2.  Resize the image to speed up the next functions
-    resize(&image);
-    gtk_image_clear(Image);
+    // 2.  Resize the SDL_image to speed up the next functions
+    resize(&SDL_image);
+    gtk_image_set_from_sdl_surface(Image, SDL_image);
 
     // 3.  Grayscale
     surface_to_grayscale(Image);
-    gtk_image_clear(image);
+    gtk_image_set_from_sdl_surface(Image, SDL_image);
 
     // 4.  Noise reduction + contrasts correction
     correct_brightness(Image);
-    gtk_image_clear(image);
+    gtk_image_set_from_sdl_surface(Image, SDL_image);
 
     // 5.  Binarization
-    binarize(image);
-    gtk_image_clear(Image);
+    binarize(SDL_image);
+    gtk_image_set_from_sdl_surface(Image, SDL_image);
 
     // 6.  Interpolation des images pas droites
-    automatic_rot(&image);    
-    gtk_image_clear(Image);
+    automatic_rot(&SDL_image);    
+    gtk_image_set_from_sdl_surface(Image, SDL_image);
 
     // 7.  Grid detection
-    Quad coords = grid_detection(image, 0);
-    gtk_image_clear(Image);
+    Quad coords = grid_detection(SDL_image, 0);
+    SDL_Surface *copy;
+    SDL_BlitSurface(SDL_image, NULL, copy, NULL);
+    grid_detection(copy, 1);
+    gtk_image_set_from_sdl_surface(Image, copy);
 
     // 8.  Perspective correction of the image
-    perspective_correction(&image, &coords);
-    gtk_image_clear(Image);
+    perspective_correction(&SDL_image, &coords);
+    gtk_image_set_from_sdl_surface(Image, SDL_image);
     
     // 9.  Split the image in 81 small images
-    SDL_Surface **splitted = split_sudoku(image);
-    gtk_image_clear(Image);
+    //SDL_Surface **splitted = split_sudoku(SDL_image);
     
     // 10. Resize the image to 28x28 for the neural network
-    neural_network_resize(splitted);
-    gtk_image_clear(Image);
-    
-    // 11. Resize the image to 28x28 for the neural network
-    neural_network_resize(splitted);
-    gtk_image_clear(Image);
+    //neural_network_resize(splitted);
     
     // 12. Neural network
 
+
     // 13. Solve the grid
-    int *solved = Solve(grid);
+    //int *solved = Solve(grid);
 
     // 14. Postprocess
-    image = postprocess(*grid, *solved);
-    gtk_image_clear(Image);
+    //SDL_Surface  = postprocess(*grid, *solved);
 }

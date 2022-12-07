@@ -156,7 +156,9 @@
               <object class="GtkImage" id="ImageStepPreprocess">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="margin-bottom">191</property>
+                <property name="double-buffered">False</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <property name="stock">gtk-missing-image</property>
               </object>
               <packing>
@@ -183,8 +185,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="SaveButton">
-                    <property name="label" translatable="yes">Save</property>
+                  <object class="GtkButton" id="StartButton">
+                    <property name="label" translatable="yes">Start</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
@@ -195,11 +197,24 @@
                     <property name="position">1</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkButton" id="SaveButton">
+                    <property name="label" translatable="yes">Save</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>

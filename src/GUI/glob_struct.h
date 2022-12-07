@@ -10,6 +10,7 @@ typedef struct Glob_GUI {
 
     GtkButton *anima_PreviousButton;
     GtkButton *anima_SaveButton;
+    GtkButton *anima_StartButton;
 
     GtkButton *page_0_LoadButton;
 
