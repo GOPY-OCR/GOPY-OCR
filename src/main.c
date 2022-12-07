@@ -18,7 +18,7 @@ void exit_help(int error) {
                  "  -c,    --cut IMG                 Save the images in `IMG_X.png`\n"
                  "  -nn,   --neural-network IMG      Save the predicted grid in `IMG_detected_grid.sudoku`\n"
                  "  -s,    --solve GRID              Save the result in `GRID.result`\n"
-                 "  -N,    --neural-network          Show a proof of concept of the neural network\n"
+                 "  -N,    --neural-network-poc      Show a proof of concept of the neural network\n"
                  "                                   Type `-N` to show help message about neural network\n"
                  "  -Pre,  --preprocess IMG          Execute the whole preprocess\n"
                  "  -Post, --postprocess GRID \\     Generate an image of the solved grid\n"
@@ -314,7 +314,7 @@ int main(int argc, char **argv) {
         free(board);
     }
     
-    else if (strcmp(argv[1], "--neural-network") == 0 || strcmp(argv[1], "-N") == 0) {
+    else if (strcmp(argv[1], "--neural-network-poc") == 0 || strcmp(argv[1], "-N") == 0) {
         printf("Show neural network...\n");
 
         int verbose = argc > 2 && strcmp(argv[2], "-v") == 0 ? 2 : 1;
