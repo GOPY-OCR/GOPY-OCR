@@ -7,7 +7,7 @@
 #include <argp.h>
 #include <sys/stat.h>
 
-#define NN_SAVE_FILENAME "./ocr_save.nn"
+#define NN_SAVE_FILENAME "assets/NeuralNetwork/ocr_save.nn"
 
 
 int digit_recognition_main(int argc, char **argv, int verbose);

@@ -9,7 +9,7 @@
 #include "cost_functions.h"
 
 #ifndef NN_SAVE_FILENAME
-    #define NN_SAVE_FILENAME "./ocr_save.nn"
+    #define NN_SAVE_FILENAME "assets/NeuralNetwork/ocr_save.nn"
 #endif
 
 typedef struct Layer {
