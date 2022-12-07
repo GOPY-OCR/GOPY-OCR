@@ -11,3 +11,7 @@
 #include "gui-utils.h"
 #include "pages.h"
 #include "glob_struct.h"
+
+#define GUI_GLADE "assets/GUI/GUI-project.glade"
+
+int GUI(int argc, char* argv[]);

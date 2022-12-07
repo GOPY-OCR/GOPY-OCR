@@ -1,13 +1,13 @@
-#include "main.h"
+#include "GUI.h"
 
 #define WINDOW_TITLE "GOPY - A Fully Automated Sudoku Solver"
 
 
-int main(int argc, char* argv[])
+int GUI(int argc, char* argv[])
 {
     Glob_GUI *glob = malloc(sizeof(Glob_GUI));
     gtk_init(&argc, &argv);
-    glob->builder = gtk_builder_new_from_file("GUI-project.glade");
+    glob->builder = gtk_builder_new_from_file(GUI_GLADE);
     glob->main = GTK_WIDGET(gtk_builder_get_object(glob->builder,"main"));
     g_signal_connect(glob->main,"destroy",G_CALLBACK(gtk_main_quit),NULL);
 
