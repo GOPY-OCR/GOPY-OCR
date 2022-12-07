@@ -106,7 +106,6 @@ void update_image(GtkImage *image, SDL_Surface *new_surface) {
 
 G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_data)
 {
-    g_print("\nlol\n");
     // Convert the user pointer into the filename
     Glob_GUI *glob = user_data;
     GtkImage *Image = glob->page_1_Image;
@@ -115,43 +114,43 @@ G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_dat
     Params p = get_params(path);
 
     // 1.  Load the image as a SDL_Surface
-    SDL_Surface *SDL_image = load_image(path);
+    SDL_Surface *image_sdl = load_image(path);
     
-    // 2.  Resize the SDL_image to speed up the next functions
-    resize(&SDL_image);
-    gtk_image_set_from_sdl_surface(Image, SDL_image);
+    // 2.  Resize the image_sdl to speed up the next functions
+    resize(&image_sdl);
+    gtk_image_set_from_sdl_surface(Image, image_sdl);
 
     // 3.  Grayscale
-    surface_to_grayscale(Image);
-    gtk_image_set_from_sdl_surface(Image, SDL_image);
+    surface_to_grayscale(image_sdl);
+    gtk_image_set_from_sdl_surface(Image, image_sdl);
 
     // 4.  Noise reduction + contrasts correction
-    correct_brightness(Image);
-    gtk_image_set_from_sdl_surface(Image, SDL_image);
+    correct_brightness(image_sdl);
+    gtk_image_set_from_sdl_surface(Image, image_sdl);
 
     // 5.  Binarization
-    binarize(SDL_image, p.b_th);
-    gtk_image_set_from_sdl_surface(Image, SDL_image);
+    binarize(image_sdl, p.b_th);
+    gtk_image_set_from_sdl_surface(Image, image_sdl);
 
     // 6.  Interpolation des images pas droites
-    automatic_rot(&SDL_image);    
-    gtk_image_set_from_sdl_surface(Image, SDL_image);
+    automatic_rot(&image_sdl);    
+    gtk_image_set_from_sdl_surface(Image, image_sdl);
 
     // 7.  Grid detection
-    Quad coords = grid_detection(SDL_image, 0, p);
-    SDL_Surface *copy = new_blank_surface(SDL_image);
-    SDL_BlitSurface(SDL_image, NULL, copy, NULL);
+    Quad coords = grid_detection(image_sdl, 0, p);
+    SDL_Surface *copy = new_blank_surface(image_sdl);
+    SDL_BlitSurface(image_sdl, NULL, copy, NULL);
     grid_detection(copy, 1, p);
     gtk_image_set_from_sdl_surface(Image, copy);
 
     SDL_FreeSurface(copy);
 
     // 8.  Perspective correction of the image
-    perspective_correction(&SDL_image, &coords);
-    gtk_image_set_from_sdl_surface(Image, SDL_image);
+    perspective_correction(&image_sdl, &coords);
+    gtk_image_set_from_sdl_surface(Image, image_sdl);
     
     // 9.  Split the image in 81 small images
-    //SDL_Surface **splitted = split_sudoku(SDL_image);
+    //SDL_Surface **splitted = split_sudoku(image_sdl);
     
     // 10. Resize the image to 28x28 for the neural network
     //neural_network_resize(splitted);
