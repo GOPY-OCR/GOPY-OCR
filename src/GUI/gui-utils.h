@@ -1,6 +1,5 @@
 #pragma once
 #include <gtk/gtk.h>
-#include <gtk/gtkx.h>
 #include "glob_struct.h"
 
 void init_gui_utils(Glob_GUI *glob);
