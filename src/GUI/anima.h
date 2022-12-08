@@ -7,6 +7,7 @@
 #include "../NeuralNetwork/neural_network.h"
 #include "../Solver/grid.h"
 #include "../Solver/solver.h"
+#include "../Postprocess/postprocess.h"
 #include "sdl_utils.h"
 #include "glob_struct.h"
 #include "gui-utils.h"
