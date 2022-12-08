@@ -10,7 +10,6 @@ typedef struct Glob_GUI {
 
     GtkButton *anima_PreviousButton;
     GtkButton *anima_SaveButton;
-    GtkButton *anima_StartButton;
 
     GtkButton *page_0_LoadButton;
 
@@ -19,12 +18,11 @@ typedef struct Glob_GUI {
     GtkImage *page_1_Image;
     GtkSwitch *page_1_Switch;
 
-    GtkImage *Image_anima; 
-    GtkButton *anima_NextStep;
-    GtkButton *anima_PrevStep;
-    GtkButton *anima_LastStep;
-
-    int anima_manual;
+    GtkImage *Image_anima;
+    GtkButton *anima_NextStep; // Next step button
+    GtkButton *anima_PrevStep; // Prev step button
+    GtkButton *anima_LastStep; // Directly go to the last step (postprocess)
+    int anima_manual; // Automatic mode or not
 
     gchar *original_image_path;
     int current_page;
