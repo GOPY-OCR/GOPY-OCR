@@ -51,7 +51,7 @@ void anima_start(Glob_GUI *glob) {
 
     gtk_image_set_from_sdl_surface(glob->Image_anima, glob->steps->prep[0]);
 
-    if (!glob->anima_manual)
+    if (glob->anima_auto)
         gtk_image_set_from_sdl_surface(glob->Image_anima, glob->steps->post);
 }
 
