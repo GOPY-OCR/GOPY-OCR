@@ -53,7 +53,7 @@ void compute_all_steps(Glob_GUI *glob);
     res->cur_step = 0;
     res->nb_steps = NB_STEPS;
     res->nb_pre_steps = NB_PRE_STEPS;
-    res->preprocess_states = calloc(res->nb_pre_steps, sizeof(SDL_Surface *));
+    res->prep = calloc(res->nb_pre_steps, sizeof(SDL_Surface *));
 
     // Convert the user pointer into the filename
     GtkImage *Image = glob->Image_anima;
@@ -63,37 +63,37 @@ void compute_all_steps(Glob_GUI *glob);
 
     // 1.  Load the image as a SDL_Surface
     SDL_Surface *image_sdl = load_image(path);
-    res->preprocess_states[0] = copy_surface(image_sdl);
+    res->prep[0] = copy_surface(image_sdl);
     
     // 2.  Resize the image_sdl to speed up the next functions
     resize(&image_sdl);
-    res->preprocess_states[1] = copy_surface(image_sdl);
+    res->prep[1] = copy_surface(image_sdl);
     //gtk_image_set_from_sdl_surface(Image, image_sdl);
 
     // 3.  Grayscale
     surface_to_grayscale(image_sdl);
-    res->preprocess_states[2] = copy_surface(image_sdl);
+    res->prep[2] = copy_surface(image_sdl);
 
     // 4.  Noise reduction + contrasts correction
     correct_brightness(image_sdl);
-    res->preprocess_states[3] = copy_surface(image_sdl);
+    res->prep[3] = copy_surface(image_sdl);
 
     // 5.  Binarization
     binarize(image_sdl, p.b_th);
-    res->preprocess_states[4] = copy_surface(image_sdl);
+    res->prep[4] = copy_surface(image_sdl);
 
     // 6.  Interpolation des images pas droites
     automatic_rot(&image_sdl);    
-    res->preprocess_states[5] = copy_surface(image_sdl);
+    res->prep[5] = copy_surface(image_sdl);
 
     // 7.  Grid detection
     Quad coords = grid_detection(image_sdl, 0, p, 1);
-    res->preprocess_states[6] = copy_surface(image_sdl);
-    grid_detection(res->preprocess_states[6], 1, p, 0);
+    res->prep[6] = copy_surface(image_sdl);
+    grid_detection(res->prep[6], 1, p, 0);
 
     // 8.  Perspective correction of the image
     perspective_correction(&image_sdl, &coords);
-    res->preprocess_states[7] = copy_surface(image_sdl);
+    res->prep[7] = copy_surface(image_sdl);
     
     // 9.  Split the image in 81 small images
     SDL_Surface **splitted = split_sudoku(image_sdl);

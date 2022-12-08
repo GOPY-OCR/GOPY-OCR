@@ -47,7 +47,7 @@ void anima_init(Glob_GUI *glob)
     if (glob->steps == NULL)
         errx(EXIT_FAILURE, "Something went wrong during the computing of all steps");
 
-    gtk_image_set_from_sdl_surface(glob->Image_anima, steps->preprocess[0]);
+    gtk_image_set_from_sdl_surface(glob->Image_anima, steps->prep[0]);
 
     if (!glob->anima_manual)
         gtk_image_set_from_sdl_surface(glob->Image_anima, steps->post);
@@ -102,7 +102,7 @@ G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data) 
     Anima_Steps *steps = glob->steps;
 
     if (++steps->cur_step < steps->nb_pre_steps)
-        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->preprocess[steps->cur_step]);
+        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->prep[steps->cur_step]);
 
     else if (steps->cur_step == steps->nb_pre_steps) {
         // Show detected grid    
@@ -119,7 +119,7 @@ G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data) 
     Anima_Steps *steps = glob->steps;
 
     if (--steps->cur_step < steps->nb_pre_steps)
-        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->preprocess[steps->cur_step]);
+        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->prep[steps->cur_step]);
 
     else if (steps->cur_step == steps->nb_pre_steps) {
         // Show detected grid    
