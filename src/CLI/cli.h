@@ -14,6 +14,7 @@
 
 // Brightness / contrast / noise part
 #include "../Preprocess/brightness.h"
+#include "../Preprocess/denoise.h"
 
 // Rotation part
 #include "../Preprocess/rotation.h"
@@ -31,7 +32,6 @@
 
 // Preprocess
 #include "../Preprocess/preprocess.h"
-#include "../Preprocess/params.h"
 
 // Solver part
 #include "../Solver/grid.h"

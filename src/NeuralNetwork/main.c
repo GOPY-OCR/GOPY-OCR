@@ -4,6 +4,7 @@ const char *help = "usage: %s mode [options] [mode options]   \n\
 availables modes:                                             \n\
 -t, --train: train the neural network                         \n\
 -p, --predict: predict the number displayed on the input image\n\
+-s, --sort: sort the images from current directory            \n\
 -x, --xor-demo: run the demo for the xor network              \n\
 -h, --help: display this help                                 \n\
 options:                                                      \n\
@@ -59,11 +60,11 @@ int main(int argc, char **argv) {
             predict_image(nn, argv[argi]);
         }
 
-        
+    } else if (strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--sort") == 0) {
+        sort_images(argc, argv, verbosity);
     } else if (strcmp(argv[1], "-h") == 0 ||
                strcmp(argv[1], "--help") == 0) {
-
-
+        printf(help, argv[0]);
     } else if (strcmp(argv[1], "-x") == 0 || strcmp(argv[1], "--xor-demo") == 0) {
         int verbose_argument = (verbosity > 0) ? 1 : 0;
         int args_offset = 2 + verbose_argument;

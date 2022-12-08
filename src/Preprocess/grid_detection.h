@@ -8,18 +8,15 @@
 #include "flood_fill.h"
 #include "array_sort.h"
 #include "debug_utils.h"
-#include "params.h"
+#include "max_component.h"
 
 // Detects the grid in the image
 // The input image must be correctly rotated
-Quad grid_detection(SDL_Surface *image, int draw_grid, Params params, int remove_grid);
+Quad grid_detection(SDL_Surface *image, int draw_grid, int remove_grid);
 
 int grid_rotation_detection(SDL_Surface *image);
 
 Quad find_white_coners(SDL_Surface *extracted_grid);
-
-// Extracts the grid from the image
-SDL_Surface *extract_grid(SDL_Surface *image, int flood_fill_connectivity, int remove_grid);
 
 // calculates the areas of the rectangles
 // and tries to find which one are part of the grid

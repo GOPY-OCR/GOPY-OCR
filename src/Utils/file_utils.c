@@ -144,3 +144,9 @@ void copy_file(const char *src, const char *dst) {
     fclose(fsrc);
     fclose(fdst);
 }
+
+void move_file(const char *src, const char *dst){
+    if (rename(src, dst) != 0) {
+        errx(1, "move_file: Could not move file %s to %s", src, dst);
+    }
+}

@@ -18,8 +18,6 @@ SDL_Surface **preprocess(const char *filename) {
     // 1.  Load the image as a SDL_Surface
     SDL_Surface *image = load_image(filename);
 
-    Params p = get_params(filename);
-
     // 2.  Resize the image to speed up the next functions
     resize(&image);
 
@@ -30,13 +28,13 @@ SDL_Surface **preprocess(const char *filename) {
     correct_brightness(image);
 
     // 5.  Binarization
-    binarize(image, p.b_th);
+    adaptative_binarize(image);
 
     // 6.  Automatic rotation
     automatic_rot(&image);
 
     // 7.  Grid detection
-    Quad coords = grid_detection(image, 0, p, 1);
+    Quad coords = grid_detection(image, 0, 1);
 
     // 8.  Perspective correction of the image
     perspective_correction(&image, &coords);
@@ -46,6 +44,9 @@ SDL_Surface **preprocess(const char *filename) {
 
     // 10. Resize the image to 28x28 for the neural network
     neural_network_resize(splitted);
+
+    // 11. Denoise neural network images
+    neural_network_denoise(splitted);
 
     return splitted;
 }

@@ -4,11 +4,13 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <assert.h>
 #include "matrice.h"
+#include "pixel_utils.h"
 
 void binarize(SDL_Surface *base, int threshold);
 
-void adaptative(SDL_Surface **base);
+void adaptative_binarize(SDL_Surface *base);
 
 #endif
 

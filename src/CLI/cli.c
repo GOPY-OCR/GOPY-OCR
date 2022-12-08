@@ -135,11 +135,10 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "bin");
 
         SDL_Surface *image = load_image(argv[2]);
-        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image, p.b_th);
+        adaptative_binarize(image);
         save_image(image, final_name);
 
         free(final_name);
@@ -155,13 +154,12 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "detected_grid");
 
         SDL_Surface *image = load_image(argv[2]);
-        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image, p.b_th);
+        adaptative_binarize(image);
         automatic_rot(&image);
-        grid_detection(image, 1, p, 0);
+        grid_detection(image, 1, 0);
         save_image(image, final_name);
 
         free(final_name);
@@ -196,11 +194,10 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "auto_rotated");
 
         SDL_Surface *image = load_image(argv[2]);
-        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image, p.b_th);
+        adaptative_binarize(image);
         automatic_rot(&image);
         save_image(image, final_name);
         SDL_FreeSurface(image);
@@ -215,13 +212,12 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "perspective");
 
         SDL_Surface *image = load_image(argv[2]);
-        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image, p.b_th);
+        adaptative_binarize(image);
         automatic_rot(&image);
-        Quad grid = grid_detection(image, 0, p, 1);
+        Quad grid = grid_detection(image, 0, 1);
         perspective_correction(&image, &grid);
         save_image(image, final_name);
 
@@ -236,15 +232,15 @@ int CLI(int argc, char **argv) {
             exit_help(1);
 
         SDL_Surface *image = load_image(argv[2]);
-        Params p = get_params(argv[2]);
         resize(&image);
         surface_to_grayscale(image);
         correct_brightness(image);
-        binarize(image, p.b_th);
+        adaptative_binarize(image);
         automatic_rot(&image);
-        Quad grid = grid_detection(image, 0, p, 1);
+        Quad grid = grid_detection(image, 0, 1);
         perspective_correction(&image, &grid);
         SDL_Surface **splitted = split_sudoku(image);
+        neural_network_denoise(splitted);
         neural_network_resize(splitted);
 
         for (size_t i = 0; i < 81; i++) {

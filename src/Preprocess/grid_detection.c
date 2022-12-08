@@ -1,7 +1,9 @@
 #include "grid_detection.h"
 
-Quad grid_detection(SDL_Surface *image, int draw_grid, Params params, int remove_grid) {
-    SDL_Surface *extracted_grid = extract_grid(image, params.ff_c, remove_grid);
+#define GRID_FLOOD_FILL_CONNECTIVITY 2
+
+Quad grid_detection(SDL_Surface *image, int draw_grid, int remove_grid) {
+    SDL_Surface *extracted_grid = extract_max_component(image, GRID_FLOOD_FILL_CONNECTIVITY, remove_grid);
 
     Quad grid_quad = find_white_coners(extracted_grid);
 
@@ -15,7 +17,7 @@ Quad grid_detection(SDL_Surface *image, int draw_grid, Params params, int remove
 }
 
 int grid_rotation_detection(SDL_Surface *image){
-    SDL_Surface *extracted_grid = extract_grid(image, 2, 0);
+    SDL_Surface *extracted_grid = extract_max_component(image, 2, 0);
 
     Line *image_lines = find_image_lines(extracted_grid, 10, 0);
 
@@ -59,58 +61,6 @@ Quad find_white_coners(SDL_Surface *extracted_grid){
     SDL_UnlockSurface(extracted_grid);
 
     return result;
-}
-
-
-SDL_Surface *extract_grid(SDL_Surface *image, int flood_fill_connectivity, int remove_grid){
-    int areas_capacity = 100;
-    int *areas = malloc(sizeof(int) * areas_capacity);
-    Point *areas_origin = malloc(sizeof(Point) * areas_capacity);
-    int nb_areas = 0;
-
-
-    Uint32 black = SDL_MapRGB(image->format, 0, 0, 0);
-    
-    SDL_Surface *copy = SDL_CreateRGBSurface(0, image->w, image->h, 32, 0, 0, 0, 0);
-    SDL_BlitSurface(image, NULL, copy, NULL);
-
-    for (int x = 0; x < image->w; x++) {
-        for (int y = 0; y < image->h; y++) {
-            if (!is_pixel_white(copy, x, y)) {
-                continue;
-            }
-
-            if (nb_areas == areas_capacity) {
-                areas_capacity *= 2;
-                areas = realloc(areas, sizeof(int) * areas_capacity);
-                areas_origin = realloc(areas_origin, sizeof(Point) * areas_capacity);
-            }
-
-            areas_origin[nb_areas] = (Point) {x, y};
-            areas[nb_areas] = flood_fill(copy, areas_origin[nb_areas], black, 0, NULL, flood_fill_connectivity);
-            nb_areas++;
-        }
-    }
-
-    SDL_FreeSurface(copy);
-
-    int max_area_index = 0;
-    for (int i = 0; i < nb_areas; i++) {
-        if (areas[i] > areas[max_area_index]) {
-            max_area_index = i;
-        }
-    }
-
-    SDL_Surface *extracted_grid = SDL_CreateRGBSurface(0, image->w, image->h, 32, 0, 0, 0, 0);
-
-    // where we found the largest white connected area,
-    // we copy it to a new surface
-    flood_fill(image, areas_origin[max_area_index], black, !remove_grid, extracted_grid, flood_fill_connectivity);
-
-    free(areas);
-    free(areas_origin);
-
-    return extracted_grid;
 }
 
 int compare_rects_area(const void *a, const void *b){

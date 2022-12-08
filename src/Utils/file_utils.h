@@ -29,5 +29,6 @@ int count_files_in_dir(const char *path);
 void delete_dir_recursive(const char path[]);
 
 
-
 void copy_file(const char *src, const char *dst);
+
+void move_file(const char *src, const char *dst);

@@ -1,14 +1,14 @@
 #include "digit_recognition.h"
 
 #define NUM_INPUTS 784
-#define NN_LAYERS (int[]){32, 10}
+#define NN_LAYERS (int[]){128, 10}
 
 // corresponding datasets are 10 times larger
 #define TRAINING_SAMPLES_PER_DIGIT 522 // 500 images from github, 22 from our sudokus
 #define TEST_SAMPLES_PER_DIGIT 22
 
 #define EPOCHS 400
-#define LEARNING_RATE 1
+#define LEARNING_RATE 0.7
 #define BATCH_SIZE 500
 
 #define ENABLE_MULTITHREADING 1
@@ -239,3 +239,48 @@ void predict_all_images(NeuralNetwork *nn, int argc, char **argv, int verbose) {
             grand_total, tot_files, 100.0 * (tot_files - grand_total) / tot_files);
 }
 
+
+void sort_images(int argc, char **argv, int verbose){
+    int nb_files = count_files_in_dir("./");
+    char **files = list_files("./", nb_files, 1);
+    int nb_folders = 10;
+    char **folders = malloc(sizeof(char *) * nb_folders);
+
+    NeuralNetwork *nn = load_neural_network(NN_SAVE_FILENAME);
+    
+    for (int i = 0; i < nb_folders; i++) {
+        folders[i] = malloc(100);
+        sprintf(folders[i], "%d", i);
+        if (!dir_exists(folders[i])){
+            if (verbose == 2)
+                printf("Creating folder: %s\n", folders[i]);
+            mkdir(folders[i], 0777);
+        }
+    }
+
+    for (int i = 0; i < nb_files; i++) {
+        char *filename = files[i];
+        int len = strlen(filename);
+
+        // check if ends with .png
+        if (!(len > 4 && strcmp(filename + len - 4, ".png") == 0)) {
+            continue;
+        }
+
+        int digit = predict_digit(filename, nn);
+
+        char *new_filename = malloc(strlen(folders[digit]) + len + 2);
+        strcpy(new_filename, folders[digit]);
+        strcat(new_filename, "/");
+        strcat(new_filename, filename);
+
+        if (verbose == 1)
+            printf("Moving %s to %s\r", filename, new_filename);
+        else if (verbose == 2)
+            printf("Moving %s to %s\n", filename, new_filename);
+
+        move_file(filename, new_filename);
+        free(new_filename);
+        free(filename);
+    }
+}

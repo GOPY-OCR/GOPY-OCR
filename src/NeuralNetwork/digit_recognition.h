@@ -20,3 +20,5 @@ int predict_surface(SDL_Surface *img, NeuralNetwork *nn);
 void predict_image(NeuralNetwork *nn, char *filename) ;
 void predict_all_images_in_dir(NeuralNetwork *nn, char *folder);
 void predict_all_images(NeuralNetwork *nn, int argc, char **argv, int verbose);
+
+void sort_images(int argc, char **argv, int verbose);
