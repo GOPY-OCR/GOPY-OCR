@@ -10,6 +10,7 @@
 #include "gui-utils.h"
 
 void anima_init(Glob_GUI *glob);
+void anima_start(Glob_GUI *glob);
 G_MODULE_EXPORT void on_PreviousButton_clicked(GtkButton *button, gpointer user_data);
 G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data);
 G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data);

@@ -37,5 +37,7 @@ G_MODULE_EXPORT void on_Continue1_clicked(GtkButton *button, gpointer user_data)
    else
    {
 	   next_page(glob);
+       // Must be anima because fuck it otherwise
+       anima_start(glob);
    }
 }

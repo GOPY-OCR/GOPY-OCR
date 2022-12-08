@@ -42,7 +42,9 @@ void anima_init(Glob_GUI *glob)
     g_signal_connect(glob->anima_NextStep, "clicked", G_CALLBACK(on_NextStep_clicked), glob);
     g_signal_connect(glob->anima_PrevStep, "clicked", G_CALLBACK(on_PrevStep_clicked), glob);
     g_signal_connect(glob->anima_LastStep, "clicked", G_CALLBACK(on_LastStep_clicked), glob);
+}
 
+void anima_start(Glob_GUI *glob) {
     compute_all_steps(glob);
     if (glob->steps == NULL)
         errx(EXIT_FAILURE, "Something went wrong during the computing of all steps");

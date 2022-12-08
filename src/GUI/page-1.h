@@ -1,6 +1,7 @@
 #pragma once
 #include "pages.h"
 #include "glob_struct.h"
+#include "anima.h"
 
 void page_1_init(Glob_GUI *glob);
 
