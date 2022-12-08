@@ -157,12 +157,17 @@ G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_dat
     
     // 12. Neural network
     int *grid = neural_network(splitted);
+    save_grid_file("/tmp/grid_00", grid);
 
     // 13. Solve the grid
     int *solved = Solve(grid);
+    save_grid_file("/tmp/grid_00.result", solved);
 
     // 14. Postprocess
     SDL_Surface *final_result = postprocess(*grid, *solved);
+
+    free(grid);
+    free(solved);
 
     save_image(final_result, "/tmp/sodoko_result.png");
 }

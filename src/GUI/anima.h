@@ -4,6 +4,9 @@
 #include <SDL2/SDL_image.h>
 #include <string.h>
 #include "../Preprocess/preprocess.h"
+#include "../NeuralNetwork/neural_network.h"
+#include "../Solver/grid.h"
+#include "../Solver/solver.h"
 #include "sdl_utils.h"
 #include "glob_struct.h"
 #include "gui-utils.h"
