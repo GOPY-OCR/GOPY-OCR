@@ -44,8 +44,9 @@ void anima_init(Glob_GUI *glob)
 {
     glob->anima_PreviousButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "PreviousButton"));
     glob->anima_SaveButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "SaveButton"));
-    glob->page_1_Image = GTK_IMAGE(gtk_builder_get_object(glob->builder, "ImageStepPreprocess"));
+    glob->Image_anima = GTK_IMAGE(gtk_builder_get_object(glob->builder, "ImageStepPreprocess"));
     glob->anima_StartButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "StartButton"));
+
 
     //CSS Button color changer 
     GtkCssProvider* css = gtk_css_provider_new();
@@ -104,7 +105,7 @@ G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_dat
 {
     // Convert the user pointer into the filename
     Glob_GUI *glob = user_data;
-    GtkImage *Image = glob->page_1_Image;
+    GtkImage *Image = glob->Image_anima;
     gchar *path = glob->original_image_path;
 
     Params p = get_params(path);
