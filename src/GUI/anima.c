@@ -82,14 +82,17 @@ void anima_init(Glob_GUI *glob)
 
 G_MODULE_EXPORT void on_PreviousButton_clicked(GtkButton *button, gpointer user_data)
 {
-    //g_print("should be displayed");
+   
+     Glob_GUI * glob = (Glob_GUI*) user_data;  
+    
     if ((Glob_GUI *)user_data == NULL)
     {
        g_print("null");	
     }
     else 
 	{
-	    prev_page((Glob_GUI *)user_data);
+	   	gtk_image_clear(GTK_IMAGE(glob->Image_anima));
+	       	prev_page((Glob_GUI *)user_data);
 	}
 	g_print("pls help");
 }
