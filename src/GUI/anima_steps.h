@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define NB_STEPS 11
 typedef Anima_Steps {
+    int nb_steps; // 11 for now
     int cur_step; // 0-7 for preprocess steps
                   // 8 for detected grid
                   // 9 for solved grid

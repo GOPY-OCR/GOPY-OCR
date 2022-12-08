@@ -49,6 +49,8 @@ SDL_Surface *copy_surface(SDL_Surface *base) {
 Anima_Steps *compute_all_steps(Glob_GUI *glob);
 {
     Anima_Steps *res = malloc(sizeof(Anima_Steps));
+    res->cur_step = 0;
+    res->nb_steps = NB_STEPS;
     res->preprocess_states = calloc(8, sizeof(SDL_Surface *));
 
     // Convert the user pointer into the filename
