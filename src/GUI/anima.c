@@ -97,14 +97,44 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
 }
 
 G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data) {
+    Glob_GUI *glob = user_data;
+    if (glob == NULL || glob->steps->cur_step == glob->steps->nb_steps - 1)
+        return;
 
+    Anima_Steps *steps = glob->steps;
+
+    if (++steps->cur_step < steps->nb_pre_steps)
+        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->preprocess[steps->cur_step]);
+
+    else if (steps->cur_step == steps->nb_pre_steps) {
+        // Show detected grid    
+    }
+    else
+        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->post);
 }
 
 G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data) {
+    Glob_GUI *glob = user_data;
+    if (glob == NULL || glob->steps->cur_step == 0)
+        return;
 
+    Anima_Steps *steps = glob->steps;
+
+    if (--steps->cur_step < steps->nb_pre_steps)
+        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->preprocess[steps->cur_step]);
+
+    else if (steps->cur_step == steps->nb_pre_steps) {
+        // Show detected grid    
+    }
+    else
+        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->post);
 }
 
 G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) {
-
+    Glob_GUI *glob = user_data;
+    if (glob == NULL)
+        return;
+    
+    gtk_image_set_from_sdl_surface(glob->Image_anima, steps->post);
 }
 

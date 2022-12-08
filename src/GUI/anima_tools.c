@@ -52,7 +52,8 @@ void compute_all_steps(Glob_GUI *glob);
     Anima_Steps *res = glob->steps;
     res->cur_step = 0;
     res->nb_steps = NB_STEPS;
-    res->preprocess_states = calloc(8, sizeof(SDL_Surface *));
+    res->nb_pre_steps = NB_PRE_STEPS;
+    res->preprocess_states = calloc(res->nb_pre_steps, sizeof(SDL_Surface *));
 
     // Convert the user pointer into the filename
     GtkImage *Image = glob->Image_anima;
