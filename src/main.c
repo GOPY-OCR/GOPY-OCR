@@ -290,9 +290,6 @@ int main(int argc, char **argv) {
         free(res);
         free(file);
 
-        for (size_t i = 0; i < 81; i++)
-            SDL_FreeSurface(splitted[i]);
-
         SDL_FreeSurface(image);
     }
 
