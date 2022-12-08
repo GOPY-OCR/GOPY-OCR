@@ -17,8 +17,9 @@ typedef struct Glob_GUI {
     GtkButton *page_1_CancelButton;
     GtkButton *page_1_ContinueButton;
     GtkImage *page_1_Image;
-    GtkImage *Image_anima;
-    
+    GtkSwitch *page_1_Switch;
+
+    GtkImage *Image_anima; 
     GtkButton *anima_NextStep;
     GtkButton *anima_PrevStep;
     GtkButton *anima_LastStep;

@@ -93,9 +93,6 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
-            </child>
-            <child>
               <object class="GtkButtonBox" id="Button Bar">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -116,6 +113,18 @@
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkSwitch" id="page1switch">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="active">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkButton" id="Continue1">
                     <property name="label" translatable="yes">Continue</property>
                     <property name="visible">True</property>
@@ -128,7 +137,7 @@
                     <property name="expand">False</property>
                     <property name="fill">False</property>
                     <property name="pack-type">end</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>
@@ -136,7 +145,21 @@
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="pack-type">end</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Auto Solve Mode</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="padding">8</property>
+                <property name="pack-type">end</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>

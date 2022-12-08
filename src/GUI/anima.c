@@ -52,6 +52,7 @@ void anima_init(Glob_GUI *glob)
     glob->anima_LastStep = GTK_BUTTON(gtk_builder_get_object(glob->builder, "AnimaLastStep"));
 
 
+
     //CSS Button color changer 
     GtkCssProvider* css = gtk_css_provider_new();
     //modify hexa code to change color 
