@@ -92,12 +92,16 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
    {
     //permet de choisir le chemin 
 
-        GtkWidget* dialog = gtk_file_chooser_dialog_new("Select your unsolved grid", GTK_WINDOW(glob->main), GTK_FILE_CHOOSER_ACTION_SAVE, ("_Cancel"),GTK_RESPONSE_CANCEL, (    "_Save"), GTK_RESPONSE_ACCEPT, NULL);
+       g_print("MDR");
+       GtkWidget* dialog = gtk_file_chooser_dialog_new("Select your unsolved grid", GTK_WINDOW(glob->window), GTK_FILE_CHOOSER_ACTION_SAVE, ("_Cancel"),GTK_RESPONSE_CANCEL, ("_Save"), GTK_RESPONSE_ACCEPT, NULL);
        //recupère le  chemin
-       //char* outFile = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-       //SDL_Surface* surface = IMG_Load(//path of modified image);
-       //IMG_SavePNG(surface,outfile);
-
+       gint res = gtk_dialog_run (GTK_DIALOG (dialog));
+       if (res == GTK_RESPONSE_ACCEPT) {
+           char* outFile = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+           SDL_Surface* surface = IMG_Load("/tmp/sodoko_result.png");
+           IMG_SavePNG(surface, outFile);
+       }
+       gtk_widget_destroy (dialog);
    }
 }
 
