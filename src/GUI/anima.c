@@ -47,6 +47,10 @@ void anima_init(Glob_GUI *glob)
     glob->Image_anima = GTK_IMAGE(gtk_builder_get_object(glob->builder, "ImageStepPreprocess"));
     glob->anima_StartButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "StartButton"));
 
+    glob->anima_NextStep = GTK_BUTTON(gtk_builder_get_object(glob->builder, "AnimaNextStep"));
+    glob->anima_PrevStep = GTK_BUTTON(gtk_builder_get_object(glob->builder, "AnimaPrevStep"));
+    glob->anima_LastStep = GTK_BUTTON(gtk_builder_get_object(glob->builder, "AnimaLastStep"));
+
 
     //CSS Button color changer 
     GtkCssProvider* css = gtk_css_provider_new();
