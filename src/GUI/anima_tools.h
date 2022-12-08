@@ -18,7 +18,7 @@
 
 void gtk_image_set_from_sdl_surface(GtkImage *image, SDL_Surface *surface);
 SDL_Surface *copy_surface(SDL_Surface *base);
-Anima_Steps *compute_all_steps(Glob_GUI *glob);
+void compute_all_steps(Glob_GUI *glob);
 
 #endif
 

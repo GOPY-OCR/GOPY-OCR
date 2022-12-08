@@ -1,5 +1,6 @@
 #pragma once
 #include "gtk/gtk.h"
+#include "anima_steps.h"
 
 typedef struct Glob_GUI {
     GtkBuilder *builder;
@@ -23,6 +24,7 @@ typedef struct Glob_GUI {
     GtkButton *anima_PrevStep; // Prev step button
     GtkButton *anima_LastStep; // Directly go to the last step (postprocess)
     int anima_manual; // Automatic mode or not
+    Anima_Steps *steps; // All the steps
 
     gchar *original_image_path;
     int current_page;

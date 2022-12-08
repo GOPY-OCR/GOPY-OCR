@@ -46,9 +46,10 @@ SDL_Surface *copy_surface(SDL_Surface *base) {
     return copy;
 }
 
-Anima_Steps *compute_all_steps(Glob_GUI *glob);
+void compute_all_steps(Glob_GUI *glob);
 {
-    Anima_Steps *res = malloc(sizeof(Anima_Steps));
+    glob->steps = malloc(sizeof(Anima_Steps));
+    Anima_Steps *res = glob->steps;
     res->cur_step = 0;
     res->nb_steps = NB_STEPS;
     res->preprocess_states = calloc(8, sizeof(SDL_Surface *));
