@@ -154,16 +154,26 @@ G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_dat
     // 12. Neural network
     int *grid = neural_network(splitted);
     save_grid_file("/tmp/grid_00", grid);
-
+    
     // 13. Solve the grid
-    int *solved = Solve(grid);
-    save_grid_file("/tmp/grid_00.result", solved);
+    int *solved = calloc(81, sizeof(int));
+    for (size_t i = 0; i < 81; i++)
+        solved[i] = grid[i];
 
-    // 14. Postprocess
-    SDL_Surface *final_result = postprocess(*grid, *solved);
+    if (!Solve(solved)) {
+        g_print("Not solvable grid\n");
+    }
+
+    else {
+        save_grid_file("/tmp/grid_00.result", solved);
+
+        // 14. Postprocess
+        SDL_Surface *final_result = postprocess(grid, solved);
+        gtk_image_set_from_sdl_surface(Image, final_result);
+
+        save_image(final_result, "/tmp/sodoko_result.png");
+    }
 
     free(grid);
     free(solved);
-
-    save_image(final_result, "/tmp/sodoko_result.png");
 }
