@@ -19,6 +19,8 @@ ifneq ($(DEBUG), 0)
 	CFLAGS += -g -pg -fsanitize=address,undefined
 	LDFLAGS += -fsanitize=address,undefined
 	CPPFLAGS += -DDEBUG # define DEBUG like `#define DEBUG` in all C files
+else
+	CPPFLAGS += -DNDEBUG
 endif
 
 
