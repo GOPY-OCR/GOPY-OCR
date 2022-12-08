@@ -72,3 +72,24 @@ int *load_grid_file(const char *filename) {
 
     return grid;
 }
+
+
+
+void print_grid(const int grid[]) {
+    for (size_t i = 0; i < 9; i++) {
+        for (size_t j = 0; j < 9; j++) {
+            if (j == 3 || j == 6)
+                printf(" ");
+
+            if (grid[i * 9 + j] == 0)
+                printf(".");
+
+            else
+                printf("%i", grid[i * 9 + j]);
+        }
+        if (i == 2 || i == 5)
+            printf("\n");
+        
+        printf("\n");
+    }
+}

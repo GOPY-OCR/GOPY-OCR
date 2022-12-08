@@ -114,6 +114,7 @@ int median_line_angle(Line *lines, int nb_lines){
         int dx = lines[i].p2.x - lines[i].p1.x;
         int dy = lines[i].p2.y - lines[i].p1.y;
 
+
         if (intabs(dx) < intabs(dy)){
             // this line has an angle between -45 and 45 degrees
             if (dx < 0){
@@ -131,6 +132,7 @@ int median_line_angle(Line *lines, int nb_lines){
     sort_int_array(angles, nb_angles);
 
     int median_angle = angles[nb_angles / 2];
+
 
     return median_angle;
 }

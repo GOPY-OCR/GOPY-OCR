@@ -122,3 +122,13 @@ matrice *feedforward(NeuralNetwork *nn, matrice *inputs) {
 
     return output;
 }
+
+int *neural_network(SDL_Surface **splitted) {
+    int *res = calloc(81, sizeof(int));
+    NeuralNetwork *nn = load_neural_network(NN_SAVE_FILENAME);
+    for (size_t i = 0; i < 81; i++)
+        res[i] = predict_surface(splitted[i], nn);
+
+    return res;
+}
+

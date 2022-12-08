@@ -8,6 +8,10 @@
 #include "sdl_utils.h"
 #include "cost_functions.h"
 
+#ifndef NN_SAVE_FILENAME
+    #define NN_SAVE_FILENAME "assets/NeuralNetwork/ocr_save.nn"
+#endif
+
 typedef struct Layer {
     matrice *weights;
     matrice *biases;
@@ -40,6 +44,8 @@ void save_neural_network(NeuralNetwork *nn, char *filename);
 // Loads a neural network from a file
 // Returns NULL if the file doesn't exist
 NeuralNetwork *load_neural_network(char *filename);
+
+int *neural_network(SDL_Surface **splitted);
 
 
 /*

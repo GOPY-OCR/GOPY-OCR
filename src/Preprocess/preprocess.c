@@ -36,7 +36,7 @@ SDL_Surface **preprocess(const char *filename) {
     automatic_rot(&image);
 
     // 7.  Grid detection
-    Quad coords = grid_detection(image, 1, p);
+    Quad coords = grid_detection(image, 1, p, 1);
 
     // 8.  Perspective correction of the image
     perspective_correction(&image, &coords);

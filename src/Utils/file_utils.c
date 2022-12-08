@@ -13,7 +13,7 @@ int dir_exists(const char *dirname){
 char **list_files(const char *path, const int n, int append_path) {
     DIR *dir;
     struct dirent *ent;
-    char **files = malloc(n * sizeof(char *));
+    char **files = malloc((n+1) * sizeof(char *));
     int i = 0;
 
     int pathle = strlen(path);
@@ -41,6 +41,8 @@ char **list_files(const char *path, const int n, int append_path) {
     } else {
         errx(1, "list_files: Could not open directory %s", path);
     }
+
+    files[i] = NULL;
 
     return files;
 }

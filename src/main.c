@@ -16,8 +16,9 @@ void exit_help(int error) {
                  "  -d,    --detect-grid IMG         Save the detected grid in `IMG_detected_grid.png`\n"
                  "  -pc,   --perspective-correct IMG Save the perspective correction of IMG\n"
                  "  -c,    --cut IMG                 Save the images in `IMG_X.png`\n"
+                 "  -nn,   --neural-network IMG      Save the predicted grid in `IMG_detected_grid.sudoku`\n"
                  "  -s,    --solve GRID              Save the result in `GRID.result`\n"
-                 "  -N,    --neural-network          Show a proof of concept of the neural network\n"
+                 "  -N,    --neural-network-poc      Show a proof of concept of the neural network\n"
                  "                                   Type `-N` to show help message about neural network\n"
                  "  -Pre,  --preprocess IMG          Execute the whole preprocess\n"
                  "  -Post, --postprocess GRID \\     Generate an image of the solved grid\n"
@@ -155,7 +156,7 @@ int main(int argc, char **argv) {
         correct_brightness(image);
         binarize(image, p.b_th);
         automatic_rot(&image);
-        grid_detection(image, 1, p);
+        grid_detection(image, 1, p, 0);
         save_image(image, final_name);
 
         free(final_name);
@@ -215,7 +216,7 @@ int main(int argc, char **argv) {
         correct_brightness(image);
         binarize(image, p.b_th);
         automatic_rot(&image);
-        Quad grid = grid_detection(image, 0, p);
+        Quad grid = grid_detection(image, 0, p, 1);
         perspective_correction(&image, &grid);
         save_image(image, final_name);
 
@@ -236,15 +237,17 @@ int main(int argc, char **argv) {
         correct_brightness(image);
         binarize(image, p.b_th);
         automatic_rot(&image);
-        Quad grid = grid_detection(image, 0, p);
+        Quad grid = grid_detection(image, 0, p, 1);
         perspective_correction(&image, &grid);
         SDL_Surface **splitted = split_sudoku(image);
+        neural_network_resize(splitted);
 
         for (size_t i = 0; i < 81; i++) {
             char str[3] = {0};
             sprintf(str, "%ld", i);
             
             char *final_name = format_final_name(argv[2], str);
+
             save_image(splitted[i], final_name);
 
             free(final_name);
@@ -253,7 +256,43 @@ int main(int argc, char **argv) {
 
         SDL_FreeSurface(image);
     }
-    
+
+    else if (strcmp(argv[1], "--neural-network") == 0 || strcmp(argv[1], "-nn") == 0) {
+        printf("Show full detection process...\n");
+
+        if (argc != 3)
+            exit_help(1);
+
+        SDL_Surface *image = load_image(argv[2]);
+        Params p = get_params(argv[2]);
+        resize(&image);
+        surface_to_grayscale(image);
+        correct_brightness(image);
+        binarize(image, p.b_th);
+        automatic_rot(&image);
+        Quad grid = grid_detection(image, 0, p, 1);
+        perspective_correction(&image, &grid);
+
+        SDL_Surface **splitted = split_sudoku(image);
+
+        int *res = neural_network(splitted);
+
+        printf("Sudoku:\n");
+        print_grid(res);
+
+        char *file = malloc(strlen(argv[2]) + 5);
+        strcpy(file, argv[2]);
+        strtok(file, ".");
+        strcat(file, ".sudoku");
+        printf("\nSaving to %s...\n", file);
+        save_grid_file(file, res);
+
+        free(res);
+        free(file);
+
+        SDL_FreeSurface(image);
+    }
+
     else if (strcmp(argv[1], "--solve") == 0 || strcmp(argv[1], "-s") == 0) {
         printf("Show solver...\n");
 
@@ -272,7 +311,7 @@ int main(int argc, char **argv) {
         free(board);
     }
     
-    else if (strcmp(argv[1], "--neural-network") == 0 || strcmp(argv[1], "-N") == 0) {
+    else if (strcmp(argv[1], "--neural-network-poc") == 0 || strcmp(argv[1], "-N") == 0) {
         printf("Show neural network...\n");
 
         int verbose = argc > 2 && strcmp(argv[2], "-v") == 0 ? 2 : 1;

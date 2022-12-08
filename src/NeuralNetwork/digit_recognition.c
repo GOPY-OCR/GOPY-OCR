@@ -1,32 +1,31 @@
 #include "digit_recognition.h"
 
 #define NUM_INPUTS 784
-#define NN_LAYERS (int[]){784, 10}
+#define NN_LAYERS (int[]){32, 10}
 
 // corresponding datasets are 10 times larger
-#define TRAINING_SAMPLES_PER_DIGIT 5000 // upto 5000
-#define TEST_SAMPLES_PER_DIGIT 100 // upto 800
+#define TRAINING_SAMPLES_PER_DIGIT 522 // 500 images from github, 22 from our sudokus
+#define TEST_SAMPLES_PER_DIGIT 22
 
-#define EPOCHS 100
-#define LEARNING_RATE 0.5
-#define BATCH_SIZE 720
+#define EPOCHS 400
+#define LEARNING_RATE 1
+#define BATCH_SIZE 500
 
 #define ENABLE_MULTITHREADING 1
 
 #define LEARNING_RATE_DECAY 0 //0.004
 
 #define RUN_EVALUATIONS 1
-#define RUN_EVALUATIONS_ON_TRAINING 1
+#define RUN_EVALUATIONS_ON_TRAINING 0
 
 #define COST_FUNCTION cross_entropy_cost
 
-#define SAVE_FILENAME "_build/ocr_save.nn"
 int digit_recognition_main(int argc, char **argv, int verbose){
     NeuralNetwork *nn;
     // check if save file exists
-    if (file_exists(SAVE_FILENAME)){
-        printf("Loading save file: %s\n", SAVE_FILENAME);
-        nn = load_neural_network(SAVE_FILENAME);
+    if (file_exists(NN_SAVE_FILENAME)){
+        printf("Loading save file: %s\n", NN_SAVE_FILENAME);
+        nn = load_neural_network(NN_SAVE_FILENAME);
     } else {
         printf("Creating new neural network\n");
         nn = create_OCR_Neural_Network();
@@ -69,9 +68,9 @@ int digit_recognition_main(int argc, char **argv, int verbose){
 
     // Save the neural network
     if (verbose)
-        printf("Saving the neural network to %s\n", SAVE_FILENAME);
+        printf("Saving the neural network to %s\n", NN_SAVE_FILENAME);
 
-    save_neural_network(nn, SAVE_FILENAME);
+    save_neural_network(nn, NN_SAVE_FILENAME);
 
     evaluate(nn, test_dataset!=NULL?test_dataset:train_dataset, verbose > 0);
 
@@ -92,6 +91,23 @@ NeuralNetwork* create_OCR_Neural_Network() {
 int predict_digit(char* filename, NeuralNetwork *nn) {
     SDL_Surface *img = load_image(filename);
 
+    int digit = predict_surface(img, nn);
+
+    // Free the image and data
+    SDL_FreeSurface(img);
+
+    return digit;
+}
+
+int predict_surface(SDL_Surface *img, NeuralNetwork *nn) {
+    if (img->w != 28 || img->h != 28) {
+        // resize the image
+        SDL_Surface *resized = SDL_CreateRGBSurface(0, 28, 28, 32, 0, 0, 0, 0);
+        SDL_BlitScaled(img, NULL, resized, NULL);
+        SDL_FreeSurface(img);
+        img = resized;
+    }
+
     matrice *m = image_to_matrice(img);
 
     matrice *output = feedforward(nn, m);
@@ -99,7 +115,6 @@ int predict_digit(char* filename, NeuralNetwork *nn) {
     int digit = max_output(output);
 
     // Free the image and data
-    SDL_FreeSurface(img);
     matrice_free(m);
     matrice_free(output);
 
