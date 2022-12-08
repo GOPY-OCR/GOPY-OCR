@@ -133,10 +133,10 @@ G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_dat
     gtk_image_set_from_sdl_surface(Image, image_sdl);
 
     // 7.  Grid detection
-    Quad coords = grid_detection(image_sdl, 0, p);
+    Quad coords = grid_detection(image_sdl, 0, p, 1);
     SDL_Surface *copy = new_blank_surface(image_sdl);
     SDL_BlitSurface(image_sdl, NULL, copy, NULL);
-    grid_detection(copy, 1, p);
+    grid_detection(copy, 1, p, 0);
     gtk_image_set_from_sdl_surface(Image, copy);
 
     SDL_FreeSurface(copy);
