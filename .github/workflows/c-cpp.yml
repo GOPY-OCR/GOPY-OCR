@@ -20,7 +20,7 @@ jobs:
       run: sudo tar -xvf criterion-2.4.1-linux-x86_64.tar.xz -C /usr/ --strip-components=1
 
     - name: setup libraries
-      run: sudo apt install -y libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev make gcc libcriterion-dev
+      run: sudo apt install -y libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev make gcc libcriterion-dev libgtk-3-dev
     
     - name: make -B VERBOSE=1 all
       run: make -B VERBOSE=1 all
