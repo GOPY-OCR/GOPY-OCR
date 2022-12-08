@@ -5,6 +5,9 @@ void anima_init(Glob_GUI *glob)
     glob->anima_PreviousButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "PreviousButton"));
     glob->anima_SaveButton = GTK_BUTTON(gtk_builder_get_object(glob->builder, "SaveButton"));
     glob->Image_anima = GTK_IMAGE(gtk_builder_get_object(glob->builder, "ImageStepPreprocess"));
+    glob->anima_NextStep = GTK_BUTTON(gtk_builder_get_object(glob->builder, "AnimaNextStep"));
+    glob->anima_PrevStep = GTK_BUTTON(gtk_builder_get_object(glob->builder, "AnimaPrevStep"));
+    glob->anima_LastStep = GTK_BUTTON(gtk_builder_get_object(glob->builder, "AnimaLastStep"));
 
     glob->anima_NextStep = GTK_BUTTON(gtk_builder_get_object(glob->builder, "AnimaNextStep"));
     glob->anima_PrevStep = GTK_BUTTON(gtk_builder_get_object(glob->builder, "AnimaPrevStep"));
@@ -36,6 +39,9 @@ void anima_init(Glob_GUI *glob)
 	// connections des signaux
     g_signal_connect(glob->anima_PreviousButton, "clicked", G_CALLBACK(on_PreviousButton_clicked), glob);
     g_signal_connect(glob->anima_SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), glob);
+    g_signal_connect(glob->anima_NextStep, "clicked", G_CALLBACK(on_NextStep_clicked), glob);
+    g_signal_connect(glob->anima_PrevStep, "clicked", G_CALLBACK(on_PrevStep_clicked), glob);
+    g_signal_connect(glob->anima_LastStep, "clicked", G_CALLBACK(on_LastStep_clicked), glob);
 }
 
 
@@ -80,3 +86,16 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
        gtk_widget_destroy (dialog);
    }
 }
+
+G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data) {
+
+}
+
+G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data) {
+
+}
+
+G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) {
+
+}
+
