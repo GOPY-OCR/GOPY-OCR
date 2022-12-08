@@ -100,10 +100,6 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
    }
 }
 
-void update_image(GtkImage *image, SDL_Surface *new_surface) {
-
-}
-
 G_MODULE_EXPORT void on_StartButton_clicked(GtkButton *button, gpointer user_data)
 {
     // Convert the user pointer into the filename
