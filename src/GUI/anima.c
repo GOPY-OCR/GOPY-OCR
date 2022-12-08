@@ -62,7 +62,17 @@ void anima_init(Glob_GUI *glob)
     
     context = gtk_widget_get_style_context(glob->anima_PreviousButton);
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
-   
+    
+    context = gtk_widget_get_style_context(glob->anima_NextStep);
+    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    context = gtk_widget_get_style_context(glob->anima_PrevStep);
+    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    context = gtk_widget_get_style_context(glob->anima_LastStep);
+    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+
 	// connections des signaux
     g_signal_connect(glob->anima_PreviousButton, "clicked", G_CALLBACK(on_PreviousButton_clicked), glob);
     g_signal_connect(glob->anima_SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), glob);
