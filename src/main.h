@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "CLI/cli.h"
-//#include "GUI/GUI.h"
+#include "GUI/GUI.h"
 
 
 #endif
