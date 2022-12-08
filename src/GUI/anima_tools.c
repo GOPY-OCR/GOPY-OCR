@@ -46,8 +46,7 @@ SDL_Surface *copy_surface(SDL_Surface *base) {
     return copy;
 }
 
-void compute_all_steps(Glob_GUI *glob);
-{
+void compute_all_steps(Glob_GUI *glob) {
     glob->steps = malloc(sizeof(Anima_Steps));
     Anima_Steps *res = glob->steps;
     res->cur_step = 0;
@@ -103,7 +102,6 @@ void compute_all_steps(Glob_GUI *glob);
     
     // 12. Neural network
     res->detected = neural_network(splitted);
-    save_grid_file("/tmp/grid_00", grid);
     
     // 13. Solve the grid
     res->solved = calloc(81, sizeof(int));
@@ -115,15 +113,7 @@ void compute_all_steps(Glob_GUI *glob);
     }
 
     else {
-        save_grid_file("/tmp/grid_00.result", solved);
-
         // 14. Postprocess
-        SDL_Surface *final_result = postprocess(grid, solved);
-        res->post = copy_surface(image_sdl);
-
-        save_image(final_result, "/tmp/sodoko_result.png");
+        res->post = postprocess(res->detected, res->solved);
     }
-
-    free(grid);
-    free(solved);
 }

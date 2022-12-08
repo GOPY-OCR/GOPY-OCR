@@ -47,10 +47,10 @@ void anima_init(Glob_GUI *glob)
     if (glob->steps == NULL)
         errx(EXIT_FAILURE, "Something went wrong during the computing of all steps");
 
-    gtk_image_set_from_sdl_surface(glob->Image_anima, steps->prep[0]);
+    gtk_image_set_from_sdl_surface(glob->Image_anima, glob->steps->prep[0]);
 
     if (!glob->anima_manual)
-        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->post);
+        gtk_image_set_from_sdl_surface(glob->Image_anima, glob->steps->post);
 }
 
 
@@ -133,6 +133,8 @@ G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) 
     if (glob == NULL)
         return;
     
+    Anima_Steps *steps = glob->steps;
+
     gtk_image_set_from_sdl_surface(glob->Image_anima, steps->post);
 }
 
