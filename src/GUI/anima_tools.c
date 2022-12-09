@@ -120,9 +120,9 @@ void compute_all_steps(Glob_GUI *glob) {
     Quad coords = grid_detection(image_sdl, 0, p, 1);
 
     // 8.  Perspective correction of the image
-    res->steps[6] = copy_surface(res->steps[4]);
-    perspective_correction(&(res->steps[6]), &coords);
     perspective_correction(&image_sdl, &coords);
+    res->steps[6] = copy_surface(image_sdl);
+    resize(&(res->steps[6]));
     
     // 9.  Split the image in 81 small images
     SDL_Surface **splitted = split_sudoku(image_sdl);
