@@ -103,7 +103,6 @@ void compute_all_steps(Glob_GUI *glob) {
     res->steps[4] = copy_surface(image_sdl);
 
     // 7.  Grid detection
-    g_print("\n\nLOL\n");
     res->steps[5] = copy_surface(image_sdl);
     grid_detection(res->steps[4], 1, p, 0);
     Quad coords = grid_detection(image_sdl, 0, p, 1);

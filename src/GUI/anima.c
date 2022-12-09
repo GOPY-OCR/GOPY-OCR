@@ -46,7 +46,6 @@ void anima_init(Glob_GUI *glob)
 
 void anima_start(Glob_GUI *glob) {
     compute_all_steps(glob);
-    g_print("LOL\n");
     if (glob->anima == NULL)
         errx(EXIT_FAILURE, "Something went wrong during the computing of all steps");
 
@@ -69,30 +68,20 @@ void anima_start(Glob_GUI *glob) {
 
 G_MODULE_EXPORT void on_PreviousButton_clicked(GtkButton *button, gpointer user_data)
 {
-   
-     Glob_GUI * glob = (Glob_GUI*) user_data;  
+    Glob_GUI * glob = (Glob_GUI*) user_data;  
     
-    if ((Glob_GUI *)user_data == NULL)
-    {
-       g_print("null");	
-    }
-    else 
+    if ((Glob_GUI *)user_data != NULL)
 	{
-	   	gtk_image_clear(GTK_IMAGE(glob->Image_anima));
-	       	prev_page((Glob_GUI *)user_data);
+	    gtk_image_clear(GTK_IMAGE(glob->Image_anima));
+	    prev_page((Glob_GUI *)user_data);
 	}
-	g_print("pls help");
 }
 
 
 G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data)
 {
    Glob_GUI *glob = (Glob_GUI*) user_data;
-   if ((Glob_GUI*) user_data == NULL)
-   {
-     g_print("starting save");
-   }
-   else
+   if ((Glob_GUI*) user_data != NULL)
    {
     //permet de choisir le chemin 
 
