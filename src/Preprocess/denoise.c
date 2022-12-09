@@ -1,7 +1,7 @@
 #include "denoise.h"
 
 #define DENOISE_FF_CONNECTIVITY 2
-#define DIGIT_WHITE_PIXELS_THRESHOLD 0.03
+#define DIGIT_WHITE_PIXELS_THRESHOLD 0.02
 
 void clear_if_empty(SDL_Surface **surface) {
     // count white pixels
