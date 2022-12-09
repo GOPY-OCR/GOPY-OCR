@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <err.h>
 #include <SDL2/SDL.h>
+#include "point.h"
+#include "pixel_utils.h"
+#include "maths.h"
 
 #define NEW_SIZE 500
 #define NN_SIZE 28

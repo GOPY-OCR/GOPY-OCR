@@ -4,8 +4,8 @@
 #define NN_LAYERS (int[]){128, 10}
 
 // corresponding datasets are 10 times larger
-#define TRAINING_SAMPLES_PER_DIGIT 522 // 500 images from github, 22 from our sudokus
-#define TEST_SAMPLES_PER_DIGIT 22
+#define TRAINING_SAMPLES_PER_DIGIT 17 // 500 images from github, 22 from our sudokus
+#define TEST_SAMPLES_PER_DIGIT 17
 
 #define EPOCHS 400
 #define LEARNING_RATE 0.7
