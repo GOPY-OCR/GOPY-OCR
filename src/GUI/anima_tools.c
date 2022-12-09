@@ -99,8 +99,9 @@ void compute_all_steps(Glob_GUI *glob) {
     res->steps[3] = copy_surface(image_sdl);
 
     // 6.  Interpolation des images pas droites
-    automatic_rot(&image_sdl);    
+    automatic_rot(&image_sdl);
     res->steps[4] = copy_surface(image_sdl);
+    resize(&(res->steps[4]));
 
     // 7.  Grid detection
     res->steps[5] = copy_surface(image_sdl);
@@ -121,6 +122,7 @@ void compute_all_steps(Glob_GUI *glob) {
     // 12. Neural network
     res->detected = neural_network(splitted);
     res->steps[7] = postprocess(res->detected, res->detected);
+    resize(&(res->steps[7]));
     
     // 13. Solve the grid
     res->solved = calloc(81, sizeof(int));
@@ -135,5 +137,6 @@ void compute_all_steps(Glob_GUI *glob) {
     else {
         // 14. Postprocess
         res->steps[8] = postprocess(res->detected, res->solved);
+        resize(&(res->steps[8]));
     }
 }
