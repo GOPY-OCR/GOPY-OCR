@@ -58,11 +58,15 @@ void anima_start(Glob_GUI *glob) {
             gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
         }
         
-        anima->cur_step = anima->nb_steps - 1;
-        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
+        else {
+            anima->cur_step = anima->nb_steps - 1;
+            gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
+        }
     }
      
-    gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[0]);
+    else {
+        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[0]);
+    }
 }
 
 
@@ -72,8 +76,9 @@ G_MODULE_EXPORT void on_PreviousButton_clicked(GtkButton *button, gpointer user_
     
     if ((Glob_GUI *)user_data != NULL)
 	{
-	    gtk_image_clear(GTK_IMAGE(glob->Image_anima));
-	    prev_page((Glob_GUI *)user_data);
+        gtk_image_clear(GTK_IMAGE(glob->Image_anima));
+        prev_page((Glob_GUI *)user_data);
+        free_anima_steps(glob->anima);
 	}
 }
 
@@ -103,15 +108,16 @@ G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data) 
 
     Anima_Steps *anima = glob->anima;
 
-    if (++anima->cur_step < anima->nb_steps - 1)
-        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
-
-    else {
-        if (anima->steps[anima->nb_steps] == NULL) {
+    if (anima->cur_step + 1 < anima->nb_steps) {
+        if (anima->cur_step == anima->nb_steps - 1 && 
+                anima->steps[anima->cur_step] == NULL) {
             dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
         }
+        else if (anima->steps[anima->cur_step] == NULL)
+            dialog_error(glob->window, GTK_MESSAGE_ERROR, "Something went wrong with the next step...");
+
         else
-            gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
+            gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[++anima->cur_step]);
     }
 }
 
@@ -122,8 +128,8 @@ G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data) 
 
     Anima_Steps *anima = glob->anima;
 
-    if (--anima->cur_step >= 0)
-        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
+    if (anima->cur_step > 0)
+        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[--anima->cur_step]);
 }
 
 G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) {
@@ -139,7 +145,9 @@ G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) 
         gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
     }
     
-    anima->cur_step = anima->nb_steps - 1;
-    gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
+    else {
+        anima->cur_step = anima->nb_steps - 1;
+        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
+    }
 }
 

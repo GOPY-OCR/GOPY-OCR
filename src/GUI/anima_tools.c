@@ -1,5 +1,16 @@
 #include "anima_tools.h"
 
+void free_anima_steps(Anima_Steps *anima) {
+    for (size_t i = 0; i < anima->nb_steps; i++) {
+        SDL_FreeSurface(anima->steps[i]);
+    }
+
+    free(anima->steps);
+    free(anima->detected);
+    free(anima->solved);
+    free(anima);
+}
+
 void dialog_error(GtkWindow *window, GtkMessageType type, char *msg)
 {
     char *title = "Info";
@@ -104,12 +115,12 @@ void compute_all_steps(Glob_GUI *glob) {
     resize(&(res->steps[4]));
 
     // 7.  Grid detection
-    res->steps[5] = copy_surface(image_sdl);
-    grid_detection(res->steps[4], 1, p, 0);
+    res->steps[5] = copy_surface(res->steps[4]);
+    grid_detection(res->steps[5], 1, p, 0);
     Quad coords = grid_detection(image_sdl, 0, p, 1);
 
     // 8.  Perspective correction of the image
-    res->steps[6] = copy_surface(res->steps[5]);
+    res->steps[6] = copy_surface(res->steps[4]);
     perspective_correction(&(res->steps[6]), &coords);
     perspective_correction(&image_sdl, &coords);
     
