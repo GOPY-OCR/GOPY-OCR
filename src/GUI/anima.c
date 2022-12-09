@@ -51,8 +51,14 @@ void anima_start(Glob_GUI *glob) {
 
     gtk_image_set_from_sdl_surface(glob->Image_anima, glob->steps->prep[0]);
 
-    if (glob->anima_auto)
-        gtk_image_set_from_sdl_surface(glob->Image_anima, glob->steps->post);
+    if (glob->anima_auto) {
+        if (glob->steps->post == NULL) {
+            dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
+        }
+
+        else
+            gtk_image_set_from_sdl_surface(glob->Image_anima, glob->steps->post);
+    }
 }
 
 
@@ -81,7 +87,7 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
    {
      g_print("starting save");
    }
-   else
+   else if (glob->steps->post != NULL)
    {
     //permet de choisir le chemin 
 
@@ -109,8 +115,11 @@ G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data) 
     else if (steps->cur_step == steps->nb_pre_steps) {
         // Show detected grid    
     }
-    else
-        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->post);
+    else {
+        if (glob->steps->post == NULL) {
+            dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
+        }
+    }
 }
 
 G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data) {
@@ -126,8 +135,11 @@ G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data) 
     else if (steps->cur_step == steps->nb_pre_steps) {
         // Show detected grid    
     }
-    else
-        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->post);
+    else {
+        if (glob->steps->post == NULL) {
+            dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
+        }
+    }
 }
 
 G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) {
@@ -137,6 +149,8 @@ G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) 
     
     Anima_Steps *steps = glob->steps;
 
-    gtk_image_set_from_sdl_surface(glob->Image_anima, steps->post);
+    if (glob->steps->post == NULL) {
+        dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
+    }
 }
 
