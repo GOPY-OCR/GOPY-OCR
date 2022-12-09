@@ -25,3 +25,4 @@ mirror*
 # Glade temp files
 *~
 *#
+gmon.out
