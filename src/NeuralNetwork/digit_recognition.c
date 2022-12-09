@@ -297,6 +297,10 @@ void sort_images(int argc, char **argv, int verbose){
         free(filename);
     }
 
+    for (int i = 0; i < nb_folders; i++) {
+        free(folders[i]);
+    }
+
     free(folders);
     free_neural_network(nn);
     free(files);
