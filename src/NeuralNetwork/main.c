@@ -61,7 +61,9 @@ int main(int argc, char **argv) {
         }
 
     } else if (strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--sort") == 0) {
-        sort_images(argc, argv, verbosity);
+        int argi = 2 + (verbosity > 0);
+
+        sort_images(argc - argi, argv + argi, verbosity);
     } else if (strcmp(argv[1], "-h") == 0 ||
                strcmp(argv[1], "--help") == 0) {
         printf(help, argv[0]);

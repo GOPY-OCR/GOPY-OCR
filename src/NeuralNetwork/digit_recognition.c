@@ -4,19 +4,19 @@
 #define NN_LAYERS (int[]){128, 10}
 
 // corresponding datasets are 10 times larger
-#define TRAINING_SAMPLES_PER_DIGIT 17 // 500 images from github, 22 from our sudokus
-#define TEST_SAMPLES_PER_DIGIT 17
+#define TRAINING_SAMPLES_PER_DIGIT 500 // 500 images from github, 22 from our sudokus
+#define TEST_SAMPLES_PER_DIGIT 40
 
-#define EPOCHS 400
+#define EPOCHS 20
 #define LEARNING_RATE 0.7
-#define BATCH_SIZE 500
+#define BATCH_SIZE 200
 
 #define ENABLE_MULTITHREADING 1
 
-#define LEARNING_RATE_DECAY 0 //0.004
+#define LEARNING_RATE_DECAY -0.03
 
 #define RUN_EVALUATIONS 1
-#define RUN_EVALUATIONS_ON_TRAINING 0
+#define RUN_EVALUATIONS_ON_TRAINING 1
 
 #define COST_FUNCTION cross_entropy_cost
 
@@ -241,8 +241,19 @@ void predict_all_images(NeuralNetwork *nn, int argc, char **argv, int verbose) {
 
 
 void sort_images(int argc, char **argv, int verbose){
-    int nb_files = count_files_in_dir("./");
-    char **files = list_files("./", nb_files, 1);
+    char *folder = ".";
+
+    if (argc > 0){
+        folder = argv[0];
+
+        int le = strlen(folder);
+        if (folder[le - 1] == '/'){
+            folder[le - 1] = '\0';
+        }
+    }
+
+    int nb_files = count_files_in_dir(folder);
+    char **files = list_files(folder, nb_files, 1);
     int nb_folders = 10;
     char **folders = malloc(sizeof(char *) * nb_folders);
 
@@ -250,7 +261,7 @@ void sort_images(int argc, char **argv, int verbose){
     
     for (int i = 0; i < nb_folders; i++) {
         folders[i] = malloc(100);
-        sprintf(folders[i], "%d", i);
+        sprintf(folders[i], "%s/%d", folder, i);
         if (!dir_exists(folders[i])){
             if (verbose == 2)
                 printf("Creating folder: %s\n", folders[i]);
@@ -272,7 +283,7 @@ void sort_images(int argc, char **argv, int verbose){
         char *new_filename = malloc(strlen(folders[digit]) + len + 2);
         strcpy(new_filename, folders[digit]);
         strcat(new_filename, "/");
-        strcat(new_filename, filename);
+        strcat(new_filename, filename + strlen(folder) + 1);
 
         if (verbose == 1)
             printf("Moving %s to %s\r", filename, new_filename);
@@ -280,7 +291,13 @@ void sort_images(int argc, char **argv, int verbose){
             printf("Moving %s to %s\n", filename, new_filename);
 
         move_file(filename, new_filename);
+
+
         free(new_filename);
         free(filename);
     }
+
+    free(folders);
+    free_neural_network(nn);
+    free(files);
 }
