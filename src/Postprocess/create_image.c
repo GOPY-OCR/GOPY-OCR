@@ -1,7 +1,11 @@
 #include "create_image.h"
 
 void add_number(SDL_Surface *res, int x, int y, int number, int *grid) {
-    SDL_Color color = grid[x * BOARDSIZE + y] == 0 ? OLD_NUMBER_COLOR : NEW_NUMBER_COLOR;
+    // If there is no number, return and to nothing
+    if (number == 0)
+        return;
+
+    SDL_Color color = grid[x + y * BOARDSIZE] == 0 ? NEW_NUMBER_COLOR : OLD_NUMBER_COLOR;
 
     if (TTF_Init() < 0)
         errx(EXIT_FAILURE, "%s", SDL_GetError());
