@@ -3,13 +3,13 @@
 # Which compiler use
 CC := gcc
 
-USED_LIBS = sdl2 SDL2_image SDL2_ttf
+USED_LIBS = sdl2 SDL2_image gtk+-3.0 SDL2_ttf
 # Flags (with = and not := so flags can be added after)
 CFLAGS = -Wall -Wextra `pkg-config --cflags $(USED_LIBS)` $(OPTFLAGS) -D__NO_INLINE__
 OPTFLAGS := -O3
 CPPFLAGS = -MMD $(addprefix -I, $(INCLUDE_DIRS))
 LDFLAGS :=
-LDLIBS := `pkg-config --libs $(USED_LIBS)` -lm -lpthread
+LDLIBS := `pkg-config --libs $(USED_LIBS)` -lm -export-dynamic -lpthread
 
 # Debug mode can be enabled by executing `make DEBUG=1 rule_name`
 DEBUG := 0

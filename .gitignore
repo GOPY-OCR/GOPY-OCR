@@ -21,3 +21,8 @@ compile_commands.json
 
 # Files for morroring
 mirror* 
+
+# Glade temp files
+*~
+*#
+gmon.out
