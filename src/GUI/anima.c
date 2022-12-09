@@ -46,10 +46,9 @@ void anima_init(Glob_GUI *glob)
 
 void anima_start(Glob_GUI *glob) {
     compute_all_steps(glob);
+    g_print("LOL\n");
     if (glob->anima == NULL)
         errx(EXIT_FAILURE, "Something went wrong during the computing of all steps");
-
-    gtk_image_set_from_sdl_surface(glob->Image_anima, glob->anima->steps[0]);
 
     Anima_Steps *anima = glob->anima;
 
@@ -63,8 +62,8 @@ void anima_start(Glob_GUI *glob) {
         anima->cur_step = anima->nb_steps - 1;
         gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
     }
-        
-    gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
+     
+    gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[0]);
 }
 
 
