@@ -107,13 +107,14 @@ G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data) 
         return;
 
     Anima_Steps *anima = glob->anima;
+    g_print("%i\n", anima->cur_step + 1);
 
     if (anima->cur_step + 1 < anima->nb_steps) {
-        if (anima->cur_step == anima->nb_steps - 1 && 
-                anima->steps[anima->cur_step] == NULL) {
+        if (anima->cur_step + 1 == anima->nb_steps - 1 && 
+                anima->steps[anima->cur_step + 1] == NULL) {
             dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
         }
-        else if (anima->steps[anima->cur_step] == NULL)
+        else if (anima->steps[anima->cur_step + 1] == NULL)
             dialog_error(glob->window, GTK_MESSAGE_ERROR, "Something went wrong with the next step...");
 
         else
