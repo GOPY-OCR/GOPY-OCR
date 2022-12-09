@@ -18,8 +18,10 @@ Uint32 *getpixel(SDL_Surface *surface, int x, int y){
     if(x < 0 || x >= surface->w || y < 0 || y >= surface->h){
         return NULL;
     }
-
-    int bpp = surface->format->BytesPerPixel; // = 4
+    
+    // optimization
+    //int bpp = surface->format->BytesPerPixel;
+    const int bpp = 4;
     Uint32 *p = surface->pixels + y * surface->pitch + x * bpp;
     return p;
 }
