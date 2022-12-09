@@ -198,8 +198,8 @@
                 <property name="homogeneous">True</property>
                 <property name="layout-style">start</property>
                 <child>
-                  <object class="GtkButton" id="AnimaNextStep">
-                    <property name="label" translatable="yes">Next Step</property>
+                  <object class="GtkButton" id="AnimaPrevStep">
+                    <property name="label" translatable="yes">Previous Step</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
@@ -211,8 +211,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="AnimaPrevStep">
-                    <property name="label" translatable="yes">Previous Step</property>
+                  <object class="GtkButton" id="AnimaNextStep">
+                    <property name="label" translatable="yes">Next Step</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
@@ -261,17 +261,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="StartButton">
-                    <property name="label" translatable="yes">Start</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
+                  <placeholder/>
                 </child>
                 <child>
                   <object class="GtkButton" id="SaveButton">
