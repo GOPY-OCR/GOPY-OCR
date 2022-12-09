@@ -1,5 +1,26 @@
 #include "anima_tools.h"
 
+void dialog_error(GtkWindow *window, GtkMessageType type, char *msg)
+{
+    char *title = "Info";
+    if (type == GTK_MESSAGE_ERROR)
+        title = "Error";
+    if (type == GTK_MESSAGE_WARNING)
+        title = "Warning";
+
+    GtkWidget *dialog;
+    GtkDialogFlags flags = GTK_DIALOG_DESTROY_WITH_PARENT;
+    dialog = gtk_message_dialog_new_with_markup(window,
+                                      flags,
+                                      type,
+                                      GTK_BUTTONS_CLOSE,
+                                      "<b>%s</b>: %s", title, msg);
+
+    gtk_window_set_title(GTK_WINDOW(dialog), title);
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
+
 void gtk_image_set_from_sdl_surface(GtkImage *image, SDL_Surface *surface)
 {
     Uint32 src_format;
@@ -110,6 +131,7 @@ void compute_all_steps(Glob_GUI *glob) {
 
     if (!Solve(res->solved)) {
         g_print("Not solvable grid\n");
+        res->post = NULL;
     }
 
     else {

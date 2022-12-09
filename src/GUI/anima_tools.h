@@ -16,6 +16,7 @@
 #include "anima_steps.h"
 #include "gui-utils.h"
 
+void dialog_error(GtkWindow *window, GtkMessageType type, char *msg);
 void gtk_image_set_from_sdl_surface(GtkImage *image, SDL_Surface *surface);
 SDL_Surface *copy_surface(SDL_Surface *base);
 void compute_all_steps(Glob_GUI *glob);
