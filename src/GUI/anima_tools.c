@@ -68,12 +68,11 @@ SDL_Surface *copy_surface(SDL_Surface *base) {
 }
 
 void compute_all_steps(Glob_GUI *glob) {
-    glob->steps = malloc(sizeof(Anima_Steps));
-    Anima_Steps *res = glob->steps;
+    glob->anima = malloc(sizeof(Anima_Steps));
+    Anima_Steps *res = glob->anima;
     res->cur_step = 0;
     res->nb_steps = NB_STEPS;
-    res->nb_pre_steps = NB_PRE_STEPS;
-    res->prep = calloc(res->nb_pre_steps, sizeof(SDL_Surface *));
+    res->steps = calloc(NB_STEPS, sizeof(SDL_Surface *));
 
     // Convert the user pointer into the filename
     GtkImage *Image = glob->Image_anima;
@@ -83,37 +82,37 @@ void compute_all_steps(Glob_GUI *glob) {
 
     // 1.  Load the image as a SDL_Surface
     SDL_Surface *image_sdl = load_image(path);
-    res->prep[0] = copy_surface(image_sdl);
+    res->steps[0] = copy_surface(image_sdl);
     
     // 2.  Resize the image_sdl to speed up the next functions
     resize(&image_sdl);
-    res->prep[1] = copy_surface(image_sdl);
+    res->steps[1] = copy_surface(image_sdl);
     //gtk_image_set_from_sdl_surface(Image, image_sdl);
 
     // 3.  Grayscale
     surface_to_grayscale(image_sdl);
-    res->prep[2] = copy_surface(image_sdl);
+    res->steps[2] = copy_surface(image_sdl);
 
     // 4.  Noise reduction + contrasts correction
     correct_brightness(image_sdl);
-    res->prep[3] = copy_surface(image_sdl);
+    res->steps[3] = copy_surface(image_sdl);
 
     // 5.  Binarization
     binarize(image_sdl, p.b_th);
-    res->prep[4] = copy_surface(image_sdl);
+    res->steps[4] = copy_surface(image_sdl);
 
     // 6.  Interpolation des images pas droites
     automatic_rot(&image_sdl);    
-    res->prep[5] = copy_surface(image_sdl);
+    res->steps[5] = copy_surface(image_sdl);
 
     // 7.  Grid detection
+    res->steps[6] = copy_surface(image_sdl);
+    grid_detection(res->steps[6], 1, p, 0);
     Quad coords = grid_detection(image_sdl, 0, p, 1);
-    res->prep[6] = copy_surface(image_sdl);
-    grid_detection(res->prep[6], 1, p, 0);
 
     // 8.  Perspective correction of the image
     perspective_correction(&image_sdl, &coords);
-    res->prep[7] = copy_surface(image_sdl);
+    res->steps[7] = copy_surface(image_sdl);
     
     // 9.  Split the image in 81 small images
     SDL_Surface **splitted = split_sudoku(image_sdl);
@@ -123,6 +122,7 @@ void compute_all_steps(Glob_GUI *glob) {
     
     // 12. Neural network
     res->detected = neural_network(splitted);
+    res->steps[8] = postprocess(res->detected, res->detected);
     
     // 13. Solve the grid
     res->solved = calloc(81, sizeof(int));
@@ -131,11 +131,11 @@ void compute_all_steps(Glob_GUI *glob) {
 
     if (!Solve(res->solved)) {
         g_print("Not solvable grid\n");
-        res->post = NULL;
+        res->steps[9] = NULL;
     }
 
     else {
         // 14. Postprocess
-        res->post = postprocess(res->detected, res->solved);
+        res->steps[10] = postprocess(res->detected, res->solved);
     }
 }

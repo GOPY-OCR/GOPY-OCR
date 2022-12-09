@@ -24,7 +24,7 @@ typedef struct Glob_GUI {
     GtkButton *anima_PrevStep; // Prev step button
     GtkButton *anima_LastStep; // Directly go to the last step (postprocess)
     int anima_auto; // Automatic mode or not
-    Anima_Steps *steps; // All the steps
+    Anima_Steps *anima; // All the steps
 
     gchar *original_image_path;
     int current_page;

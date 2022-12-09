@@ -46,19 +46,25 @@ void anima_init(Glob_GUI *glob)
 
 void anima_start(Glob_GUI *glob) {
     compute_all_steps(glob);
-    if (glob->steps == NULL)
+    if (glob->anima == NULL)
         errx(EXIT_FAILURE, "Something went wrong during the computing of all steps");
 
-    gtk_image_set_from_sdl_surface(glob->Image_anima, glob->steps->prep[0]);
+    gtk_image_set_from_sdl_surface(glob->Image_anima, glob->anima->steps[0]);
+
+    Anima_Steps *anima = glob->anima;
 
     if (glob->anima_auto) {
-        if (glob->steps->post == NULL) {
+        if (anima->steps[anima->nb_steps - 1] == NULL) {
             dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
+            anima->cur_step = anima->nb_steps - 2;
+            gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
         }
-
-        else
-            gtk_image_set_from_sdl_surface(glob->Image_anima, glob->steps->post);
+        
+        anima->cur_step = anima->nb_steps - 1;
+        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
     }
+        
+    gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
 }
 
 
@@ -87,7 +93,7 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
    {
      g_print("starting save");
    }
-   else if (glob->steps->post != NULL)
+   else
    {
     //permet de choisir le chemin 
 
@@ -96,7 +102,7 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
        gint res = gtk_dialog_run (GTK_DIALOG (dialog));
        if (res == GTK_RESPONSE_ACCEPT) {
            char* outFile = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-           IMG_SavePNG(glob->steps->post, outFile);
+           IMG_SavePNG(glob->anima->steps[glob->anima->cur_step], outFile);
        }
        gtk_widget_destroy (dialog);
    }
@@ -104,42 +110,32 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
 
 G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data) {
     Glob_GUI *glob = user_data;
-    if (glob == NULL || glob->steps->cur_step == glob->steps->nb_steps - 1)
+    if (glob == NULL || glob->anima->cur_step == glob->anima->nb_steps - 1)
         return;
 
-    Anima_Steps *steps = glob->steps;
+    Anima_Steps *anima = glob->anima;
 
-    if (++steps->cur_step < steps->nb_pre_steps)
-        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->prep[steps->cur_step]);
+    if (++anima->cur_step < anima->nb_steps - 1)
+        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
 
-    else if (steps->cur_step == steps->nb_pre_steps) {
-        // Show detected grid    
-    }
     else {
-        if (glob->steps->post == NULL) {
+        if (anima->steps[anima->nb_steps] == NULL) {
             dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
         }
+        else
+            gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
     }
 }
 
 G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data) {
     Glob_GUI *glob = user_data;
-    if (glob == NULL || glob->steps->cur_step == 0)
+    if (glob == NULL || glob->anima->cur_step == 0)
         return;
 
-    Anima_Steps *steps = glob->steps;
+    Anima_Steps *anima = glob->anima;
 
-    if (--steps->cur_step < steps->nb_pre_steps)
-        gtk_image_set_from_sdl_surface(glob->Image_anima, steps->prep[steps->cur_step]);
-
-    else if (steps->cur_step == steps->nb_pre_steps) {
-        // Show detected grid    
-    }
-    else {
-        if (glob->steps->post == NULL) {
-            dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
-        }
-    }
+    if (--anima->cur_step >= 0)
+        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
 }
 
 G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) {
@@ -147,10 +143,15 @@ G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) 
     if (glob == NULL)
         return;
     
-    Anima_Steps *steps = glob->steps;
+    Anima_Steps *anima = glob->anima;
 
-    if (glob->steps->post == NULL) {
+    if (anima->steps[anima->nb_steps - 1] == NULL) {
         dialog_error(glob->window, GTK_MESSAGE_ERROR, "Unsolvable grid...");
+        anima->cur_step = anima->nb_steps - 2;
+        gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
     }
+    
+    anima->cur_step = anima->nb_steps - 1;
+    gtk_image_set_from_sdl_surface(glob->Image_anima, anima->steps[anima->cur_step]);
 }
 
