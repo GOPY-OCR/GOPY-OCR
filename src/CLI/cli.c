@@ -240,7 +240,7 @@ int CLI(int argc, char **argv) {
         Quad grid = grid_detection(image, 0, 1);
         perspective_correction(&image, &grid);
         SDL_Surface **splitted = split_sudoku(image);
-        neural_network_denoise(splitted);
+        denoise_cells(splitted);
         neural_network_resize(splitted);
 
         for (size_t i = 0; i < 81; i++) {

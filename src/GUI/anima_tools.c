@@ -88,8 +88,6 @@ void compute_all_steps(Glob_GUI *glob) {
     // Convert the user pointer into the filename
     gchar *path = glob->original_image_path;
 
-    Params p = get_params(path);
-
     // 1.  Load the image as a SDL_Surface
     SDL_Surface *image_sdl = load_image(path);
     
@@ -106,7 +104,7 @@ void compute_all_steps(Glob_GUI *glob) {
     res->steps[2] = copy_surface(image_sdl);
 
     // 5.  Binarization
-    binarize(image_sdl, p.b_th);
+    adaptative_binarize(image_sdl);
     res->steps[3] = copy_surface(image_sdl);
 
     // 6.  Interpolation des images pas droites
@@ -116,8 +114,8 @@ void compute_all_steps(Glob_GUI *glob) {
 
     // 7.  Grid detection
     res->steps[5] = copy_surface(res->steps[4]);
-    grid_detection(res->steps[5], 1, p, 0);
-    Quad coords = grid_detection(image_sdl, 0, p, 1);
+    grid_detection(res->steps[5], 1, 0);
+    Quad coords = grid_detection(image_sdl, 0, 1);
 
     // 8.  Perspective correction of the image
     perspective_correction(&image_sdl, &coords);
@@ -127,6 +125,9 @@ void compute_all_steps(Glob_GUI *glob) {
     // 9.  Split the image in 81 small images
     SDL_Surface **splitted = split_sudoku(image_sdl);
     
+    // 10. Denoise the neural network images
+    denoise_cells(splitted);
+
     // 10. Resize the image to 28x28 for the neural network
     neural_network_resize(splitted);
     

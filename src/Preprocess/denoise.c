@@ -20,7 +20,7 @@ void clear_if_empty(SDL_Surface **surface) {
     }
 }
 
-void neural_network_denoise(SDL_Surface **cells)
+void denoise_cells(SDL_Surface **cells)
 {
     for (int i = 0; i < 81; i++){
         SDL_Surface *denoised = extract_max_component(cells[i], DENOISE_FF_CONNECTIVITY, 0);

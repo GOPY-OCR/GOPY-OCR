@@ -43,7 +43,7 @@ SDL_Surface **preprocess(const char *filename) {
     SDL_Surface **splitted = split_sudoku(image);
 
     // 10. Denoise neural network images
-    neural_network_denoise(splitted);
+    denoise_cells(splitted);
 
     // 11. Resize the image to 28x28 for the neural network
     neural_network_resize(splitted);
