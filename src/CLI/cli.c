@@ -84,7 +84,7 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "resized");
 
         SDL_Surface *image = load_image(argv[2]);
-        resize(&image);
+        resize(&image, NEW_SIZE);
         save_image(image, final_name);
 
         free(final_name);
@@ -100,7 +100,7 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "grayscaled");
 
         SDL_Surface *image = load_image(argv[2]);
-        resize(&image);
+        resize(&image, NEW_SIZE);
         surface_to_grayscale(image);
         save_image(image, final_name);
 
@@ -117,7 +117,7 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "contrast");
 
         SDL_Surface *image = load_image(argv[2]);
-        resize(&image);
+        resize(&image, NEW_SIZE);
         surface_to_grayscale(image);
         correct_brightness(image);
         save_image(image, final_name);
@@ -135,7 +135,7 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "bin");
 
         SDL_Surface *image = load_image(argv[2]);
-        resize(&image);
+        resize(&image, NEW_SIZE);
         surface_to_grayscale(image);
         correct_brightness(image);
         adaptative_binarize(image);
@@ -154,7 +154,7 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "detected_grid");
 
         SDL_Surface *image = load_image(argv[2]);
-        resize(&image);
+        resize(&image, NEW_SIZE);
         surface_to_grayscale(image);
         correct_brightness(image);
         adaptative_binarize(image);
@@ -194,7 +194,7 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "auto_rotated");
 
         SDL_Surface *image = load_image(argv[2]);
-        resize(&image);
+        resize(&image, NEW_SIZE);
         surface_to_grayscale(image);
         correct_brightness(image);
         adaptative_binarize(image);
@@ -212,7 +212,7 @@ int CLI(int argc, char **argv) {
         char *final_name = format_final_name(argv[2], "perspective");
 
         SDL_Surface *image = load_image(argv[2]);
-        resize(&image);
+        resize(&image, NEW_SIZE);
         surface_to_grayscale(image);
         correct_brightness(image);
         adaptative_binarize(image);
@@ -232,7 +232,7 @@ int CLI(int argc, char **argv) {
             exit_help(1);
 
         SDL_Surface *image = load_image(argv[2]);
-        resize(&image);
+        resize(&image, NEW_SIZE);
         surface_to_grayscale(image);
         correct_brightness(image);
         adaptative_binarize(image);

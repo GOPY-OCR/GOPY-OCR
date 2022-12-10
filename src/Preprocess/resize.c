@@ -1,8 +1,8 @@
 #include "resize.h"
 
-void resize(SDL_Surface **base) {
-    int width = NEW_SIZE;
-    int height = (float) NEW_SIZE / (float) (*base)->w * (*base)->h;
+void resize(SDL_Surface **base, int new_size) {
+    int width = new_size;
+    int height = (float) new_size / (float) (*base)->w * (*base)->h;
     SDL_Surface *dest = SDL_CreateRGBSurface(
             (*base)->flags,
             width,

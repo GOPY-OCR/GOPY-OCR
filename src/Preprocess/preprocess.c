@@ -19,7 +19,7 @@ SDL_Surface **preprocess(const char *filename) {
     SDL_Surface *image = load_image(filename);
 
     // 2.  Resize the image to speed up the next functions
-    resize(&image);
+    resize(&image, NEW_SIZE);
 
     // 3.  Grayscale
     surface_to_grayscale(image);
