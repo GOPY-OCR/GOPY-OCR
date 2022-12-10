@@ -16,7 +16,7 @@
 #define LEARNING_RATE_DECAY -0.03
 
 #define RUN_EVALUATIONS 1
-#define RUN_EVALUATIONS_ON_TRAINING 1
+#define RUN_EVALUATIONS_ON_TRAINING 0
 
 #define COST_FUNCTION cross_entropy_cost
 

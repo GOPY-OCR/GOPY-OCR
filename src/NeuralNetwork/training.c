@@ -56,7 +56,7 @@ void train(NeuralNetwork *nn,
                 epochs);
 
         printf("\nOptions enabled: ");
-        if(multithread) printf("[multithread] ");
+        if(multithread) printf("[multithread (using %d threads)] ", THREADS_COUNT);
         if(save_accuracies) printf("[save accuracies] ");
         if(learning_rate_decay != 0) 
             printf("[learning_rate_decay (factor: %s)] ", 
