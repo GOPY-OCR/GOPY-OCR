@@ -15,15 +15,13 @@ void adaptative_binarize(SDL_Surface *base){
 
     int half_s = max(base->w, base->h) / 16;
     int count;
-    int sum;
+    unsigned int sum;
     
 
     for (int x = 0; x < base->w; x++){
         sum = 0;
         for (int y = 0; y < base->h; y++){
             sum += getpixelgray(base, x, y);
-            
-            assert(sum > 0);
             
             if(x == 0){
                 matrice_set(integral, x, y, (double) sum);

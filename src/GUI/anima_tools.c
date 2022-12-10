@@ -78,7 +78,15 @@ SDL_Surface *copy_surface(SDL_Surface *base) {
     return copy;
 }
 
+void apply_locale() {
+    locale_t locale = uselocale(newlocale(LC_ALL_MASK, "C", NULL));
+    if (locale == (locale_t)0) {
+        errx(EXIT_FAILURE, "Error: failed to set locale");
+    }
+}
+
 void compute_all_steps(Glob_GUI *glob) {
+    apply_locale();
     glob->anima = malloc(sizeof(Anima_Steps));
     Anima_Steps *res = glob->anima;
     res->cur_step = 0;
@@ -130,7 +138,7 @@ void compute_all_steps(Glob_GUI *glob) {
 
     // 10. Resize the image to 28x28 for the neural network
     neural_network_resize(splitted);
-    
+
     // 12. Neural network
     res->detected = neural_network(splitted);
     res->steps[7] = postprocess(res->detected, res->detected);

@@ -495,7 +495,7 @@ matrice *matrice_deserialize(char *str, char **endptr){
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-            double val = strtof(p, &p);
+            double val = strtod(p, &p);
             matrice_set(m, i, j, val);
             p++;
         }

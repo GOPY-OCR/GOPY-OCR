@@ -20,6 +20,16 @@
 
 #define COST_FUNCTION cross_entropy_cost
 
+
+int *neural_network(SDL_Surface **splitted) {
+    int *res = calloc(81, sizeof(int));
+    NeuralNetwork *nn = load_neural_network(NN_SAVE_FILENAME);
+    for (size_t i = 0; i < 81; i++)
+        res[i] = predict_surface(splitted[i], nn);
+
+    return res;
+}
+
 int digit_recognition_main(int argc, char **argv, int verbose){
     NeuralNetwork *nn;
     // check if save file exists

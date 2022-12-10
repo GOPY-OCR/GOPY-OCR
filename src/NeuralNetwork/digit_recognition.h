@@ -6,9 +6,12 @@
 #include "cost_functions.h"
 #include <argp.h>
 #include <sys/stat.h>
+#include <SDL2/SDL.h>
 
 #define NN_SAVE_FILENAME "assets/NeuralNetwork/ocr_save.nn"
 
+// main function called in GUI and CLI
+int *neural_network(SDL_Surface **splitted);
 
 int digit_recognition_main(int argc, char **argv, int verbose);
 
