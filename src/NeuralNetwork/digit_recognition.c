@@ -62,6 +62,17 @@ int digit_recognition_main(int argc, char **argv, int verbose){
         test_dataset = load_dataset("data/testing/", TEST_SAMPLES_PER_DIGIT);
     }
 
+    // get mean and std (for normalization)
+    //matrice *all = matrice_new(train_dataset->size * NUM_INPUTS, 1);
+    //for (int i = 0; i < train_dataset->size; i++){
+    //    for (int j = 0; j < NUM_INPUTS; j++){
+    //        matrice_set(all, i * NUM_INPUTS + j, 0, matrice_get(train_dataset->inputs[i], j, 0));
+    //    }
+    //}
+    //double mean = matrice_mean(all);
+    //double std = matrice_std(all);
+    //printf("mean: %.10f, std: %.10f\n", mean, std);
+
     // Train the neural network
     train(nn, 
           epochs, 

@@ -20,8 +20,8 @@ void free_dataset(dataset *data) {
 
 // these values where computed accross the whole dataset previously
 // and are used to normalize the inputs
-#define IMAGE_MEAN 100.602216505102035171148600056767
-#define IMAGE_STD 236.326521859361037058988586068153
+#define IMAGE_MEAN 226.0856719372
+#define IMAGE_STD 349.0570268198
 matrice *image_to_matrice(SDL_Surface *image) {
     matrice *m = matrice_new(image->w * image->h, 1);
 
