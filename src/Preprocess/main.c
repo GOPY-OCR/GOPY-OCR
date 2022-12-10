@@ -11,9 +11,7 @@
 
 int main(int argc, char **argv) {
     SDL_Surface *image = load_image(argv[1]);
-    Params params = get_params(argv[1]);
-
-    resize(&image);
+    resize(&image, NEW_SIZE);
 
     //surface_to_grayscale(image);
     //correct_brightness(image);

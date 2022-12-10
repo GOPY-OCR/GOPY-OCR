@@ -6,8 +6,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <string.h>
+#include <locale.h>
+#include <err.h>
 #include "../Preprocess/preprocess.h"
-#include "../NeuralNetwork/neural_network.h"
+#include "../NeuralNetwork/digit_recognition.h"
 #include "../Solver/grid.h"
 #include "../Solver/solver.h"
 #include "../Postprocess/postprocess.h"

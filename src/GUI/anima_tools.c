@@ -78,7 +78,15 @@ SDL_Surface *copy_surface(SDL_Surface *base) {
     return copy;
 }
 
+void apply_locale() {
+    locale_t locale = uselocale(newlocale(LC_ALL_MASK, "C", NULL));
+    if (locale == (locale_t)0) {
+        errx(EXIT_FAILURE, "Error: failed to set locale");
+    }
+}
+
 void compute_all_steps(Glob_GUI *glob) {
+    apply_locale();
     glob->anima = malloc(sizeof(Anima_Steps));
     Anima_Steps *res = glob->anima;
     res->cur_step = 0;
@@ -88,52 +96,58 @@ void compute_all_steps(Glob_GUI *glob) {
     // Convert the user pointer into the filename
     gchar *path = glob->original_image_path;
 
-    Params p = get_params(path);
-
     // 1.  Load the image as a SDL_Surface
     SDL_Surface *image_sdl = load_image(path);
     
     // 2.  Resize the image_sdl to speed up the next functions
-    resize(&image_sdl);
     res->steps[0] = copy_surface(image_sdl);
+    resize(&(res->steps[0]), GUI_SIZE);
+    resize(&image_sdl, NEW_SIZE);
 
     // 3.  Grayscale
     surface_to_grayscale(image_sdl);
     res->steps[1] = copy_surface(image_sdl);
+    resize(&(res->steps[1]), GUI_SIZE);
 
     // 4.  Noise reduction + contrasts correction
     correct_brightness(image_sdl);
     res->steps[2] = copy_surface(image_sdl);
+    resize(&(res->steps[2]), GUI_SIZE);
 
     // 5.  Binarization
-    binarize(image_sdl, p.b_th);
+    adaptative_binarize(image_sdl);
     res->steps[3] = copy_surface(image_sdl);
+    resize(&(res->steps[3]), GUI_SIZE);
 
     // 6.  Interpolation des images pas droites
     automatic_rot(&image_sdl);
     res->steps[4] = copy_surface(image_sdl);
-    resize(&(res->steps[4]));
+    resize(&(res->steps[4]), GUI_SIZE);
 
     // 7.  Grid detection
     res->steps[5] = copy_surface(res->steps[4]);
-    grid_detection(res->steps[5], 1, p, 0);
-    Quad coords = grid_detection(image_sdl, 0, p, 1);
+    grid_detection(res->steps[5], 1, 0);
+    Quad coords = grid_detection(image_sdl, 0, 1);
+    resize(&(res->steps[5]), GUI_SIZE);
 
     // 8.  Perspective correction of the image
     perspective_correction(&image_sdl, &coords);
     res->steps[6] = copy_surface(image_sdl);
-    resize(&(res->steps[6]));
+    resize(&(res->steps[6]), GUI_SIZE);
     
     // 9.  Split the image in 81 small images
     SDL_Surface **splitted = split_sudoku(image_sdl);
     
+    // 10. Denoise the neural network images
+    denoise_cells(splitted);
+
     // 10. Resize the image to 28x28 for the neural network
     neural_network_resize(splitted);
-    
+
     // 12. Neural network
     res->detected = neural_network(splitted);
     res->steps[7] = postprocess(res->detected, res->detected);
-    resize(&(res->steps[7]));
+    resize(&(res->steps[7]), GUI_SIZE);
     
     // 13. Solve the grid
     res->solved = calloc(81, sizeof(int));
@@ -148,6 +162,6 @@ void compute_all_steps(Glob_GUI *glob) {
     else {
         // 14. Postprocess
         res->steps[8] = postprocess(res->detected, res->solved);
-        resize(&(res->steps[8]));
+        resize(&(res->steps[8]), GUI_SIZE);
     }
 }

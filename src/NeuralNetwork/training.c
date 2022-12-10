@@ -21,7 +21,7 @@
 
 #define ACCURACIES_CSV_FILE "_build/accuracies.csv"
 // max number of training examples to use for computing training accuracy
-#define NB_TRAINING_SAMPLES 1000
+#define NB_TRAINING_SAMPLES 3000
 
 void train(NeuralNetwork *nn, 
            int epochs, 
@@ -56,11 +56,14 @@ void train(NeuralNetwork *nn,
                 epochs);
 
         printf("\nOptions enabled: ");
-        if(multithread) printf("[multithread] ");
+        if(multithread) printf("[multithread (using %d threads)] ", THREADS_COUNT);
         if(save_accuracies) printf("[save accuracies] ");
         if(learning_rate_decay != 0) 
-            printf("[learning_rate_decay (factor: %s)]", 
+            printf("[learning_rate_decay (factor: %s)] ", 
                     double_to_string(learning_rate_decay));
+        if(compute_training_accuracy) 
+            printf("[compute training accuracy (max %d samples)] ", 
+                    NB_TRAINING_SAMPLES);
         printf("\n");
 
         printf("Network shape: {");
@@ -74,7 +77,7 @@ void train(NeuralNetwork *nn,
     }
 
 
-    matrice *accuracies = matrice_new(epochs, 1 + compute_training_accuracy);
+    matrice *accuracies = matrice_new(epochs + 1, 1 + compute_training_accuracy);
     double accuracy = -1;
     
     dataset *training_samples = NULL;
@@ -88,6 +91,14 @@ void train(NeuralNetwork *nn,
     // to make a copy of it to avoid modifying the order each epoch
     if(testing_data == training_data) {
         testing_data = copy_dataset(testing_data, 0); // 0 = shallow copy, no need to copy the data, only the order
+    }
+
+    // compute initial accuracy
+    accuracy = evaluate(nn, testing_data, 0);
+    matrice_set(accuracies, 0, 0, accuracy);
+    if (compute_training_accuracy) {
+        accuracy = evaluate(nn, training_samples, 0);
+        matrice_set(accuracies, 0, 1, accuracy);
     }
 
     for (int e = 0; e < epochs; e++) {
@@ -122,11 +133,11 @@ void train(NeuralNetwork *nn,
             }
 
 
-            matrice_set(accuracies, e, 0, accuracy);
+            matrice_set(accuracies, e + 1, 0, accuracy);
 
             if (compute_training_accuracy) {
                 accuracy = evaluate(nn, training_samples, 0);
-                matrice_set(accuracies, e, 1, accuracy);
+                matrice_set(accuracies, e + 1, 1, accuracy);
 
                 if (verbose > 1) {
                     printf(" (training accuracy: %.2f%%)\n", accuracy * 100);

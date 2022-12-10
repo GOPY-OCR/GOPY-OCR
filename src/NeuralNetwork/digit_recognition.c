@@ -1,24 +1,34 @@
 #include "digit_recognition.h"
 
 #define NUM_INPUTS 784
-#define NN_LAYERS (int[]){32, 10}
+#define NN_LAYERS (int[]){128, 10}
 
 // corresponding datasets are 10 times larger
-#define TRAINING_SAMPLES_PER_DIGIT 522 // 500 images from github, 22 from our sudokus
-#define TEST_SAMPLES_PER_DIGIT 22
+#define TRAINING_SAMPLES_PER_DIGIT 500 // 500 images from github, 22 from our sudokus
+#define TEST_SAMPLES_PER_DIGIT 40
 
-#define EPOCHS 400
-#define LEARNING_RATE 1
-#define BATCH_SIZE 500
+#define EPOCHS 20
+#define LEARNING_RATE 0.7
+#define BATCH_SIZE 200
 
 #define ENABLE_MULTITHREADING 1
 
-#define LEARNING_RATE_DECAY 0 //0.004
+#define LEARNING_RATE_DECAY -0.03
 
 #define RUN_EVALUATIONS 1
 #define RUN_EVALUATIONS_ON_TRAINING 0
 
 #define COST_FUNCTION cross_entropy_cost
+
+
+int *neural_network(SDL_Surface **splitted) {
+    int *res = calloc(81, sizeof(int));
+    NeuralNetwork *nn = load_neural_network(NN_SAVE_FILENAME);
+    for (size_t i = 0; i < 81; i++)
+        res[i] = predict_surface(splitted[i], nn);
+
+    return res;
+}
 
 int digit_recognition_main(int argc, char **argv, int verbose){
     NeuralNetwork *nn;
@@ -51,6 +61,17 @@ int digit_recognition_main(int argc, char **argv, int verbose){
     if (RUN_EVALUATIONS){
         test_dataset = load_dataset("data/testing/", TEST_SAMPLES_PER_DIGIT);
     }
+
+    // get mean and std (for normalization)
+    //matrice *all = matrice_new(train_dataset->size * NUM_INPUTS, 1);
+    //for (int i = 0; i < train_dataset->size; i++){
+    //    for (int j = 0; j < NUM_INPUTS; j++){
+    //        matrice_set(all, i * NUM_INPUTS + j, 0, matrice_get(train_dataset->inputs[i], j, 0));
+    //    }
+    //}
+    //double mean = matrice_mean(all);
+    //double std = matrice_std(all);
+    //printf("mean: %.10f, std: %.10f\n", mean, std);
 
     // Train the neural network
     train(nn, 
@@ -239,3 +260,69 @@ void predict_all_images(NeuralNetwork *nn, int argc, char **argv, int verbose) {
             grand_total, tot_files, 100.0 * (tot_files - grand_total) / tot_files);
 }
 
+
+void sort_images(int argc, char **argv, int verbose){
+    char *folder = ".";
+
+    if (argc > 0){
+        folder = argv[0];
+
+        int le = strlen(folder);
+        if (folder[le - 1] == '/'){
+            folder[le - 1] = '\0';
+        }
+    }
+
+    int nb_files = count_files_in_dir(folder);
+    char **files = list_files(folder, nb_files, 1);
+    int nb_folders = 10;
+    char **folders = malloc(sizeof(char *) * nb_folders);
+
+    NeuralNetwork *nn = load_neural_network(NN_SAVE_FILENAME);
+    
+    for (int i = 0; i < nb_folders; i++) {
+        folders[i] = malloc(100);
+        sprintf(folders[i], "%s/%d", folder, i);
+        if (!dir_exists(folders[i])){
+            if (verbose == 2)
+                printf("Creating folder: %s\n", folders[i]);
+            mkdir(folders[i], 0777);
+        }
+    }
+
+    for (int i = 0; i < nb_files; i++) {
+        char *filename = files[i];
+        int len = strlen(filename);
+
+        // check if ends with .png
+        if (!(len > 4 && strcmp(filename + len - 4, ".png") == 0)) {
+            continue;
+        }
+
+        int digit = predict_digit(filename, nn);
+
+        char *new_filename = malloc(strlen(folders[digit]) + len + 2);
+        strcpy(new_filename, folders[digit]);
+        strcat(new_filename, "/");
+        strcat(new_filename, filename + strlen(folder) + 1);
+
+        if (verbose == 1)
+            printf("Moving %s to %s\r", filename, new_filename);
+        else if (verbose == 2)
+            printf("Moving %s to %s\n", filename, new_filename);
+
+        move_file(filename, new_filename);
+
+
+        free(new_filename);
+        free(filename);
+    }
+
+    for (int i = 0; i < nb_folders; i++) {
+        free(folders[i]);
+    }
+
+    free(folders);
+    free_neural_network(nn);
+    free(files);
+}

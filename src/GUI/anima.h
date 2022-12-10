@@ -16,5 +16,5 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
 G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data);
 G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data);
 G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data);
-
+G_MODULE_EXPORT void on_key_press_anima(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 

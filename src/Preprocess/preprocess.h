@@ -12,7 +12,7 @@
 #include "rotation.h"
 #include "resize.h"
 #include "split.h"
-#include "params.h"
+#include "denoise.h"
 
 SDL_Surface **preprocess(const char *filename);
 

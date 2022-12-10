@@ -4,11 +4,15 @@
 #include <stdlib.h>
 #include <err.h>
 #include <SDL2/SDL.h>
+#include "point.h"
+#include "pixel_utils.h"
+#include "maths.h"
 
-#define NEW_SIZE 500
+#define NEW_SIZE 1000
+#define GUI_SIZE 500
 #define NN_SIZE 28
 
-void resize(SDL_Surface **base);
+void resize(SDL_Surface **base, int new_size);
 void neural_network_resize(SDL_Surface *splitted[81]);
 
 #endif

@@ -42,6 +42,9 @@ void anima_init(Glob_GUI *glob)
     g_signal_connect(glob->anima_NextStep, "clicked", G_CALLBACK(on_NextStep_clicked), glob);
     g_signal_connect(glob->anima_PrevStep, "clicked", G_CALLBACK(on_PrevStep_clicked), glob);
     g_signal_connect(glob->anima_LastStep, "clicked", G_CALLBACK(on_LastStep_clicked), glob);
+
+    // enable the use of keyboard arrows to navigate between steps
+    g_signal_connect(glob->main, "key-press-event", G_CALLBACK(on_key_press_anima), glob);
 }
 
 void anima_start(Glob_GUI *glob) {
@@ -152,3 +155,19 @@ G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) 
     }
 }
 
+G_MODULE_EXPORT void on_key_press_anima(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
+    Glob_GUI *glob = user_data;
+    if (glob == NULL)
+        return;
+
+    switch (event->keyval) {
+        case GDK_KEY_Right:
+            on_NextStep_clicked(NULL, user_data);
+            break;
+        case GDK_KEY_Left:
+            on_PrevStep_clicked(NULL, user_data);
+            break;
+        default:
+            break;
+    }
+}
