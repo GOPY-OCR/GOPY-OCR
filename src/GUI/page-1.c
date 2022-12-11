@@ -31,12 +31,7 @@ G_MODULE_EXPORT void on_Continue1_clicked(GtkButton *button, gpointer user_data)
 {
     (void)button;
    Glob_GUI *glob = (Glob_GUI *)user_data;
-   if (glob == NULL)
-   {
-	   g_print("aled");
-   }
-
-   else
+   if (glob != NULL)
    {
        glob->anima_auto = gtk_switch_get_state(glob->page_1_Switch);
 	   next_page(glob);

@@ -37,7 +37,6 @@ void switch_page(Glob_GUI *glob, int page)
 
 		
 	}
-	g_print(page_name);
 	gtk_stack_set_visible_child_name(glob->Pages, page_name);
 
 }
