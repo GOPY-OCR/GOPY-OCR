@@ -1,7 +1,7 @@
 #include "anima_tools.h"
 
 void free_anima_steps(Anima_Steps *anima) {
-    for (size_t i = 0; i < anima->nb_steps; i++) {
+    for (int i = 0; i < anima->nb_steps; i++) {
         SDL_FreeSurface(anima->steps[i]);
     }
 

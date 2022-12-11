@@ -16,12 +16,13 @@ void page_0_init(Glob_GUI *glob)
    //CSS, beware, here be dragons
     GtkCssProvider *  css = gtk_css_provider_new();
     gtk_css_provider_load_from_data(css, "* { background-image:none; background-color:#0D4848;}",-1,NULL);
-    GtkCssProvider *context = gtk_widget_get_style_context(glob->page_0_LoadButton);
+    GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(glob->page_0_LoadButton));
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
 }
 
 G_MODULE_EXPORT void on_ButtonLoad_clicked(GtkButton *Button, gpointer user_data)
 {
+    (void)Button;
     if (user_data == NULL){
         // for some reason this function is called twice
         // so cancel the call where user_data is NULL

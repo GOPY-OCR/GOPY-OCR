@@ -20,19 +20,19 @@ void anima_init(Glob_GUI *glob)
     //modify hexa code to change color 
     gtk_css_provider_load_from_data(css, "* { background-image:none; background-color:#0D4848;}",-1,NULL);
         
-    GtkStyleContext* context = gtk_widget_get_style_context(glob->anima_SaveButton);
+    GtkStyleContext* context = gtk_widget_get_style_context(GTK_WIDGET(glob->anima_SaveButton));
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
     
-    context = gtk_widget_get_style_context(glob->anima_PreviousButton);
+    context = gtk_widget_get_style_context(GTK_WIDGET(glob->anima_PreviousButton));
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
     
-    context = gtk_widget_get_style_context(glob->anima_NextStep);
+    context = gtk_widget_get_style_context(GTK_WIDGET(glob->anima_NextStep));
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    context = gtk_widget_get_style_context(glob->anima_PrevStep);
+    context = gtk_widget_get_style_context(GTK_WIDGET(glob->anima_PrevStep));
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    context = gtk_widget_get_style_context(glob->anima_LastStep);
+    context = gtk_widget_get_style_context(GTK_WIDGET(glob->anima_LastStep));
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
 
 
@@ -75,6 +75,7 @@ void anima_start(Glob_GUI *glob) {
 
 G_MODULE_EXPORT void on_PreviousButton_clicked(GtkButton *button, gpointer user_data)
 {
+    (void)button;
     Glob_GUI * glob = (Glob_GUI*) user_data;  
     
     if ((Glob_GUI *)user_data != NULL)
@@ -88,6 +89,7 @@ G_MODULE_EXPORT void on_PreviousButton_clicked(GtkButton *button, gpointer user_
 
 G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data)
 {
+    (void)button;
    Glob_GUI *glob = (Glob_GUI*) user_data;
    if ((Glob_GUI*) user_data != NULL)
    {
@@ -105,6 +107,7 @@ G_MODULE_EXPORT void on_SaveButton_clicked(GtkButton *button, gpointer user_data
 }
 
 G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data) {
+    (void)button;
     Glob_GUI *glob = user_data;
     if (glob == NULL || glob->anima->cur_step == glob->anima->nb_steps - 1)
         return;
@@ -126,6 +129,7 @@ G_MODULE_EXPORT void on_NextStep_clicked(GtkButton *button, gpointer user_data) 
 }
 
 G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data) {
+    (void)button;
     Glob_GUI *glob = user_data;
     if (glob == NULL || glob->anima->cur_step == 0)
         return;
@@ -137,6 +141,7 @@ G_MODULE_EXPORT void on_PrevStep_clicked(GtkButton *button, gpointer user_data) 
 }
 
 G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) {
+    (void)button;
     Glob_GUI *glob = user_data;
     if (glob == NULL)
         return;
@@ -156,6 +161,7 @@ G_MODULE_EXPORT void on_LastStep_clicked(GtkButton *button, gpointer user_data) 
 }
 
 G_MODULE_EXPORT void on_key_press_anima(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
+    (void)widget;
     Glob_GUI *glob = user_data;
     if (glob == NULL)
         return;

@@ -4,16 +4,21 @@
 
 matrice* cross_entropy(matrice *a, matrice *y){
     // not needed for now
+    (void)a;
+    (void)y;
     return NULL; //TODO
 }
 
 matrice* cross_entropy_delta(matrice *z, matrice *a, matrice *y){
+    (void)z;
     return matrice_sub(a, y);
 }
 
 
 matrice* mse(matrice *a, matrice *y){
     // not needed for now
+    (void)a;
+    (void)y;
     return NULL; //TODO
 }
 

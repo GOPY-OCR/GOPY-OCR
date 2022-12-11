@@ -260,6 +260,7 @@ void backprop(NeuralNetwork *nn,
     matrice *sig;
     matrice *delta;
     matrice *sub;
+    (void)sub;
     matrice *transpose;
 
     for (int i = 0; i < nn->nb_layers; i++) {
@@ -376,6 +377,7 @@ void apply_learning_rate_decay(int epoch,
                                int verbose,
                                double decay_rate) {
 
+    (void)epoch;
     if (*learning_rate < 0.000001 || *learning_rate > 10000000){
         // this is to prevent the learning rate from exploding or vanishing
         return;

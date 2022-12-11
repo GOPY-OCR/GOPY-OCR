@@ -78,6 +78,7 @@ void xor_train(int verbose, int argc, char **argv) {
 
 // Main mode 2
 double test_xor_inputs(NeuralNetwork *network, int verbose, double input1, double input2) {
+    (void)verbose;
     matrice *input = matrice_new(2, 1);
     matrice_set(input, 0, 0, input1);
     matrice_set(input, 1, 0, input2);

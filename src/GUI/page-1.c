@@ -9,10 +9,10 @@ void page_1_init(Glob_GUI *glob)
 
     GtkCssProvider *  css = gtk_css_provider_new();
     gtk_css_provider_load_from_data(css, "* { background-image:none; background-color:#0D4848;}",-1,NULL);
-    GtkCssProvider *context = gtk_widget_get_style_context(glob->page_1_CancelButton);
+    GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(glob->page_1_CancelButton));
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    context = gtk_widget_get_style_context(glob->page_1_ContinueButton);
+    context = gtk_widget_get_style_context(GTK_WIDGET(glob->page_1_ContinueButton));
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(css),GTK_STYLE_PROVIDER_PRIORITY_USER);
 
 
@@ -22,12 +22,14 @@ void page_1_init(Glob_GUI *glob)
 
 G_MODULE_EXPORT void on_CancelButton1_clicked(GtkButton *button, gpointer user_data)
 {
+    (void)button;
     clear_image((Glob_GUI *)user_data);
     prev_page((Glob_GUI *)user_data);
 }
 
 G_MODULE_EXPORT void on_Continue1_clicked(GtkButton *button, gpointer user_data)
 {
+    (void)button;
    Glob_GUI *glob = (Glob_GUI *)user_data;
    if (glob == NULL)
    {
