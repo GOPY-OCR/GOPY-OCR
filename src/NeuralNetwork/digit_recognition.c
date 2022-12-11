@@ -56,10 +56,10 @@ int digit_recognition_main(int argc, char **argv, int verbose){
     }
 
     // Load the data
-    dataset *train_dataset = load_dataset("src/NeuralNetwork/data/training/", TRAINING_SAMPLES_PER_DIGIT);
+    dataset *train_dataset = load_dataset("data/training/", TRAINING_SAMPLES_PER_DIGIT);
     dataset *test_dataset = NULL;
     if (RUN_EVALUATIONS){
-        test_dataset = load_dataset("src/NeuralNetwork/data/testing/", TEST_SAMPLES_PER_DIGIT);
+        test_dataset = load_dataset("data/testing/", TEST_SAMPLES_PER_DIGIT);
     }
 
     // get mean and std (for normalization)
