@@ -10,8 +10,6 @@ void page_0_init(Glob_GUI *glob)
     glob->original_image_path = NULL;
 
     g_signal_connect(glob->page_0_LoadButton, "clicked", G_CALLBACK(on_ButtonLoad_clicked), glob);
-    printf("glob: %p\n", glob);
-     
    
    //CSS, beware, here be dragons
     GtkCssProvider *  css = gtk_css_provider_new();
